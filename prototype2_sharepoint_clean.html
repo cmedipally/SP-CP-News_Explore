@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint + AI Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #faf9f8;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SharePoint Header */
+        .sp-header {
+            background: #0078d4;
+            color: white;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            height: 48px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .waffle {
+            width: 20px;
+            height: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 6px);
+            gap: 2px;
+        }
+
+        .waffle span {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .sp-logo {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Left Sidebar */
+        .sp-sidebar {
+            width: 48px;
+            background: #f3f2f1;
+            border-right: 1px solid #edebe9;
+            position: fixed;
+            left: 0;
+            top: 48px;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-item {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #605e5c;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .sidebar-item:hover {
+            background: #edebe9;
+        }
+
+        .sidebar-item.active {
+            background: #edebe9;
+        }
+
+        .sidebar-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: #0078d4;
+        }
+
+        /* Content */
+        .content {
+            margin-left: 48px;
+            margin-top: 48px;
+            height: calc(100vh - 48px);
+            overflow-y: auto;
+        }
+
+        .page-header {
+            padding: 16px 32px;
+            background: white;
+            border-bottom: 1px solid #edebe9;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #605e5c;
+            margin-bottom: 8px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #201f1e;
+        }
+
+        .news-section {
+            padding: 24px 32px 100px 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 16px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .news-card {
+            background: white;
+            border: 1px solid #edebe9;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .news-card:hover {
+            box-shadow: 0 6.4px 14.4px rgba(0,0,0,0.18);
+            transform: translateY(-2px);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .news-content {
+            padding: 16px;
+        }
+
+        .news-badge {
+            background: #f3f2f1;
+            color: #323130;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .news-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 8px;
+        }
+
+        .news-excerpt {
+            font-size: 13px;
+            color: #605e5c;
+            line-height: 1.5;
+        }
+
+        /* Floating Agent Button */
+        .agent-fab {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s;
+            z-index: 100;
+            border: 3px solid #f3f2f1;
+        }
+
+        .agent-fab-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .agent-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.5);
+        }
+
+        .agent-fab.active {
+            transform: rotate(45deg);
+        }
+
+        .agent-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #f56565;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            border: 2px solid white;
+        }
+
+        /* Agent Panel */
+        .agent-panel {
+            position: fixed;
+            bottom: 110px;
+            right: 32px;
+            width: 420px;
+            height: 650px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 99;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .agent-panel.show {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .agent-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px 16px 0 0;
+            position: relative;
+        }
+
+        .agent-branding {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .agent-logo {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .agent-brand-text {
+            flex: 1;
+        }
+
+        .agent-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .agent-subtitle {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .agent-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .agent-content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
+            min-height: 0;
+        }
+
+        /* Main Menu View */
+        .menu-view {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+        }
+
+        .menu-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .menu-item-icon {
+            font-size: 20px;
+        }
+
+        .menu-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #201f1e;
+            flex: 1;
+        }
+
+        .menu-item-badge {
+            background: #f56565;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .menu-item-desc {
+            font-size: 12px;
+            color: #605e5c;
+            margin-left: 30px;
+            line-height: 1.4;
+        }
+
+        /* Detail View */
+        .detail-view {
+            display: none;
+        }
+
+        .detail-view.active {
+            display: block;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 0;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-button:hover {
+            color: #764ba2;
+        }
+
+        .agent-section {
+            margin-bottom: 24px;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .update-item {
+            background: #f9f9f9;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .update-item:hover {
+            background: #f0f0f0;
+            transform: translateX(4px);
+        }
+
+        .update-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 4px;
+        }
+
+        .update-summary {
+            font-size: 12px;
+            color: #605e5c;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .update-meta {
+            font-size: 11px;
+            color: #a19f9d;
+        }
+
+        .question-item {
+            background: #f9f9f9;
+            border-radius: 4px;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #323130;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-item:hover {
+            background: #f0f0f0;
+            transform: translateX(4px);
+        }
+
+        .question-badge {
+            background: #0078d4;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .event-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .event-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .event-date {
+            font-size: 11px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+
+        .event-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 2px;
+        }
+
+        .event-location {
+            font-size: 12px;
+            color: #605e5c;
+        }
+
+        /* Chat Input Area - Always visible at bottom */
+        .chat-input-area {
+            padding: 16px 20px;
+            border-top: 1px solid #edebe9;
+            background: white;
+            border-radius: 0 0 16px 16px;
+            flex-shrink: 0;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 1px solid #edebe9;
+            border-radius: 20px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: none;
+            max-height: 80px;
+            min-height: 40px;
+            transition: all 0.2s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .chat-input::placeholder {
+            color: #a19f9d;
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chat-send-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #edebe9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #201f1e;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #605e5c;
+        }
+
+        .modal-body {
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-body h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #201f1e;
+            margin: 16px 0 8px 0;
+        }
+
+        .modal-body p {
+            font-size: 14px;
+            color: #323130;
+            margin-bottom: 12px;
+        }
+
+        .modal-link {
+            display: inline-block;
+            background: #0078d4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 16px;
+            margin-right: 8px;
+        }
+
+        .modal-link:hover {
+            background: #106ebe;
+        }
+
+        .modal-link.secondary {
+            background: white;
+            color: #0078d4;
+            border: 1px solid #0078d4;
+        }
+
+        .prototype-label {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: #00b294;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 1000;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-label">SharePoint + AI</div>
+
+    <!-- Header -->
+    <div class="sp-header">
+        <div class="waffle">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+        <div class="sp-logo">SharePoint</div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sp-sidebar">
+        <div class="sidebar-item active">🏠</div>
+        <div class="sidebar-item">🧭</div>
+        <div class="sidebar-item">✏️</div>
+        <div class="sidebar-item">🔧</div>
+        <div class="sidebar-item">☁️</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="page-header">
+            <div class="breadcrumb">← Back to discover</div>
+            <div class="page-title">News</div>
+        </div>
+
+        <div class="news-section">
+            <div class="section-title">Company Updates</div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-image">📢</div>
+                    <div class="news-content">
+                        <div class="news-badge">ANNOUNCEMENT</div>
+                        <div class="news-title">Leadership Summit Registration</div>
+                        <div class="news-excerpt">Join us March 15-17 in Seattle. Network with leaders and attend 30+ sessions.</div>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-image">🏠</div>
+                    <div class="news-content">
+                        <div class="news-badge">POLICY UPDATE</div>
+                        <div class="news-title">New Hybrid Work Policy</div>
+                        <div class="news-excerpt">Choose remote, hybrid, or in-office. Submit preference by Jan 31.</div>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-image">🎓</div>
+                    <div class="news-content">
+                        <div class="news-badge">LEARNING</div>
+                        <div class="news-title">Q1 Learning Opportunities</div>
+                        <div class="news-excerpt">20+ new courses available. $1,500 annual learning budget.</div>
+                    </div>
+                </div>
+
+                <div class="news-card">
+                    <div class="news-image">🌟</div>
+                    <div class="news-content">
+                        <div class="news-badge">RESULTS</div>
+                        <div class="news-title">Q4 2025 Company Results</div>
+                        <div class="news-excerpt">Record quarter with 18% growth and 3 product launches.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Agent Button -->
+    <div class="agent-fab" id="agentFab" onclick="toggleAgent()">
+        <div class="agent-fab-logo">C</div>
+        <div class="agent-badge">3</div>
+    </div>
+
+    <!-- Agent Panel -->
+    <div class="agent-panel" id="agentPanel">
+        <div class="agent-header">
+            <div class="agent-branding">
+                <div class="agent-logo">C</div>
+                <div class="agent-brand-text">
+                    <div class="agent-title">Contoso Copilot</div>
+                    <div class="agent-subtitle">Your AI assistant</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-content">
+            <div class="agent-content-scroll" id="agentContent">
+            <!-- Main Menu -->
+            <div class="menu-view" id="menuView">
+                <div class="menu-item" onclick="showSection('updates')">
+                    <div class="menu-item-header">
+                        <span class="menu-item-icon">📰</span>
+                        <span class="menu-item-title">Latest Updates</span>
+                        <span class="menu-item-badge">3</span>
+                    </div>
+                    <div class="menu-item-desc">Get TLDR summaries of recent company news and updates</div>
+                </div>
+
+                <div class="menu-item" onclick="showSection('questions')">
+                    <div class="menu-item-header">
+                        <span class="menu-item-icon">🔥</span>
+                        <span class="menu-item-title">Trending Questions</span>
+                    </div>
+                    <div class="menu-item-desc">See what your team and organization are asking</div>
+                </div>
+
+                <div class="menu-item" onclick="showSection('events')">
+                    <div class="menu-item-header">
+                        <span class="menu-item-icon">📅</span>
+                        <span class="menu-item-title">Upcoming Events</span>
+                    </div>
+                    <div class="menu-item-desc">Company events, deadlines, and important dates</div>
+                </div>
+            </div>
+
+            <!-- Latest Updates Detail View -->
+            <div class="detail-view" id="updatesView">
+                <button class="back-button" onclick="showMenu()">← Back</button>
+                <div class="agent-section">
+                    <div class="section-label">📰 Latest Updates</div>
+
+                    <div class="update-item" onclick="showDetail('summit')">
+                        <div class="update-title">Leadership Summit</div>
+                        <div class="update-summary">Mar 15-17 in Seattle. Early bird ends Feb 15.</div>
+                        <div class="update-meta">2 days ago</div>
+                    </div>
+
+                    <div class="update-item" onclick="showDetail('hybrid')">
+                        <div class="update-title">Hybrid Work Policy</div>
+                        <div class="update-summary">Choose your work mode. Action needed by Jan 31.</div>
+                        <div class="update-meta">4 days ago</div>
+                    </div>
+
+                    <div class="update-item" onclick="showDetail('learning')">
+                        <div class="update-title">Q1 Learning Programs</div>
+                        <div class="update-summary">20+ courses available. $1,500 budget per employee.</div>
+                        <div class="update-meta">1 week ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trending Questions Detail View -->
+            <div class="detail-view" id="questionsView">
+                <button class="back-button" onclick="showMenu()">← Back</button>
+                <div class="agent-section">
+                    <div class="section-label">🔥 Trending Questions</div>
+
+                    <div class="question-item" onclick="showAnswer('pto')">
+                        <span>How many PTO days do I have?</span>
+                        <span class="question-badge">24</span>
+                    </div>
+
+                    <div class="question-item" onclick="showAnswer('hybrid')">
+                        <span>What's the hybrid work policy?</span>
+                        <span class="question-badge">18</span>
+                    </div>
+
+                    <div class="question-item" onclick="showAnswer('benefits')">
+                        <span>When is benefits enrollment?</span>
+                        <span class="question-badge">15</span>
+                    </div>
+
+                    <div class="question-item" onclick="showAnswer('summit')">
+                        <span>How do I register for summit?</span>
+                        <span class="question-badge">12</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events Detail View -->
+            <div class="detail-view" id="eventsView">
+                <button class="back-button" onclick="showMenu()">← Back</button>
+                <div class="agent-section">
+                    <div class="section-label">📅 Upcoming Events</div>
+
+                    <div class="event-item" onclick="showDetail('summit')">
+                        <div class="event-date">MAR 15-17</div>
+                        <div class="event-title">Leadership Summit</div>
+                        <div class="event-location">Seattle Convention Center</div>
+                    </div>
+
+                    <div class="event-item" onclick="showDetail('townhall')">
+                        <div class="event-date">JAN 30</div>
+                        <div class="event-title">Monthly Town Hall</div>
+                        <div class="event-location">Virtual (Teams)</div>
+                    </div>
+
+                    <div class="event-item" onclick="showDetail('training')">
+                        <div class="event-date">FEB 5</div>
+                        <div class="event-title">Security Training Due</div>
+                        <div class="event-location">Online module</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Chat Input Area - Always at Bottom -->
+            <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                    <textarea
+                        class="chat-input"
+                        id="chatInput"
+                        placeholder="Ask Copilot anything..."
+                        rows="1"
+                        onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendChatMessage(); }"
+                        oninput="autoResizeChat(this)"
+                    ></textarea>
+                    <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal" onclick="if(event.target===this) closeModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle"></div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const content = {
+            summit: {
+                title: "Leadership Summit 2026",
+                body: `
+                    <p><strong>📅 March 15-17, 2026</strong><br>📍 Seattle Convention Center</p>
+                    <h3>TLDR</h3>
+                    <p>3-day leadership event with keynotes, 30+ breakout sessions, and networking. Early bird pricing ($299) ends Feb 15.</p>
+                    <h3>What to Expect</h3>
+                    <p>• Keynote from CEO Sarah Chen<br>• 30+ breakout sessions<br>• Networking dinner March 16<br>• Product roadmap reveals</p>
+                    <a href="#" class="modal-link" onclick="alert('Opening registration...'); return false;">Register Now →</a>
+                    <a href="#" class="modal-link secondary" onclick="alert('Opening details...'); return false;">View Details</a>
+                `
+            },
+            hybrid: {
+                title: "Hybrid Work Policy",
+                body: `
+                    <h3>TLDR</h3>
+                    <p>Choose your work mode: remote, hybrid (2+ days in office), or in-office. Submit in Workday by Jan 31.</p>
+                    <h3>Options</h3>
+                    <p><strong>Fully Remote:</strong> Work from anywhere in your country<br>
+                    <strong>Hybrid:</strong> Min 2 days/week in office (Tue-Thu core days)<br>
+                    <strong>In-Office:</strong> 5 days/week with reserved desk</p>
+                    <a href="#" class="modal-link" onclick="alert('Opening Workday...'); return false;">Submit Preference</a>
+                `
+            },
+            learning: {
+                title: "Q1 Learning Programs",
+                body: `
+                    <h3>TLDR</h3>
+                    <p>20+ courses available including Leadership Academy, Tech Skills, and D&I training. $1,500 annual budget per employee.</p>
+                    <h3>Available Programs</h3>
+                    <p>• Leadership Fundamentals<br>• Technical Skills (Azure, AWS, GCP)<br>• Diversity & Inclusion<br>• Communication Excellence<br>• Project Management</p>
+                    <a href="#" class="modal-link" onclick="alert('Opening catalog...'); return false;">Browse Courses</a>
+                `
+            },
+            townhall: {
+                title: "Monthly Town Hall",
+                body: `
+                    <p><strong>📅 Jan 30, 2026 at 2:00 PM PT</strong><br>📍 Virtual (Teams)</p>
+                    <h3>TLDR</h3>
+                    <p>Join CEO Sarah Chen for Q4 results, Q1 priorities, and open Q&A.</p>
+                    <h3>Agenda</h3>
+                    <p>• Q4 Results & Achievements<br>• Q1 Priorities<br>• Product Roadmap<br>• Open Q&A</p>
+                    <a href="#" class="modal-link" onclick="alert('Adding to calendar...'); return false;">Add to Calendar</a>
+                `
+            },
+            training: {
+                title: "Security Training",
+                body: `
+                    <p><strong>⚠️ Due: February 5, 2026</strong></p>
+                    <h3>TLDR</h3>
+                    <p>Complete 30-min security course, update password (12+ chars), and pass quiz by Feb 5.</p>
+                    <h3>Requirements</h3>
+                    <p>1. Complete security awareness course (30 min)<br>2. Update password (12+ characters)<br>3. Pass quiz (80% required)</p>
+                    <a href="#" class="modal-link" onclick="alert('Starting training...'); return false;">Start Training</a>
+                `
+            }
+        };
+
+        const answers = {
+            pto: {
+                title: "PTO Policy",
+                body: `
+                    <h3>Your PTO</h3>
+                    <p><strong>Annual:</strong> 20 days<br><strong>Accrual:</strong> 1.67 days/month<br><strong>Rollover:</strong> Up to 5 days<br><strong>Request:</strong> Workday, 2 weeks advance</p>
+                    <h3>Holidays</h3>
+                    <p>10 company holidays + your birthday</p>
+                    <a href="#" class="modal-link" onclick="alert('Opening Workday...'); return false;">Check Balance</a>
+                `
+            },
+            benefits: {
+                title: "Benefits Enrollment",
+                body: `
+                    <h3>Enrollment</h3>
+                    <p>Annual enrollment: <strong>November 1-15</strong></p>
+                    <h3>Coverage</h3>
+                    <p><strong>Health:</strong> Medical, Dental, Vision (80% covered)<br><strong>401(k):</strong> 6% match, immediate vesting<br><strong>Other:</strong> $1,500 learning budget, $50/month gym</p>
+                    <a href="#" class="modal-link" onclick="alert('Opening guide...'); return false;">Benefits Guide</a>
+                `
+            }
+        };
+
+        function toggleAgent() {
+            const panel = document.getElementById('agentPanel');
+            const fab = document.getElementById('agentFab');
+            panel.classList.toggle('show');
+            fab.classList.toggle('active');
+
+            // Reset to menu view when opening
+            if (panel.classList.contains('show')) {
+                showMenu();
+            }
+        }
+
+        function showMenu() {
+            document.getElementById('menuView').style.display = 'flex';
+            document.getElementById('updatesView').classList.remove('active');
+            document.getElementById('questionsView').classList.remove('active');
+            document.getElementById('eventsView').classList.remove('active');
+        }
+
+        function showSection(section) {
+            document.getElementById('menuView').style.display = 'none';
+
+            const views = {
+                'updates': 'updatesView',
+                'questions': 'questionsView',
+                'events': 'eventsView'
+            };
+
+            const viewId = views[section];
+            if (viewId) {
+                document.getElementById(viewId).classList.add('active');
+            }
+        }
+
+        function showDetail(key) {
+            const item = content[key];
+            if (!item) return;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalBody').innerHTML = item.body;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function showAnswer(key) {
+            const item = answers[key] || content[key];
+            if (!item) return;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalBody').innerHTML = item.body;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        // Chat functionality
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Get response and show in modal
+            const response = getChatResponse(message);
+            showChatResponse(message, response);
+        }
+
+        function getChatResponse(message) {
+            const lower = message.toLowerCase();
+
+            if (lower.includes('pto') || lower.includes('vacation') || lower.includes('time off')) {
+                return `<p><strong>PTO Policy</strong></p><p>• 20 days annually<br>• Accrues at 1.67 days/month<br>• Request via Workday 2 weeks in advance<br>• Up to 5 days rollover</p><p>You also get 10 company holidays plus your birthday!</p>`;
+            } else if (lower.includes('benefit') || lower.includes('health') || lower.includes('insurance')) {
+                return `<p><strong>Benefits Overview</strong></p><p>• Medical, Dental, Vision (80% covered)<br>• 401(k) with 6% match<br>• $1,500 learning budget<br>• $50/month gym reimbursement</p><p>Enrollment: Nov 1-15</p>`;
+            } else if (lower.includes('hybrid') || lower.includes('remote') || lower.includes('wfh')) {
+                return `<p><strong>Hybrid Work Policy</strong></p><p>Choose your mode:<br>• Fully Remote<br>• Hybrid (2+ days/week)<br>• In-Office (5 days)</p><p>Submit in Workday by Jan 31</p>`;
+            } else if (lower.includes('summit') || lower.includes('leadership') || lower.includes('event')) {
+                return `<p><strong>Leadership Summit 2026</strong></p><p>📅 March 15-17<br>📍 Seattle Convention Center</p><p>Early bird ($299) ends Feb 15</p><p>Features keynotes, 30+ sessions, and networking dinner.</p>`;
+            } else if (lower.includes('it') || lower.includes('help') || lower.includes('support') || lower.includes('laptop')) {
+                return `<p><strong>IT Support</strong></p><p>📧 helpdesk@contoso.com<br>📞 1-800-CONTOSO<br>💬 Teams chat (24/7)</p><p>Password resets: portal.contoso.com</p>`;
+            } else if (lower.includes('office') || lower.includes('location') || lower.includes('address')) {
+                return `<p><strong>Office Locations</strong></p><p>Seattle HQ: 1234 Innovation Way<br>NYC: 567 Broadway<br>Austin: 890 Tech Blvd</p><p>All open Mon-Fri with 24/7 badge access.</p>`;
+            } else if (lower.includes('training') || lower.includes('learn') || lower.includes('course')) {
+                return `<p><strong>Learning & Development</strong></p><p>• $1,500/year budget per employee<br>• Coursera, Udemy, Pluralsight<br>• Certifications (AWS, Azure, GCP)<br>• Lunch & Learns every Friday</p><p>Submit requests in Workday.</p>`;
+            } else {
+                return `<p>I can help you with:</p><p>• PTO & benefits<br>• Hybrid work policy<br>• Upcoming events<br>• IT support<br>• Office locations<br>• Learning programs</p><p>What would you like to know?</p>`;
+            }
+        }
+
+        function showChatResponse(question, answer) {
+            document.getElementById('modalTitle').textContent = 'Copilot Response';
+            document.getElementById('modalBody').innerHTML = `
+                <p><strong>Your question:</strong><br>${question}</p>
+                <hr style="margin: 16px 0; border: none; border-top: 1px solid #edebe9;">
+                ${answer}
+            `;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function autoResizeChat(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 80) + 'px';
+        }
+    </script>
+</body>
+</html>
