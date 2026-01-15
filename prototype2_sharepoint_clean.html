@@ -338,6 +338,59 @@
             min-height: 0;
         }
 
+        /* Chat Messages */
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-message.user {
+            align-items: flex-end;
+        }
+
+        .chat-message.assistant {
+            align-items: flex-start;
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-message.assistant .chat-bubble {
+            background: #f3f2f1;
+            color: #323130;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble strong {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .chat-timestamp {
+            font-size: 11px;
+            color: #a19f9d;
+            padding: 0 4px;
+        }
+
         /* Main Menu View */
         .menu-view {
             display: flex;
@@ -801,6 +854,9 @@
 
         <div class="agent-content">
             <div class="agent-content-scroll" id="agentContent">
+            <!-- Chat Messages Area -->
+            <div class="chat-messages" id="chatMessages" style="display: none;"></div>
+
             <!-- Main Menu -->
             <div class="menu-view" id="menuView">
                 <div class="menu-item" onclick="showSection('updates')">
@@ -1038,6 +1094,7 @@
             document.getElementById('updatesView').classList.remove('active');
             document.getElementById('questionsView').classList.remove('active');
             document.getElementById('eventsView').classList.remove('active');
+            document.getElementById('chatMessages').style.display = 'none';
         }
 
         function showSection(section) {
@@ -1085,9 +1142,39 @@
             input.value = '';
             input.style.height = 'auto';
 
-            // Get response and show in modal
+            // Hide menu and detail views, show chat
+            document.getElementById('menuView').style.display = 'none';
+            document.querySelectorAll('.detail-view').forEach(view => view.classList.remove('active'));
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.style.display = 'flex';
+
+            // Add user message
+            addChatMessage('user', message);
+
+            // Get response and show it
             const response = getChatResponse(message);
-            showChatResponse(message, response);
+
+            // Add assistant message after a short delay
+            setTimeout(() => {
+                addChatMessage('assistant', response);
+            }, 500);
+        }
+
+        function addChatMessage(sender, message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'chat-bubble';
+            bubbleDiv.innerHTML = message;
+
+            messageDiv.appendChild(bubbleDiv);
+            chatMessages.appendChild(messageDiv);
+
+            // Scroll to bottom
+            const scrollContainer = document.getElementById('agentContent');
+            scrollContainer.scrollTop = scrollContainer.scrollHeight;
         }
 
         function getChatResponse(message) {
@@ -1112,15 +1199,6 @@
             }
         }
 
-        function showChatResponse(question, answer) {
-            document.getElementById('modalTitle').textContent = 'Copilot Response';
-            document.getElementById('modalBody').innerHTML = `
-                <p><strong>Your question:</strong><br>${question}</p>
-                <hr style="margin: 16px 0; border: none; border-top: 1px solid #edebe9;">
-                ${answer}
-            `;
-            document.getElementById('modal').classList.add('show');
-        }
 
         function autoResizeChat(textarea) {
             textarea.style.height = 'auto';
