@@ -1394,8 +1394,12 @@
 
         // Check if first visit and start tour
         function checkPageReady() {
+            // Check for URL parameter to force tour
+            const urlParams = new URLSearchParams(window.location.search);
+            const forceTour = urlParams.get('tour');
+
             const tourCompleted = localStorage.getItem('contosoTourCompleted');
-            if (tourCompleted) return;
+            if (tourCompleted && !forceTour) return;
 
             // Check if all key elements are rendered and visible
             const newChatBtn = document.querySelector('.new-chat-btn');
