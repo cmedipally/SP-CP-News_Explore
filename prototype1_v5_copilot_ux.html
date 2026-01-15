@@ -1394,36 +1394,54 @@
 
         // Check if first visit and start tour
         function checkPageReady() {
+            console.log('[Tour] Checking page ready...');
+
             // Check for URL parameter to force tour
             const urlParams = new URLSearchParams(window.location.search);
             const forceTour = urlParams.get('tour');
+            console.log('[Tour] Force tour:', forceTour);
 
             const tourCompleted = localStorage.getItem('contosoTourCompleted');
-            if (tourCompleted && !forceTour) return;
+            console.log('[Tour] Tour completed:', tourCompleted);
+
+            if (tourCompleted && !forceTour) {
+                console.log('[Tour] Tour already completed and not forced, skipping');
+                return;
+            }
 
             // Check if all key elements are rendered and visible
             const newChatBtn = document.querySelector('.new-chat-btn');
             const companyAgent = document.getElementById('companyAgent');
             const inputArea = document.querySelector('.input-area');
 
+            console.log('[Tour] Elements check:', {
+                newChatBtn: !!newChatBtn,
+                companyAgent: !!companyAgent,
+                inputArea: !!inputArea
+            });
+
             if (newChatBtn && newChatBtn.offsetParent !== null &&
                 companyAgent && companyAgent.offsetParent !== null &&
                 inputArea && inputArea.offsetParent !== null) {
                 // All elements are ready, start tour
+                console.log('[Tour] All elements ready, starting tour...');
                 try {
                     startTour();
+                    console.log('[Tour] Tour started successfully');
                 } catch(e) {
-                    console.error('Tour failed to start:', e);
+                    console.error('[Tour] Failed to start:', e);
                     document.getElementById('tourOverlay').classList.remove('active');
                 }
             } else {
                 // Not ready yet, check again in 500ms
+                console.log('[Tour] Elements not ready, checking again in 500ms');
                 setTimeout(checkPageReady, 500);
             }
         }
 
         // Start checking after initial load
         window.addEventListener('load', function() {
+            console.log('[Tour] Page loaded, starting check in 1000ms');
             setTimeout(checkPageReady, 1000);
         });
 
