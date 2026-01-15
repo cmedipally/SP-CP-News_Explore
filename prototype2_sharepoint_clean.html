@@ -391,6 +391,144 @@
             padding: 0 4px;
         }
 
+        /* Product Tour Styles */
+        .tour-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        .tour-overlay.active {
+            display: block;
+        }
+
+        .tour-spotlight {
+            position: fixed;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7), 0 0 20px rgba(102, 126, 234, 0.8);
+            pointer-events: none;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .tour-tooltip {
+            position: fixed;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 360px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            animation: tooltipSlideIn 0.3s ease-out;
+        }
+
+        @keyframes tooltipSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tour-tooltip-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .tour-step-indicator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .tour-tooltip-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #201f1e;
+            flex: 1;
+        }
+
+        .tour-tooltip-content {
+            font-size: 14px;
+            color: #605e5c;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tour-tooltip-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tour-progress {
+            font-size: 12px;
+            color: #a19f9d;
+        }
+
+        .tour-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tour-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .tour-btn-skip {
+            background: transparent;
+            color: #605e5c;
+        }
+
+        .tour-btn-skip:hover {
+            background: #f3f2f1;
+        }
+
+        .tour-btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tour-btn-next:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .tour-btn-finish {
+            background: #00b294;
+            color: white;
+        }
+
+        .tour-btn-finish:hover {
+            background: #009b7d;
+        }
+
         /* Main Menu View */
         .menu-view {
             display: flex;
@@ -994,6 +1132,27 @@
         </div>
     </div>
 
+    <!-- Product Tour -->
+    <div class="tour-overlay" id="tourOverlay"></div>
+    <div class="tour-spotlight" id="tourSpotlight"></div>
+    <div class="tour-tooltip" id="tourTooltip">
+        <div class="tour-tooltip-header">
+            <div class="tour-step-indicator" id="tourStepNumber">1</div>
+            <div class="tour-tooltip-title" id="tourTitle">Welcome</div>
+        </div>
+        <div class="tour-tooltip-content" id="tourContent">
+            Welcome to the tour!
+        </div>
+        <div class="tour-tooltip-footer">
+            <div class="tour-progress" id="tourProgress">1 of 5</div>
+            <div class="tour-buttons">
+                <button class="tour-btn tour-btn-skip" onclick="skipTour()">Skip</button>
+                <button class="tour-btn tour-btn-next" id="tourNextBtn" onclick="nextTourStep()">Next</button>
+                <button class="tour-btn tour-btn-finish" id="tourFinishBtn" onclick="finishTour()" style="display: none;">Finish</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const content = {
             summit: {
@@ -1204,6 +1363,157 @@
             textarea.style.height = 'auto';
             textarea.style.height = Math.min(textarea.scrollHeight, 80) + 'px';
         }
+
+        // Product Tour
+        let currentTourStep = 0;
+        const tourSteps = [
+            {
+                title: "Welcome to Contoso Copilot!",
+                content: "This quick tour will show you how to get the most out of your AI assistant. Let's get started!",
+                target: null, // No specific target for welcome
+                position: "center"
+            },
+            {
+                title: "Your AI Assistant",
+                content: "Click this button anytime to open Contoso Copilot. Get instant answers, summaries, and help with company information.",
+                target: "#agentFab",
+                position: "left"
+            },
+            {
+                title: "Explore Features",
+                content: "Access Latest Updates, Trending Questions, and Upcoming Events from the main menu. Each section provides curated, relevant information.",
+                target: "#menuView",
+                position: "top"
+            },
+            {
+                title: "Ask Anything",
+                content: "Type your questions in the chat bar at the bottom. Ask about PTO, benefits, policies, events, or anything else!",
+                target: ".chat-input-area",
+                position: "top"
+            },
+            {
+                title: "You're All Set!",
+                content: "That's it! Start exploring by asking a question or browsing the menu. Contoso Copilot is here to help 24/7.",
+                target: null,
+                position: "center"
+            }
+        ];
+
+        function startTour() {
+            currentTourStep = 0;
+            document.getElementById('tourOverlay').classList.add('active');
+            showTourStep();
+        }
+
+        function showTourStep() {
+            const step = tourSteps[currentTourStep];
+            const tooltip = document.getElementById('tourTooltip');
+            const spotlight = document.getElementById('tourSpotlight');
+
+            // Update content
+            document.getElementById('tourStepNumber').textContent = currentTourStep + 1;
+            document.getElementById('tourTitle').textContent = step.title;
+            document.getElementById('tourContent').textContent = step.content;
+            document.getElementById('tourProgress').textContent = `${currentTourStep + 1} of ${tourSteps.length}`;
+
+            // Show/hide buttons
+            const nextBtn = document.getElementById('tourNextBtn');
+            const finishBtn = document.getElementById('tourFinishBtn');
+            if (currentTourStep === tourSteps.length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                finishBtn.style.display = 'none';
+            }
+
+            // Position spotlight and tooltip
+            if (step.target) {
+                const targetEl = document.querySelector(step.target);
+                if (targetEl) {
+                    const rect = targetEl.getBoundingClientRect();
+
+                    // Show and position spotlight
+                    spotlight.style.display = 'block';
+                    spotlight.style.top = (rect.top - 8) + 'px';
+                    spotlight.style.left = (rect.left - 8) + 'px';
+                    spotlight.style.width = (rect.width + 16) + 'px';
+                    spotlight.style.height = (rect.height + 16) + 'px';
+
+                    // Position tooltip
+                    tooltip.style.display = 'block';
+                    const tooltipRect = tooltip.getBoundingClientRect();
+
+                    if (step.position === 'left') {
+                        tooltip.style.top = (rect.top + rect.height / 2 - tooltipRect.height / 2) + 'px';
+                        tooltip.style.left = (rect.left - tooltipRect.width - 20) + 'px';
+                    } else if (step.position === 'top') {
+                        tooltip.style.top = (rect.top - tooltipRect.height - 20) + 'px';
+                        tooltip.style.left = (rect.left + rect.width / 2 - tooltipRect.width / 2) + 'px';
+                    } else if (step.position === 'right') {
+                        tooltip.style.top = (rect.top + rect.height / 2 - tooltipRect.height / 2) + 'px';
+                        tooltip.style.left = (rect.right + 20) + 'px';
+                    } else {
+                        tooltip.style.top = (rect.bottom + 20) + 'px';
+                        tooltip.style.left = (rect.left + rect.width / 2 - tooltipRect.width / 2) + 'px';
+                    }
+                } else {
+                    // Fallback to center if target not found
+                    positionTooltipCenter();
+                }
+            } else {
+                // Center position for steps without target
+                spotlight.style.display = 'none';
+                positionTooltipCenter();
+            }
+
+            // Open agent panel for menu step
+            if (currentTourStep === 2 && step.target === '#menuView') {
+                const panel = document.getElementById('agentPanel');
+                if (!panel.classList.contains('show')) {
+                    toggleAgent();
+                }
+            }
+        }
+
+        function positionTooltipCenter() {
+            const tooltip = document.getElementById('tourTooltip');
+            tooltip.style.display = 'block';
+            tooltip.style.top = '50%';
+            tooltip.style.left = '50%';
+            tooltip.style.transform = 'translate(-50%, -50%)';
+        }
+
+        function nextTourStep() {
+            if (currentTourStep < tourSteps.length - 1) {
+                currentTourStep++;
+                showTourStep();
+            }
+        }
+
+        function skipTour() {
+            endTour();
+        }
+
+        function finishTour() {
+            endTour();
+        }
+
+        function endTour() {
+            document.getElementById('tourOverlay').classList.remove('active');
+            document.getElementById('tourSpotlight').style.display = 'none';
+            document.getElementById('tourTooltip').style.display = 'none';
+            localStorage.setItem('contosoTourCompleted', 'true');
+        }
+
+        // Check if first visit and start tour
+        window.addEventListener('load', function() {
+            const tourCompleted = localStorage.getItem('contosoTourCompleted');
+            if (!tourCompleted) {
+                // Start tour after a short delay
+                setTimeout(startTour, 800);
+            }
+        });
     </script>
 </body>
 </html>
