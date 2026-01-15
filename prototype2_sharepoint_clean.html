@@ -1001,7 +1001,7 @@
 
     <!-- Floating Agent Button -->
     <div class="agent-fab" id="agentFab" onclick="toggleAgent()">
-        <div class="agent-fab-logo">C</div>
+        <div class="agent-fab-logo">✨</div>
         <div class="agent-badge">3</div>
     </div>
 
@@ -1561,7 +1561,7 @@
         window.addEventListener('load', function() {
             const tourCompleted = localStorage.getItem('contosoTourCompleted');
             if (!tourCompleted) {
-                // Start tour after a short delay
+                // Start tour after page is fully rendered
                 setTimeout(() => {
                     try {
                         startTour();
@@ -1570,7 +1570,7 @@
                         // Hide overlay if tour fails
                         document.getElementById('tourOverlay').classList.remove('active');
                     }
-                }, 800);
+                }, 1500);
             }
         });
 
