@@ -1528,6 +1528,15 @@
                 setTimeout(startTour, 800);
             }
         });
+
+        // Keyboard shortcut to restart tour: Ctrl+Shift+T
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+                e.preventDefault();
+                localStorage.removeItem('contosoTourCompleted');
+                startTour();
+            }
+        });
     </script>
 </body>
 </html>
