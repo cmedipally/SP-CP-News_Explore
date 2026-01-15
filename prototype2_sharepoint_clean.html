@@ -1427,6 +1427,28 @@
                 finishBtn.style.display = 'none';
             }
 
+            // Open agent panel for menu and chat steps (before positioning)
+            if ((currentTourStep === 2 || currentTourStep === 3) && step.target) {
+                const panel = document.getElementById('agentPanel');
+                if (!panel.classList.contains('show')) {
+                    toggleAgent();
+                    // Wait for panel animation to complete before positioning
+                    setTimeout(() => positionTourElements(), 50);
+                    return;
+                }
+            }
+
+            positionTourElements();
+        }
+
+        function positionTourElements() {
+            const step = tourSteps[currentTourStep];
+            const tooltip = document.getElementById('tourTooltip');
+            const spotlight = document.getElementById('tourSpotlight');
+
+            // Reset transform for positioning
+            tooltip.style.transform = '';
+
             // Position spotlight and tooltip
             if (step.target) {
                 const targetEl = document.querySelector(step.target);
@@ -1465,14 +1487,6 @@
                 // Center position for steps without target
                 spotlight.style.display = 'none';
                 positionTooltipCenter();
-            }
-
-            // Open agent panel for menu step
-            if (currentTourStep === 2 && step.target === '#menuView') {
-                const panel = document.getElementById('agentPanel');
-                if (!panel.classList.contains('show')) {
-                    toggleAgent();
-                }
             }
         }
 
