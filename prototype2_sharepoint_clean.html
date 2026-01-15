@@ -1585,9 +1585,18 @@
                 pageHeader: !!pageHeader
             });
 
-            if (fabButton && fabButton.offsetParent !== null &&
-                newsCards && newsCards.offsetParent !== null &&
-                pageHeader && pageHeader.offsetParent !== null) {
+            // Note: Fixed position elements (like FAB) may have offsetParent as null, so check differently
+            const fabVisible = fabButton && (fabButton.offsetParent !== null || getComputedStyle(fabButton).position === 'fixed');
+            const newsVisible = newsCards && newsCards.offsetParent !== null;
+            const headerVisible = pageHeader && pageHeader.offsetParent !== null;
+
+            console.log('[Tour] Visibility check:', {
+                fabVisible,
+                newsVisible,
+                headerVisible
+            });
+
+            if (fabVisible && newsVisible && headerVisible) {
                 // All elements are ready, start tour
                 console.log('[Tour] All elements ready, starting tour...');
                 try {
