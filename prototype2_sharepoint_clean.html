@@ -1574,49 +1574,21 @@
                 return;
             }
 
-            // Check if all key elements are rendered and visible
-            const fabButton = document.getElementById('agentFab');
-            const newsCards = document.querySelector('.news-card');
-            const pageHeader = document.querySelector('.page-header');
-
-            console.log('[Tour] Elements check:', {
-                fabButton: !!fabButton,
-                newsCards: !!newsCards,
-                pageHeader: !!pageHeader
-            });
-
-            // Note: Fixed position elements (like FAB) may have offsetParent as null, so check differently
-            const fabVisible = fabButton && (fabButton.offsetParent !== null || getComputedStyle(fabButton).position === 'fixed');
-            const newsVisible = newsCards && newsCards.offsetParent !== null;
-            const headerVisible = pageHeader && pageHeader.offsetParent !== null;
-
-            console.log('[Tour] Visibility check:', {
-                fabVisible,
-                newsVisible,
-                headerVisible
-            });
-
-            if (fabVisible && newsVisible && headerVisible) {
-                // All elements are ready, start tour
-                console.log('[Tour] All elements ready, starting tour...');
-                try {
-                    startTour();
-                    console.log('[Tour] Tour started successfully');
-                } catch(e) {
-                    console.error('[Tour] Failed to start:', e);
-                    document.getElementById('tourOverlay').classList.remove('active');
-                }
-            } else {
-                // Not ready yet, check again in 500ms
-                console.log('[Tour] Elements not ready, checking again in 500ms');
-                setTimeout(checkPageReady, 500);
+            // Start tour immediately without element checks
+            console.log('[Tour] Starting tour immediately...');
+            try {
+                startTour();
+                console.log('[Tour] Tour started successfully');
+            } catch(e) {
+                console.error('[Tour] Failed to start:', e);
+                document.getElementById('tourOverlay').classList.remove('active');
             }
         }
 
         // Start checking after initial load
         window.addEventListener('load', function() {
-            console.log('[Tour] Page loaded, starting check in 1000ms');
-            setTimeout(checkPageReady, 1000);
+            console.log('[Tour] Page loaded, starting tour immediately...');
+            setTimeout(checkPageReady, 500);
         });
 
         // Keyboard shortcut to restart tour: Ctrl+Shift+T
