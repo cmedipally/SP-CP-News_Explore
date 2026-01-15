@@ -1021,6 +1021,14 @@
                     </div>
                     <div class="menu-item-desc">Company events, deadlines, and important dates</div>
                 </div>
+
+                <div class="menu-item" onclick="restartTour()" style="border-top: 1px solid #edebe9; margin-top: 12px; padding-top: 12px;">
+                    <div class="menu-item-header">
+                        <span class="menu-item-icon">🎓</span>
+                        <span class="menu-item-title">Restart Tour</span>
+                    </div>
+                    <div class="menu-item-desc">Take the product tour again</div>
+                </div>
             </div>
 
             <!-- Latest Updates Detail View -->
@@ -1369,7 +1377,7 @@
         const tourSteps = [
             {
                 title: "Welcome to Contoso Copilot!",
-                content: "This quick tour will show you how to get the most out of your AI assistant. Let's get started!",
+                content: "This quick tour will show you how to get the most out of your AI assistant. Let's get started!<br><br><small style='opacity: 0.7;'>Tip: Press Ctrl+Shift+T anytime to restart this tour</small>",
                 target: null, // No specific target for welcome
                 position: "center"
             },
@@ -1518,6 +1526,11 @@
             document.getElementById('tourSpotlight').style.display = 'none';
             document.getElementById('tourTooltip').style.display = 'none';
             localStorage.setItem('contosoTourCompleted', 'true');
+        }
+
+        function restartTour() {
+            localStorage.removeItem('contosoTourCompleted');
+            startTour();
         }
 
         // Check if first visit and start tour
