@@ -1421,7 +1421,7 @@
             // Update content
             document.getElementById('tourStepNumber').textContent = currentTourStep + 1;
             document.getElementById('tourTitle').textContent = step.title;
-            document.getElementById('tourContent').textContent = step.content;
+            document.getElementById('tourContent').innerHTML = step.content;
             document.getElementById('tourProgress').textContent = `${currentTourStep + 1} of ${tourSteps.length}`;
 
             // Show/hide buttons
@@ -1538,7 +1538,15 @@
             const tourCompleted = localStorage.getItem('contosoTourCompleted');
             if (!tourCompleted) {
                 // Start tour after a short delay
-                setTimeout(startTour, 800);
+                setTimeout(() => {
+                    try {
+                        startTour();
+                    } catch(e) {
+                        console.error('Tour failed to start:', e);
+                        // Hide overlay if tour fails
+                        document.getElementById('tourOverlay').classList.remove('active');
+                    }
+                }, 800);
             }
         });
 
