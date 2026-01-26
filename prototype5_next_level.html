@@ -1785,16 +1785,36 @@
                 return {
                     initial: "Based on your calendar, project deadlines, and team dependencies, here are your top 3 priorities for today:",
                     detail: "1️⃣ <strong>Budget Approval Prep</strong> (Due Friday, 2 hours needed)<br>Draft executive summary and financial projections for your Q2 budget request.<br><br>2️⃣ <strong>Code Review for Sarah</strong> (Blocking her deploy)<br>She's waiting on your review of the authentication refactor PR. 30 minutes.<br><br>3️⃣ <strong>Architecture Planning</strong> (Team meeting at 3pm)<br>Prepare your microservices proposal. The VP will be there, so this is high-visibility.<br><br>I've blocked 90 minutes on your calendar for deep work this morning. Want me to reschedule your 2pm sync to create more focus time?",
-                    confidence: 93
+                    confidence: 93,
+                    followUp: true
+                };
+            }
+
+            // Follow-up for focus/priority
+            if (lowerQ.includes('yes') || lowerQ.includes('reschedule') || lowerQ.includes('move')) {
+                return {
+                    initial: "Perfect! I'm rescheduling your 2pm sync to create a continuous 3-hour focus block. Here's your updated schedule:",
+                    detail: "<strong>✅ Done - Your Optimized Day:</strong><br><br><strong>9:00am - 12:00pm</strong><br>🎯 Deep Focus Block (Budget prep + Code review)<br><br><strong>12:00pm - 1:00pm</strong><br>🍽️ Lunch<br><br><strong>1:00pm - 3:00pm</strong><br>📝 Architecture prep + buffer time<br><br><strong>3:00pm - 4:00pm</strong><br>🏢 Architecture Planning (with VP)<br><br><strong>4:30pm</strong><br>💬 Rescheduled team sync (moved from 2pm)<br><br>I've sent calendar updates to all participants and added your prep docs to each meeting. Ready to crush today!",
+                    confidence: 96
                 };
             }
 
             // Missed/Catch-up questions
-            if (lowerQ.includes('miss') || lowerQ.includes('catch up') || lowerQ.includes('summary')) {
+            if (lowerQ.includes('miss') || lowerQ.includes('catch up') || lowerQ.includes('summary') || lowerQ.includes('summarize')) {
                 return {
                     initial: "You've been out for 3 days. Here's what happened while you were away, organized by priority:",
                     detail: "🔴 <strong>Critical:</strong> Your budget request deadline moved up to Friday (was next Monday). Action needed this week.<br><br>🟡 <strong>Important:</strong> The team shipped v2.3 with your caching improvements - 40% performance boost! Customers are thrilled.<br><br>🟢 <strong>FYI:</strong> New hybrid work policy (3 days remote), mental health benefits added, and the Seattle AI Lab partnership opportunity opened.<br><br>You have 47 unread emails - I've flagged 8 that need responses. Want me to draft replies for the routine ones?",
-                    confidence: 91
+                    confidence: 91,
+                    followUp: true
+                };
+            }
+
+            // Follow-up for catch-up/email handling
+            if (lowerQ.includes('draft') || lowerQ.includes('replies') || lowerQ.includes('emails')) {
+                return {
+                    initial: "I've drafted responses for the 5 routine emails. Here's what I prepared:",
+                    detail: "<strong>✅ Ready to Send (5 drafts):</strong><br><br><strong>1. To Mike (Finance):</strong> Confirmed Q2 budget meeting attendance<br><br><strong>2. To Sarah (Design):</strong> Approved mockup v3, minor feedback on spacing<br><br><strong>3. To HR:</strong> Acknowledged new benefits enrollment, will review by EOW<br><br><strong>4. To IT:</strong> Laptop upgrade request approved for next sprint<br><br><strong>5. To External Vendor:</strong> Thanked for proposal, scheduled follow-up call<br><br><strong>Still need your input (3 emails):</strong><br>• VP asking about architecture decision (strategic)<br>• Customer escalation from enterprise account (sensitive)<br>• Team member asking for feedback on performance goals (personal)<br><br>Should I send the routine drafts and flag the other 3 for your review?",
+                    confidence: 94
                 };
             }
 
@@ -1803,7 +1823,17 @@
                 return {
                     initial: "I've analyzed collaboration patterns and identified 3 high-value connections for you right now:",
                     detail: "<strong>Sarah (Design Lead)</strong><br>Working on UX problems similar to yours. Meeting her could save your team 2-3 weeks. Available Tue/Thu for coffee.<br><br><strong>David (SRE)</strong><br>Just solved the exact scaling challenge you're facing. He's presenting at next week's tech talk.<br><br><strong>Jennifer (Product)</strong><br>Championing the feature your team wants to build. Alignment now = smoother Q2 execution.<br><br>I can send warm intro emails with specific collaboration topics. Who should I reach out to first?",
-                    confidence: 88
+                    confidence: 88,
+                    followUp: true
+                };
+            }
+
+            // Follow-up responses for networking flow
+            if (lowerQ.includes('sarah') || lowerQ.includes('first') || lowerQ.includes('show')) {
+                return {
+                    initial: "Great choice! I've analyzed your recent activity and Sarah's current projects. Let me draft a personalized introduction.",
+                    detail: "<strong>Draft Email Ready:</strong><br><br>Subject: Dashboard UX Challenge - Let's Compare Notes?<br><br>Hi Sarah,<br><br>I noticed we're both tackling component reusability challenges. Your recent work on the design system caught my eye—it looks like you solved exactly what my team is wrestling with for our dashboard redesign.<br><br>Would you be open to a quick coffee chat this week? I'd love to learn from your approach, and I might have some engineering insights that could help your Q2 projects.<br><br>Available: Tuesday 10am or Thursday 2pm<br><br>Looking forward to connecting!<br><br><strong>Ready to send?</strong> I can also suggest talking points for your conversation.",
+                    confidence: 92
                 };
             }
 
