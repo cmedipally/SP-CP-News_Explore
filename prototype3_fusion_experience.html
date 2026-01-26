@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contoso AI Portal - Your Intelligent Workplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-brand: #0078D4;
+            --primary-hover: #106EBE;
+            --secondary: #50E6FF;
+            --background: #FAFAFA;
+            --surface: #FFFFFF;
+            --surface-hover: #F9F9F9;
+            --text-primary: #1A1A1A;
+            --text-secondary: #6B6B6B;
+            --text-tertiary: #9E9E9E;
+            --border: #ECECEC;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.02);
+            --shadow-md: 0 6px 16px rgba(0,0,0,0.05);
+            --shadow-lg: 0 12px 32px rgba(0,0,0,0.08);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            --gradient-brand: linear-gradient(135deg, #0078D4 0%, #50E6FF 100%);
+            --gradient-overlay: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 24px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-brand);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-search {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 14px 24px;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            font-size: 15px;
+            background: var(--background);
+            transition: all 0.2s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary-brand);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background: var(--background);
+            color: var(--primary-brand);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gradient-brand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1920px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 520px;
+            height: calc(100vh - 97px);
+            gap: 0;
+        }
+
+        /* Left Panel - News Feed */
+        .news-panel {
+            padding: 48px 56px;
+            overflow-y: auto;
+            background: var(--background);
+        }
+
+        .news-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .news-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .news-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .news-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        .panel-header {
+            margin-bottom: 48px;
+        }
+
+        .panel-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .panel-subtitle {
+            font-size: 17px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 12px 28px;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            border-radius: 28px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--primary-brand);
+            color: var(--primary-brand);
+        }
+
+        .filter-tab.active {
+            background: var(--primary-brand);
+            border-color: var(--primary-brand);
+            color: white;
+        }
+
+        /* News Cards Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 32px;
+        }
+
+        .news-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-brand);
+        }
+
+        .news-card.selected {
+            border-color: var(--primary-brand);
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+        }
+
+        .card-image-container {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        .card-category {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary-brand);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-content {
+            padding: 28px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-description {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            transition: all 0.2s ease;
+        }
+
+        .card-action-btn:hover {
+            background: var(--background);
+            color: var(--primary-brand);
+        }
+
+        /* Right Panel - AI Chat */
+        .chat-panel {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-header {
+            padding: 32px 32px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .agent-selector {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .agent-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: var(--gradient-brand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .agent-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .agent-switcher {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .quick-actions::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .quick-actions::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .quick-action-chip {
+            padding: 10px 20px;
+            background: var(--background);
+            border: 1.5px solid var(--border);
+            border-radius: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .quick-action-chip:hover {
+            background: var(--primary-brand);
+            border-color: var(--primary-brand);
+            color: white;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .message {
+            display: flex;
+            gap: 16px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--gradient-brand);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: var(--text-tertiary);
+        }
+
+        .message-content {
+            max-width: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .message-bubble {
+            padding: 16px 20px;
+            border-radius: 18px;
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 15px;
+            line-height: 1.6;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message.user .message-bubble {
+            background: var(--primary-brand);
+            color: white;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            padding: 0 4px;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 14px 18px;
+            background: var(--background);
+            border-radius: 16px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        .suggested-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .suggested-action {
+            padding: 8px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggested-action:hover {
+            background: var(--primary-brand);
+            border-color: var(--primary-brand);
+            color: white;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            padding: 28px 32px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 14px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 1.5px solid var(--border);
+            border-radius: 18px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: none;
+            max-height: 140px;
+            background: var(--background);
+            transition: all 0.2s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-brand);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            background: var(--primary-brand);
+            color: white;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Context Card in Chat */
+        .context-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .context-card-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .context-card-info {
+            flex: 1;
+        }
+
+        .context-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .context-card-meta {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .context-card-close {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .context-card-close:hover {
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+        /* Welcome State */
+        .welcome-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .welcome-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            background: var(--gradient-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .welcome-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .welcome-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .welcome-suggestion {
+            padding: 18px 22px;
+            background: var(--background);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .welcome-suggestion:hover {
+            background: var(--surface);
+            border-color: var(--primary-brand);
+            transform: translateX(4px);
+        }
+
+        .welcome-suggestion-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .welcome-suggestion-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr 400px;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-panel {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                z-index: 200;
+                transition: right 0.3s ease;
+            }
+
+            .chat-panel.mobile-open {
+                right: 0;
+            }
+
+            .header-search {
+                display: none;
+            }
+        }
+
+        /* Loading Shimmer */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .shimmer {
+            animation: shimmer 2s infinite;
+            background: linear-gradient(to right, var(--background) 4%, var(--border) 25%, var(--background) 36%);
+            background-size: 1000px 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">C</div>
+                <div class="logo-text">Contoso Portal</div>
+            </div>
+
+            <div class="header-search">
+                <input type="text" class="search-box" placeholder="Search news, ask questions, find resources...">
+            </div>
+
+            <div class="header-actions">
+                <button class="icon-btn" title="Notifications">🔔</button>
+                <button class="icon-btn" title="Apps">⚡</button>
+                <button class="icon-btn" title="Settings">⚙️</button>
+                <div class="user-avatar" title="Alex Chen">AC</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Panel - Personalized News -->
+        <div class="news-panel">
+            <div class="panel-header">
+                <h1 class="panel-title">Good morning, Alex ☀️</h1>
+                <p class="panel-subtitle">Here's what's happening at Contoso today</p>
+            </div>
+
+            <div class="filter-tabs">
+                <div class="filter-tab active">For You</div>
+                <div class="filter-tab">Company News</div>
+                <div class="filter-tab">Your Team</div>
+                <div class="filter-tab">Benefits</div>
+                <div class="filter-tab">Events</div>
+                <div class="filter-tab">Policies</div>
+            </div>
+
+            <div class="news-grid" id="newsGrid">
+                <!-- News cards will be generated here -->
+            </div>
+        </div>
+
+        <!-- Right Panel - AI Chat -->
+        <div class="chat-panel">
+            <div class="chat-header">
+                <div class="agent-selector">
+                    <div class="agent-avatar">🤖</div>
+                    <div class="agent-info">
+                        <div class="agent-name">Contoso Assistant</div>
+                        <div class="agent-status">
+                            <span class="status-dot"></span>
+                            <span>Always here to help</span>
+                        </div>
+                    </div>
+                    <select class="agent-switcher" id="agentSwitcher">
+                        <option value="general">General Assistant</option>
+                        <option value="hr">HR & Benefits</option>
+                        <option value="it">IT Support</option>
+                        <option value="finance">Finance & Expenses</option>
+                    </select>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="quick-action-chip">📅 My PTO Balance</div>
+                    <div class="quick-action-chip">🎯 Team OKRs</div>
+                    <div class="quick-action-chip">💰 Submit Expense</div>
+                    <div class="quick-action-chip">🎓 Training Courses</div>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-state" id="welcomeState">
+                    <div class="welcome-icon">✨</div>
+                    <h2 class="welcome-title">How can I help you today?</h2>
+                    <p class="welcome-description">Ask me anything about Contoso - policies, benefits, events, or click on any news card to learn more.</p>
+
+                    <div class="welcome-suggestions">
+                        <div class="welcome-suggestion" onclick="askQuestion('What are the new benefits for 2024?')">
+                            <div class="welcome-suggestion-title">🎁 New Benefits</div>
+                            <div class="welcome-suggestion-desc">Learn about updated benefits</div>
+                        </div>
+                        <div class="welcome-suggestion" onclick="askQuestion('When is the next all-hands meeting?')">
+                            <div class="welcome-suggestion-title">📅 Upcoming Events</div>
+                            <div class="welcome-suggestion-desc">Check your calendar</div>
+                        </div>
+                        <div class="welcome-suggestion" onclick="askQuestion('How do I submit a travel request?')">
+                            <div class="welcome-suggestion-title">✈️ Travel Policy</div>
+                            <div class="welcome-suggestion-desc">Get help with travel</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div id="contextCardContainer"></div>
+                <div class="chat-input-wrapper">
+                    <textarea
+                        id="chatInput"
+                        class="chat-input"
+                        placeholder="Ask me anything about Contoso..."
+                        rows="1"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample news data
+        const newsData = [
+            {
+                id: 1,
+                category: "Company News",
+                title: "Q1 2024 Results: Record Revenue and Growth",
+                description: "Contoso achieves 35% year-over-year growth, driven by cloud services expansion and new product launches.",
+                image: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                date: "2 hours ago",
+                author: "Sarah Johnson"
+            },
+            {
+                id: 2,
+                category: "Benefits",
+                title: "New Mental Health Benefits Now Available",
+                description: "Access unlimited therapy sessions, mindfulness apps, and wellness coaching through our expanded healthcare plan.",
+                image: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                date: "5 hours ago",
+                author: "HR Team"
+            },
+            {
+                id: 3,
+                category: "Your Team",
+                title: "Engineering All-Hands: Product Roadmap 2024",
+                description: "Join us this Friday for an exciting reveal of our product vision and engineering priorities for the year ahead.",
+                image: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                date: "1 day ago",
+                author: "Alex Rivera"
+            },
+            {
+                id: 4,
+                category: "Events",
+                title: "Annual Hackathon - Registration Open!",
+                description: "Join the biggest internal hackathon yet! Build innovative solutions and compete for amazing prizes over 48 hours.",
+                image: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+                date: "1 day ago",
+                author: "Innovation Team"
+            },
+            {
+                id: 5,
+                category: "Policies",
+                title: "Updated Hybrid Work Policy",
+                description: "New flexible work arrangements allow 3 days remote per week. Learn about the updated guidelines and expectations.",
+                image: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)",
+                date: "2 days ago",
+                author: "People Ops"
+            },
+            {
+                id: 6,
+                category: "Company News",
+                title: "Contoso Launches AI Research Lab",
+                description: "New research facility in Seattle will focus on next-generation AI and machine learning innovations.",
+                image: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+                date: "2 days ago",
+                author: "Corporate Communications"
+            },
+            {
+                id: 7,
+                category: "Benefits",
+                title: "Student Loan Repayment Assistance Program",
+                description: "Contoso now offers up to $10,000 annually to help employees pay off student loans. Apply today!",
+                image: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
+                date: "3 days ago",
+                author: "HR Team"
+            },
+            {
+                id: 8,
+                category: "Events",
+                title: "Diversity & Inclusion Summit 2024",
+                description: "Two-day summit featuring inspiring speakers, workshops, and conversations about building an inclusive workplace.",
+                image: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+                date: "3 days ago",
+                author: "D&I Council"
+            },
+            {
+                id: 9,
+                category: "Your Team",
+                title: "Welcome New Team Members!",
+                description: "Say hello to 5 talented engineers joining our team this month. Meet them at the welcome coffee chat.",
+                image: "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
+                date: "4 days ago",
+                author: "Engineering"
+            }
+        ];
+
+        let selectedNewsItem = null;
+        let currentAgent = 'general';
+
+        // Render news cards
+        function renderNewsCards() {
+            const grid = document.getElementById('newsGrid');
+            grid.innerHTML = newsData.map(news => `
+                <div class="news-card" onclick="selectNewsCard(${news.id})" id="news-${news.id}">
+                    <div class="card-image-container">
+                        <div class="card-image" style="background: ${news.image}"></div>
+                        <div class="card-category">${news.category}</div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${news.title}</h3>
+                        <p class="card-description">${news.description}</p>
+                        <div class="card-footer">
+                            <div class="card-meta">
+                                <span>${news.date}</span>
+                                <span>•</span>
+                                <span>${news.author}</span>
+                            </div>
+                            <div class="card-actions">
+                                <button class="card-action-btn" title="Ask AI">💬</button>
+                                <button class="card-action-btn" title="Bookmark">🔖</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Select news card
+        function selectNewsCard(newsId) {
+            const news = newsData.find(n => n.id === newsId);
+            if (!news) return;
+
+            // Update UI
+            document.querySelectorAll('.news-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(`news-${newsId}`).classList.add('selected');
+
+            // Show context in chat
+            selectedNewsItem = news;
+            showContextCard(news);
+
+            // Hide welcome state and show AI message
+            hideWelcomeState();
+
+            // AI responds about the selected article
+            setTimeout(() => {
+                addAIMessage(`I see you're interested in "${news.title}". ${getContextualResponse(news)}`);
+
+                // Add suggested actions
+                setTimeout(() => {
+                    addSuggestedActions(news);
+                }, 800);
+            }, 600);
+        }
+
+        // Get contextual AI response
+        function getContextualResponse(news) {
+            const responses = {
+                "Company News": "This is exciting news for Contoso! Would you like me to explain how this impacts your team or find related announcements?",
+                "Benefits": "This benefit is available to all full-time employees. Would you like me to help you enroll or answer questions about eligibility?",
+                "Your Team": "This is happening in your department. Would you like me to add it to your calendar or find more details?",
+                "Events": "This looks like a great opportunity! Would you like me to register you or tell you more about what to expect?",
+                "Policies": "I can help you understand this policy change. What specific questions do you have?"
+            };
+            return responses[news.category] || "How can I help you with this?";
+        }
+
+        // Show context card in chat
+        function showContextCard(news) {
+            const container = document.getElementById('contextCardContainer');
+            container.innerHTML = `
+                <div class="context-card">
+                    <div class="context-card-image" style="background: ${news.image}"></div>
+                    <div class="context-card-info">
+                        <div class="context-card-title">${news.title}</div>
+                        <div class="context-card-meta">${news.category} • ${news.date}</div>
+                    </div>
+                    <button class="context-card-close" onclick="clearContext()">✕</button>
+                </div>
+            `;
+        }
+
+        // Clear context
+        function clearContext() {
+            document.getElementById('contextCardContainer').innerHTML = '';
+            selectedNewsItem = null;
+            document.querySelectorAll('.news-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+        }
+
+        // Add AI message
+        function addAIMessage(text, showTyping = true) {
+            const messagesContainer = document.getElementById('chatMessages');
+
+            if (showTyping) {
+                // Show typing indicator
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(typingDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // Remove typing indicator after delay and show message
+                setTimeout(() => {
+                    messagesContainer.removeChild(typingDiv);
+                    addActualMessage(text);
+                }, 1000);
+            } else {
+                addActualMessage(text);
+            }
+        }
+
+        function addActualMessage(text) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time">${timeStr}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Add user message
+        function addUserMessage(text) {
+            hideWelcomeState();
+
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+            messageDiv.innerHTML = `
+                <div class="message-avatar">👤</div>
+                <div class="message-content">
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time">${timeStr}</div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Add suggested actions
+        function addSuggestedActions(news) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'message';
+
+            const actions = getSuggestedActions(news);
+
+            actionsDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="suggested-actions">
+                        ${actions.map(action => `
+                            <div class="suggested-action" onclick="askQuestion('${action}')">${action}</div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(actionsDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Get suggested actions based on news category
+        function getSuggestedActions(news) {
+            const actionMap = {
+                "Company News": ["Show me the full report", "How does this affect my team?", "Related announcements"],
+                "Benefits": ["How do I enroll?", "Eligibility requirements", "Compare with old benefits"],
+                "Your Team": ["Add to my calendar", "Who's attending?", "Meeting agenda"],
+                "Events": ["Register me", "Event details", "Past event highlights"],
+                "Policies": ["What changed?", "Does this affect me?", "Policy FAQ"]
+            };
+            return actionMap[news.category] || ["Tell me more", "Related content", "FAQ"];
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+
+            if (text) {
+                addUserMessage(text);
+                input.value = '';
+                input.style.height = 'auto';
+
+                // Simulate AI response
+                setTimeout(() => {
+                    const response = generateAIResponse(text);
+                    addAIMessage(response);
+                }, 1000);
+            }
+        }
+
+        // Generate AI response
+        function generateAIResponse(question) {
+            const responses = [
+                "Based on our latest policy updates, here's what you need to know...",
+                "I found several resources that might help with that. Let me share them with you...",
+                "Great question! According to Contoso's guidelines...",
+                "I can help you with that. The process is quite straightforward...",
+                "Let me pull up the latest information on that topic..."
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        // Ask question (from suggestions)
+        function askQuestion(question) {
+            document.getElementById('chatInput').value = question;
+            sendMessage();
+        }
+
+        // Hide welcome state
+        function hideWelcomeState() {
+            const welcomeState = document.getElementById('welcomeState');
+            if (welcomeState) {
+                welcomeState.style.display = 'none';
+            }
+        }
+
+        // Auto-resize textarea
+        document.getElementById('chatInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Send on Enter (but Shift+Enter for new line)
+        document.getElementById('chatInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // In real implementation, filter news based on category
+            });
+        });
+
+        // Quick action chips
+        document.querySelectorAll('.quick-action-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                const action = this.textContent.trim();
+                askQuestion(`Help me with: ${action}`);
+            });
+        });
+
+        // Agent switcher
+        document.getElementById('agentSwitcher').addEventListener('change', function() {
+            currentAgent = this.value;
+            const agentNames = {
+                'general': 'Contoso Assistant',
+                'hr': 'HR & Benefits Agent',
+                'it': 'IT Support Agent',
+                'finance': 'Finance Agent'
+            };
+            document.querySelector('.agent-name').textContent = agentNames[this.value];
+
+            // Show agent switch message
+            hideWelcomeState();
+            addAIMessage(`I'm now your ${agentNames[this.value]}. How can I help you?`, false);
+        });
+
+        // Initialize
+        renderNewsCards();
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #f9f9f9;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+        }
+
+        .agent-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .agent-item:hover {
+            background: #f0f0f0;
+        }
+
+        .agent-item.active {
+            background: #0078d4;
+            color: white;
+        }
+
+        .main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .message-input {
+            margin-top: 40px;
+            padding: 12px;
+            width: 400px;
+            border: 2px solid #d0d0d0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .send-btn {
+            margin-top: 10px;
+            padding: 12px 24px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .send-btn:hover {
+            background: #106ebe;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="sidebar">
+            <h3>Agents</h3>
+            <div class="agent-item active" id="copilot" onclick="selectAgent('copilot')">
+                🤖 Copilot
+            </div>
+            <div class="agent-item" id="contoso" onclick="selectAgent('contoso')">
+                🏢 Contoso
+            </div>
+        </div>
+
+        <div class="main-area">
+            <div class="status" id="status">👋</div>
+            <h1 id="title">Welcome to Copilot</h1>
+            <input type="text" class="message-input" id="input" placeholder="Type a message...">
+            <button class="send-btn" onclick="sendMsg()">Send Message</button>
+        </div>
+    </div>
+
+    <script>
+        console.log('TEST: Script loaded');
+
+        let currentAgent = 'copilot';
+
+        function selectAgent(agent) {
+            console.log('TEST: Switching to', agent);
+            currentAgent = agent;
+
+            // Update UI
+            document.getElementById('copilot').classList.remove('active');
+            document.getElementById('contoso').classList.remove('active');
+            document.getElementById(agent).classList.add('active');
+
+            // Update title
+            const title = document.getElementById('title');
+            const status = document.getElementById('status');
+
+            if (agent === 'contoso') {
+                title.textContent = 'Welcome to Contoso';
+                status.textContent = '🏢';
+            } else {
+                title.textContent = 'Welcome to Copilot';
+                status.textContent = '🤖';
+            }
+        }
+
+        function sendMsg() {
+            const input = document.getElementById('input');
+            const message = input.value;
+            console.log('TEST: Message sent:', message);
+            alert('Message sent from ' + currentAgent + ': ' + message);
+            input.value = '';
+        }
+
+        // Test on load
+        window.onload = function() {
+            console.log('TEST: Window loaded');
+            document.getElementById('input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMsg();
+                }
+            });
+        };
+    </script>
+</body>
+</html>

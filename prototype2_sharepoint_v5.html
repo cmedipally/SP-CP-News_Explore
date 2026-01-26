@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint + AI Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #faf9f8;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SharePoint Header */
+        .sp-header {
+            background: #0078d4;
+            color: white;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 48px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .sp-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .waffle {
+            width: 20px;
+            height: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 6px);
+            gap: 2px;
+        }
+
+        .waffle span {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 1px;
+        }
+
+        .sp-logo {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .sp-search input {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 2px;
+            font-size: 14px;
+            width: 400px;
+        }
+
+        .sp-search input::placeholder {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Left Sidebar */
+        .sp-sidebar {
+            width: 48px;
+            background: #f3f2f1;
+            border-right: 1px solid #edebe9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            left: 0;
+            top: 48px;
+            bottom: 0;
+            z-index: 50;
+        }
+
+        .sidebar-item {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #605e5c;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .sidebar-item:hover {
+            background: #edebe9;
+        }
+
+        .sidebar-item.active {
+            background: #edebe9;
+        }
+
+        .sidebar-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: #0078d4;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            margin-left: 48px;
+            margin-top: 48px;
+            height: calc(100vh - 48px);
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background: #faf9f8;
+        }
+
+        .page-header {
+            padding: 16px 32px;
+            background: white;
+            border-bottom: 1px solid #edebe9;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #605e5c;
+            margin-bottom: 8px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #201f1e;
+        }
+
+        .news-section {
+            padding: 24px 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 16px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .news-card {
+            background: white;
+            border: 1px solid #edebe9;
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 1.6px 3.6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .news-card:hover {
+            box-shadow: 0 6.4px 14.4px rgba(0,0,0,0.18);
+            transform: translateY(-2px);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .news-content {
+            padding: 16px;
+        }
+
+        .news-badge {
+            background: #f3f2f1;
+            color: #323130;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .news-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 8px;
+        }
+
+        .news-excerpt {
+            font-size: 13px;
+            color: #605e5c;
+            line-height: 1.5;
+        }
+
+        /* Right Agent Panel */
+        .agent-panel {
+            width: 360px;
+            background: white;
+            border-left: 1px solid #edebe9;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .agent-header {
+            padding: 16px;
+            border-bottom: 1px solid #edebe9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .agent-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .agent-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .agent-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .agent-section {
+            margin-bottom: 24px;
+        }
+
+        .agent-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .update-item {
+            background: #f3f2f1;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .update-item:hover {
+            background: #e1dfdd;
+            transform: translateX(2px);
+        }
+
+        .update-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 4px;
+        }
+
+        .update-summary {
+            font-size: 12px;
+            color: #605e5c;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .update-meta {
+            font-size: 11px;
+            color: #a19f9d;
+        }
+
+        .question-item {
+            background: #f3f2f1;
+            border-radius: 4px;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #323130;
+            transition: all 0.2s;
+        }
+
+        .question-item:hover {
+            background: #e1dfdd;
+            transform: translateX(2px);
+        }
+
+        .question-badge {
+            display: inline-block;
+            background: #0078d4;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .event-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .event-item:hover {
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .event-date {
+            font-size: 11px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+
+        .event-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #201f1e;
+            margin-bottom: 4px;
+        }
+
+        .event-details {
+            font-size: 12px;
+            color: #605e5c;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #edebe9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #201f1e;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #605e5c;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-body h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #201f1e;
+            margin: 16px 0 8px 0;
+        }
+
+        .modal-body p {
+            font-size: 14px;
+            color: #323130;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .modal-link {
+            display: inline-block;
+            background: #0078d4;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .modal-link:hover {
+            background: #106ebe;
+        }
+
+        .prototype-label {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: #00b294;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 1000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-label">PROTOTYPE 2: SharePoint + AI</div>
+
+    <!-- SharePoint Header -->
+    <div class="sp-header">
+        <div class="sp-header-left">
+            <div class="waffle">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </div>
+            <div class="sp-logo">SharePoint</div>
+        </div>
+        <div class="sp-search">
+            <input type="text" placeholder="Search in SharePoint" />
+        </div>
+        <div style="width: 40px;"></div>
+    </div>
+
+    <!-- Left Sidebar -->
+    <div class="sp-sidebar">
+        <div class="sidebar-item active">🏠</div>
+        <div class="sidebar-item">🧭</div>
+        <div class="sidebar-item">✏️</div>
+        <div class="sidebar-item">🔧</div>
+        <div class="sidebar-item">☁️</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="page-header">
+                <div class="breadcrumb">← Back to discover</div>
+                <div class="page-title">News</div>
+            </div>
+
+            <div class="news-section">
+                <div class="section-title">Company Updates</div>
+                <div class="news-grid">
+                    <div class="news-card">
+                        <div class="news-image">📢</div>
+                        <div class="news-content">
+                            <div class="news-badge">ANNOUNCEMENT</div>
+                            <div class="news-title">Leadership Summit Registration</div>
+                            <div class="news-excerpt">Join us March 15-17 in Seattle. Network with leaders and attend 30+ sessions.</div>
+                        </div>
+                    </div>
+
+                    <div class="news-card">
+                        <div class="news-image">🏠</div>
+                        <div class="news-content">
+                            <div class="news-badge">POLICY UPDATE</div>
+                            <div class="news-title">New Hybrid Work Policy</div>
+                            <div class="news-excerpt">Choose remote, hybrid, or in-office. Submit your preference by Jan 31.</div>
+                        </div>
+                    </div>
+
+                    <div class="news-card">
+                        <div class="news-image">🎓</div>
+                        <div class="news-content">
+                            <div class="news-badge">LEARNING</div>
+                            <div class="news-title">Q1 Learning Opportunities</div>
+                            <div class="news-excerpt">20+ new courses available. $1,500 annual learning budget per employee.</div>
+                        </div>
+                    </div>
+
+                    <div class="news-card">
+                        <div class="news-image">🌟</div>
+                        <div class="news-content">
+                            <div class="news-badge">RESULTS</div>
+                            <div class="news-title">Q4 2025 Company Results</div>
+                            <div class="news-excerpt">Record quarter with 18% growth and 3 product launches.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Panel -->
+        <div class="agent-panel">
+            <div class="agent-header">
+                <div class="agent-title">✨ AI Assistant</div>
+                <div class="agent-subtitle">Your personalized company guide</div>
+            </div>
+
+            <div class="agent-content">
+                <!-- TLDR Updates -->
+                <div class="agent-section">
+                    <div class="agent-section-title">📰 Latest Updates</div>
+
+                    <div class="update-item" onclick="showDetail('summit')">
+                        <div class="update-title">Leadership Summit - Register Now</div>
+                        <div class="update-summary">3-day event in Seattle. Early bird pricing ends Feb 15.</div>
+                        <div class="update-meta">Posted 2 days ago</div>
+                    </div>
+
+                    <div class="update-item" onclick="showDetail('hybrid')">
+                        <div class="update-title">Hybrid Work Policy Update</div>
+                        <div class="update-summary">New flexibility options. Action required by Jan 31.</div>
+                        <div class="update-meta">Posted 4 days ago</div>
+                    </div>
+
+                    <div class="update-item" onclick="showDetail('learning')">
+                        <div class="update-title">Q1 Learning Programs</div>
+                        <div class="update-summary">20+ courses now available. Use your $1,500 budget.</div>
+                        <div class="update-meta">Posted 1 week ago</div>
+                    </div>
+                </div>
+
+                <!-- Trending Questions -->
+                <div class="agent-section">
+                    <div class="agent-section-title">🔥 Trending Questions</div>
+
+                    <div class="question-item" onclick="showAnswer('pto')">
+                        How many PTO days do I have? <span class="question-badge">24 asks</span>
+                    </div>
+
+                    <div class="question-item" onclick="showAnswer('hybrid')">
+                        What's the new hybrid work policy? <span class="question-badge">18 asks</span>
+                    </div>
+
+                    <div class="question-item" onclick="showAnswer('benefits')">
+                        When does benefits enrollment open? <span class="question-badge">15 asks</span>
+                    </div>
+
+                    <div class="question-item" onclick="showAnswer('summit')">
+                        How do I register for the summit? <span class="question-badge">12 asks</span>
+                    </div>
+
+                    <div class="question-item" onclick="showAnswer('parking')">
+                        Where can I park at the office? <span class="question-badge">9 asks</span>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="agent-section">
+                    <div class="agent-section-title">📅 Upcoming Events</div>
+
+                    <div class="event-item" onclick="showDetail('summit')">
+                        <div class="event-date">MAR 15-17, 2026</div>
+                        <div class="event-title">Leadership Summit</div>
+                        <div class="event-details">Seattle Convention Center</div>
+                    </div>
+
+                    <div class="event-item" onclick="showDetail('townhall')">
+                        <div class="event-date">JAN 30, 2026</div>
+                        <div class="event-title">Monthly Town Hall</div>
+                        <div class="event-details">CEO Q&A - Virtual</div>
+                    </div>
+
+                    <div class="event-item" onclick="showDetail('training')">
+                        <div class="event-date">FEB 5, 2026</div>
+                        <div class="event-title">Security Training Deadline</div>
+                        <div class="event-details">Complete online module</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle"></div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const content = {
+            summit: {
+                title: "Annual Leadership Summit 2026",
+                body: `
+                    <p><strong>📅 March 15-17, 2026</strong><br>
+                    📍 Seattle Convention Center</p>
+
+                    <h3>TLDR</h3>
+                    <p>3-day leadership event with keynotes, 30+ breakout sessions, and networking opportunities. Early bird pricing ($299) available until Feb 15.</p>
+
+                    <h3>What to Expect</h3>
+                    <p>• Keynote from CEO Sarah Chen<br>
+                    • 30+ breakout sessions on leadership, innovation, and strategy<br>
+                    • Networking dinner on March 16<br>
+                    • Product roadmap reveals<br>
+                    • Executive panel discussions</p>
+
+                    <h3>Registration</h3>
+                    <p>Early Bird: $299 (until Feb 15)<br>
+                    Regular: $399 (after Feb 15)</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Opening registration page...'); return false;">Register Now →</a>
+                    <a href="#" class="modal-link" style="background: white; color: #0078d4; border: 1px solid #0078d4; margin-left: 8px;" onclick="alert('Opening full details...'); return false;">View Full Details →</a>
+                `
+            },
+            hybrid: {
+                title: "Hybrid Work Policy Update",
+                body: `
+                    <h3>TLDR</h3>
+                    <p>Starting Q1 2026, choose your work mode: fully remote, hybrid (2+ days in office), or in-office (5 days). Submit preference in Workday by Jan 31.</p>
+
+                    <h3>Your Options</h3>
+                    <p><strong>Fully Remote:</strong> Work from anywhere in your country<br>
+                    <strong>Hybrid:</strong> Minimum 2 days/week in office (Tue-Thu core days)<br>
+                    <strong>In-Office:</strong> 5 days/week with reserved desk</p>
+
+                    <h3>Action Required</h3>
+                    <p>Submit your preference in Workday by <strong>January 31, 2026</strong>. You can change your selection quarterly.</p>
+
+                    <h3>Team Collaboration</h3>
+                    <p>Team meetings will be scheduled on core days (Tue-Thu) when possible to maximize in-person collaboration for hybrid teams.</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Opening Workday...'); return false;">Submit Preference →</a>
+                    <a href="#" class="modal-link" style="background: white; color: #0078d4; border: 1px solid #0078d4; margin-left: 8px;" onclick="alert('Opening policy page...'); return false;">Read Full Policy →</a>
+                `
+            },
+            learning: {
+                title: "Q1 Learning Opportunities",
+                body: `
+                    <h3>TLDR</h3>
+                    <p>20+ new courses available including Leadership Academy, Tech Skills, and D&I training. Each employee has $1,500 annual learning budget.</p>
+
+                    <h3>Available Programs</h3>
+                    <p>• Leadership Fundamentals<br>
+                    • Technical Skills (Azure, AWS, GCP)<br>
+                    • Diversity & Inclusion Training<br>
+                    • Communication Excellence<br>
+                    • Project Management Certification</p>
+
+                    <h3>Your Budget</h3>
+                    <p>$1,500 per year for:<br>
+                    • Online courses (Coursera, Udemy, Pluralsight)<br>
+                    • Conferences & workshops<br>
+                    • Certifications<br>
+                    • Books & learning materials</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Opening course catalog...'); return false;">Browse Courses →</a>
+                `
+            },
+            townhall: {
+                title: "Monthly Town Hall - January",
+                body: `
+                    <p><strong>📅 January 30, 2026 at 2:00 PM PT</strong><br>
+                    📍 Virtual (Teams)</p>
+
+                    <h3>TLDR</h3>
+                    <p>Join CEO Sarah Chen for our monthly all-hands. Q4 results review, Q1 priorities, and open Q&A.</p>
+
+                    <h3>Agenda</h3>
+                    <p>• Q4 2025 Results & Achievements<br>
+                    • Q1 2026 Priorities & Goals<br>
+                    • Product Roadmap Updates<br>
+                    • Open Q&A with Leadership</p>
+
+                    <h3>Submit Questions</h3>
+                    <p>Submit questions in advance via the Town Hall channel in Teams.</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Adding to calendar...'); return false;">Add to Calendar →</a>
+                `
+            },
+            training: {
+                title: "Security Training Deadline",
+                body: `
+                    <p><strong>⚠️ Due: February 5, 2026</strong></p>
+
+                    <h3>TLDR</h3>
+                    <p>Annual security training is mandatory. Complete 30-min course, update password (12+ chars), and pass quiz by Feb 5.</p>
+
+                    <h3>Requirements</h3>
+                    <p>1. Complete 30-minute security awareness course<br>
+                    2. Update your password (12+ characters, complexity required)<br>
+                    3. Pass a short quiz (80% passing score)</p>
+
+                    <h3>Why This Matters</h3>
+                    <p>This training is mandatory for compliance and helps protect company and customer data. Non-completion may result in account suspension.</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Starting training...'); return false;">Start Training →</a>
+                `
+            }
+        };
+
+        const answers = {
+            pto: {
+                title: "PTO Policy",
+                body: `
+                    <h3>Your PTO</h3>
+                    <p><strong>Annual Allowance:</strong> 20 days for full-time employees<br>
+                    <strong>Accrual:</strong> 1.67 days per month<br>
+                    <strong>Rollover:</strong> Up to 5 days roll over to next year<br>
+                    <strong>Request:</strong> Submit in Workday at least 2 weeks in advance</p>
+
+                    <h3>Company Holidays</h3>
+                    <p>10 company holidays per year, plus your birthday!</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Opening Workday...'); return false;">Check My Balance →</a>
+                `
+            },
+            benefits: {
+                title: "Benefits Enrollment",
+                body: `
+                    <h3>Enrollment Period</h3>
+                    <p>Annual benefits enrollment opens <strong>November 1-15</strong> each year.</p>
+
+                    <h3>Coverage</h3>
+                    <p><strong>Health Insurance:</strong> Medical, Dental, Vision<br>
+                    Company covers 80% of premiums</p>
+
+                    <p><strong>401(k):</strong> 6% company match with immediate vesting</p>
+
+                    <p><strong>Additional Benefits:</strong><br>
+                    • $1,500 annual learning budget<br>
+                    • $50/month gym reimbursement<br>
+                    • Mental health resources (Headspace)</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Opening benefits guide...'); return false;">View Benefits Guide →</a>
+                `
+            },
+            parking: {
+                title: "Office Parking",
+                body: `
+                    <h3>Parking Options</h3>
+                    <p><strong>Reserved Spots:</strong> $50/month (limited availability)<br>
+                    <strong>Daily Parking:</strong> Validated at front desk<br>
+                    <strong>EV Charging:</strong> Free at all locations</p>
+
+                    <h3>Transit Benefits</h3>
+                    <p>$200/month transit subsidy available<br>
+                    Bike storage and shower facilities on-site</p>
+
+                    <a href="#" class="modal-link" onclick="alert('Opening commuter portal...'); return false;">Manage Commuter Benefits →</a>
+                `
+            }
+        };
+
+        function showDetail(key) {
+            const item = content[key];
+            if (!item) return;
+
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalBody').innerHTML = item.body;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function showAnswer(key) {
+            const item = answers[key] || content[key];
+            if (!item) return;
+
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalBody').innerHTML = item.body;
+            document.getElementById('modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        // Close modal on background click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

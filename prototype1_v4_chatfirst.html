@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype 1: Chat-First Copilot with Company Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1600px;
+            height: 95vh;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header - Minimal like ChatGPT */
+        .header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .company-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .company-indicator:hover {
+            background: #e0e0e0;
+        }
+
+        .company-indicator.active {
+            background: #0078d4;
+            color: white;
+        }
+
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            background: #d13438;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .notification-badge {
+            background: #d13438;
+            color: white;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Chat Area - Like ChatGPT */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 20px;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .message-group {
+            margin-bottom: 24px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .avatar.user {
+            background: #6264A7;
+        }
+
+        .avatar.assistant {
+            background: #f0f0f0;
+        }
+
+        .avatar.company {
+            background: #0078d4;
+        }
+
+        .sender-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .message-content {
+            margin-left: 42px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Critical Update Interrupt */
+        .critical-interrupt {
+            background: linear-gradient(135deg, #d13438 0%, #a4262c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(209, 52, 56, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .critical-interrupt.collapsed {
+            padding: 12px 20px;
+            cursor: pointer;
+        }
+
+        .critical-interrupt.collapsed:hover {
+            background: linear-gradient(135deg, #a4262c 0%, #d13438 100%);
+        }
+
+        .critical-interrupt.collapsed .interrupt-body,
+        .critical-interrupt.collapsed .interrupt-actions {
+            display: none;
+        }
+
+        .interrupt-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .critical-interrupt.collapsed .interrupt-header {
+            margin-bottom: 0;
+        }
+
+        .interrupt-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .collapse-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .collapse-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .interrupt-body {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .interrupt-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .interrupt-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .interrupt-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .interrupt-btn.primary {
+            background: white;
+            color: #d13438;
+            border: none;
+        }
+
+        .interrupt-btn.primary:hover {
+            background: #f5f5f5;
+        }
+
+        /* Update Cards in Chat */
+        .update-card-inline {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 12px;
+            margin-bottom: 8px;
+        }
+
+        .update-card-inline.critical {
+            background: #fff5f5;
+            border-left: 4px solid #d13438;
+        }
+
+        .update-card-inline.important {
+            background: #fffbf0;
+            border-left: 4px solid #ffa500;
+        }
+
+        .update-card-inline.info {
+            background: #f0f8ff;
+            border-left: 4px solid #0078d4;
+        }
+
+        .update-card-header {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .update-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .update-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .update-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .update-actions-inline {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .action-btn.primary {
+            background: #0078d4;
+            color: white;
+            border-color: #0078d4;
+        }
+
+        .action-btn.primary:hover {
+            background: #106ebe;
+        }
+
+        .action-btn.danger {
+            background: #d13438;
+            color: white;
+            border-color: #d13438;
+        }
+
+        .action-btn.success {
+            background: #107c10;
+            color: white;
+            border-color: #107c10;
+        }
+
+        /* Quick Replies */
+        .quick-replies {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .quick-reply {
+            background: white;
+            border: 1px solid #d0d0d0;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-reply:hover {
+            background: #f0f0f0;
+            border-color: #0078d4;
+        }
+
+        /* Input Area - ChatGPT Style */
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #e5e5e5;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.2s;
+        }
+
+        .input-container:focus-within {
+            border-color: #0078d4;
+            background: white;
+        }
+
+        .input-container textarea {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            resize: none;
+            max-height: 120px;
+            min-height: 24px;
+        }
+
+        .send-button {
+            background: #0078d4;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover {
+            background: #106ebe;
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Company Sidebar Agent */
+        .company-sidebar {
+            width: 420px;
+            background: white;
+            border-left: 1px solid #e5e5e5;
+            display: none;
+            flex-direction: column;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .company-sidebar.open {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+            color: white;
+        }
+
+        .sidebar-branding {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .company-logo {
+            width: 56px;
+            height: 56px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .sidebar-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .close-sidebar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .close-sidebar:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .sidebar-chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .sidebar-message {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .sidebar-message.user {
+            background: #0078d4;
+            color: white;
+            border: none;
+            margin-left: 40px;
+        }
+
+        .sidebar-message-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #0078d4;
+        }
+
+        .sidebar-message.user .sidebar-message-header {
+            color: white;
+        }
+
+        .sidebar-input {
+            padding: 16px 20px;
+            border-top: 1px solid #e5e5e5;
+            background: white;
+        }
+
+        .sidebar-input-wrapper {
+            display: flex;
+            gap: 8px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-input-wrapper:focus-within {
+            border-color: #0078d4;
+            background: white;
+        }
+
+        .sidebar-input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .sidebar-send {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .sidebar-send:hover {
+            background: #106ebe;
+        }
+
+        .prototype-label {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .welcome-screen {
+            text-align: center;
+            margin-top: 120px;
+        }
+
+        .welcome-screen h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .welcome-screen p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #107c10;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-label">PROTOTYPE 1: Chat-First</div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <span>🤖</span>
+                    <span>Copilot</span>
+                </div>
+            </div>
+            <div class="company-indicator" id="companyToggle" onclick="toggleSidebar()">
+                <div class="notification-dot"></div>
+                <span>🏢 Contoso</span>
+                <span class="notification-badge">1</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Main Chat Area -->
+            <div class="chat-area">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Initial Copilot Message -->
+                    <div class="message-group">
+                        <div class="message-header">
+                            <div class="avatar assistant">🤖</div>
+                            <div class="sender-name">Copilot</div>
+                        </div>
+                        <div class="message-content">
+                            Hi! I'm your AI assistant. I can help with work tasks, answer questions, or connect you with your company resources.
+                            <div class="quick-replies">
+                                <button class="quick-reply" onclick="sendUserMessage('Help me with a task')">Help with a task</button>
+                                <button class="quick-reply" onclick="sendUserMessage('Show my company updates')">Show company updates</button>
+                                <button class="quick-reply" onclick="sendUserMessage('Ask a question')">Ask a question</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-container">
+                        <textarea
+                            id="mainInput"
+                            placeholder="Message Copilot..."
+                            rows="1"
+                            onkeydown="handleMainEnter(event)"
+                            oninput="autoResize(this)"
+                        ></textarea>
+                        <button class="send-button" onclick="sendMainMessage()">
+                            ➤
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company Sidebar Agent -->
+            <div class="company-sidebar" id="companySidebar">
+                <div class="sidebar-header">
+                    <button class="close-sidebar" onclick="toggleSidebar()">×</button>
+                    <div class="sidebar-branding">
+                        <div class="company-logo">🏢</div>
+                        <div>
+                            <div class="sidebar-title">Contoso</div>
+                            <div class="sidebar-subtitle">Your company assistant</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-chat" id="sidebarChat">
+                    <!-- Critical Interrupt in Sidebar -->
+                    <div class="critical-interrupt collapsed" id="criticalInterrupt" onclick="toggleCollapse()">
+                        <div class="interrupt-header">
+                            <div class="interrupt-title">
+                                ⚠️ Urgent: Security Training Due Jan 31
+                            </div>
+                            <button class="collapse-btn" onclick="toggleCollapse(event)">−</button>
+                        </div>
+                        <div class="interrupt-body">
+                            You need to complete mandatory security training and update your password. This is required for compliance and takes about 30 minutes.
+                        </div>
+                        <div class="interrupt-actions">
+                            <button class="interrupt-btn primary" onclick="handleCritical('complete', event)">
+                                Complete Now
+                            </button>
+                            <button class="interrupt-btn" onclick="handleCritical('more', event)">
+                                Tell Me More
+                            </button>
+                            <button class="interrupt-btn" onclick="handleCritical('dismiss', event)">
+                                Remind Me Later
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-message">
+                        <div class="sidebar-message-header">🤖 Contoso Assistant</div>
+                        <div>
+                            Hi! I'm your Contoso assistant. You have <strong>1 urgent action</strong> that needs attention.
+                            I can help you with company updates, policies, benefits, and more.
+                        </div>
+                        <div class="quick-replies">
+                            <button class="quick-reply" onclick="askSidebar('Tell me about the urgent action')">What's urgent?</button>
+                            <button class="quick-reply" onclick="askSidebar('Show all my updates')">Show all updates</button>
+                            <button class="quick-reply" onclick="askSidebar('PTO policy')">PTO policy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-input">
+                    <div class="sidebar-input-wrapper">
+                        <input
+                            type="text"
+                            id="sidebarInput"
+                            placeholder="Ask about Contoso..."
+                            onkeypress="handleSidebarEnter(event)"
+                        />
+                        <button class="sidebar-send" onclick="sendSidebarMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const mainInput = document.getElementById('mainInput');
+        const sidebarChat = document.getElementById('sidebarChat');
+        const sidebarInput = document.getElementById('sidebarInput');
+        const companySidebar = document.getElementById('companySidebar');
+        const companyToggle = document.getElementById('companyToggle');
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            companySidebar.classList.toggle('open');
+            companyToggle.classList.toggle('active');
+        }
+
+        // Toggle collapse on critical interrupt
+        function toggleCollapse(event) {
+            if (event) event.stopPropagation();
+            const interrupt = document.getElementById('criticalInterrupt');
+            const collapseBtn = interrupt.querySelector('.collapse-btn');
+
+            interrupt.classList.toggle('collapsed');
+
+            if (interrupt.classList.contains('collapsed')) {
+                collapseBtn.textContent = '−';
+            } else {
+                collapseBtn.textContent = '+';
+            }
+        }
+
+        // Handle critical interrupt actions
+        function handleCritical(action, event) {
+            if (event) event.stopPropagation();
+            const interrupt = document.getElementById('criticalInterrupt');
+
+            // Update badge
+            const badge = document.querySelector('.notification-badge');
+            const dot = document.querySelector('.notification-dot');
+            badge.textContent = '0';
+            badge.style.display = 'none';
+            dot.style.display = 'none';
+
+            if (action === 'complete') {
+                addSidebarMessage('✅ Great! Opening the security training portal for you now...');
+                setTimeout(() => {
+                    addSidebarMessage('Once you complete the training, I\'ll mark this as done for you. The training includes:<br><br>1. Security awareness course (20 min)<br>2. Password update (5 min)<br>3. Quiz (5 min)');
+                }, 1500);
+                interrupt.style.display = 'none';
+            } else if (action === 'more') {
+                interrupt.classList.remove('collapsed');
+            } else if (action === 'dismiss') {
+                addSidebarMessage('No problem. I\'ll remind you about the security training tomorrow. Remember, the deadline is Jan 31.');
+                interrupt.classList.add('collapsed');
+            }
+        }
+
+        // Auto-resize textarea
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // Send main message
+        function handleMainEnter(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMainMessage();
+            }
+        }
+
+        function sendMainMessage() {
+            const message = mainInput.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            mainInput.value = '';
+            mainInput.style.height = 'auto';
+
+            setTimeout(() => {
+                handleMainResponse(message);
+            }, 1000);
+        }
+
+        function sendUserMessage(text) {
+            mainInput.value = text;
+            sendMainMessage();
+        }
+
+        function addUserMessage(text) {
+            const group = document.createElement('div');
+            group.className = 'message-group';
+            group.innerHTML = `
+                <div class="message-header">
+                    <div class="avatar user">👤</div>
+                    <div class="sender-name">You</div>
+                </div>
+                <div class="message-content">${text}</div>
+            `;
+            chatMessages.appendChild(group);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addCopilotMessage(text, showCompanyUpdates = false) {
+            const group = document.createElement('div');
+            group.className = 'message-group';
+
+            let content = `
+                <div class="message-header">
+                    <div class="avatar assistant">🤖</div>
+                    <div class="sender-name">Copilot</div>
+                </div>
+                <div class="message-content">${text}`;
+
+            if (showCompanyUpdates) {
+                content += `
+                    <div class="update-card-inline important">
+                        <div class="update-card-header">
+                            <div class="update-icon">📢</div>
+                            <div>
+                                <div class="update-title">Leadership Summit Registration</div>
+                                <div class="update-description">March 15-17 in Seattle. Early bird closes Feb 15.</div>
+                            </div>
+                        </div>
+                        <div class="update-actions-inline">
+                            <button class="action-btn primary" onclick="handleAction('register')">Register</button>
+                            <button class="action-btn" onclick="askAboutUpdate('summit')">Learn More</button>
+                        </div>
+                    </div>
+                    <div class="update-card-inline important">
+                        <div class="update-card-header">
+                            <div class="update-icon">🏠</div>
+                            <div>
+                                <div class="update-title">Hybrid Work Schedule</div>
+                                <div class="update-description">Submit your preferred schedule by Jan 31.</div>
+                            </div>
+                        </div>
+                        <div class="update-actions-inline">
+                            <button class="action-btn primary" onclick="handleAction('schedule')">Submit Schedule</button>
+                            <button class="action-btn" onclick="askAboutUpdate('hybrid')">View Policy</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            content += `</div>`;
+            group.innerHTML = content;
+            chatMessages.appendChild(group);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleMainResponse(message) {
+            const lower = message.toLowerCase();
+
+            if (lower.includes('company') || lower.includes('contoso') || lower.includes('update')) {
+                addCopilotMessage('Here are your company updates from Contoso:', true);
+            } else if (lower.includes('help') || lower.includes('task')) {
+                addCopilotMessage('I can help with many tasks! What would you like to do?<div class="quick-replies"><button class="quick-reply" onclick="sendUserMessage(\'Write an email\')">Write an email</button><button class="quick-reply" onclick="sendUserMessage(\'Analyze data\')">Analyze data</button><button class="quick-reply" onclick="sendUserMessage(\'Company info\')">Company info</button></div>');
+            } else {
+                addCopilotMessage('I can help with that. For company-specific information, you can also chat with your Contoso Assistant by clicking the 🏢 icon above.');
+            }
+        }
+
+        function handleAction(type) {
+            if (type === 'register') {
+                addCopilotMessage('✅ Opening registration for the Leadership Summit...');
+            } else if (type === 'schedule') {
+                addCopilotMessage('✅ Opening Workday to submit your hybrid work schedule...');
+            }
+        }
+
+        function askAboutUpdate(topic) {
+            toggleSidebar();
+            setTimeout(() => {
+                askSidebar(`Tell me about ${topic}`);
+            }, 300);
+        }
+
+        // Sidebar chat
+        function handleSidebarEnter(e) {
+            if (e.key === 'Enter') {
+                sendSidebarMessage();
+            }
+        }
+
+        function sendSidebarMessage() {
+            const message = sidebarInput.value.trim();
+            if (!message) return;
+
+            addSidebarMessage(message, true);
+            sidebarInput.value = '';
+
+            setTimeout(() => {
+                handleSidebarResponse(message);
+            }, 1000);
+        }
+
+        function askSidebar(text) {
+            sidebarInput.value = text;
+            sendSidebarMessage();
+        }
+
+        function addSidebarMessage(text, isUser) {
+            const msg = document.createElement('div');
+            msg.className = 'sidebar-message' + (isUser ? ' user' : '');
+
+            if (!isUser) {
+                msg.innerHTML = `
+                    <div class="sidebar-message-header">🤖 Contoso Assistant</div>
+                    <div>${text}</div>
+                `;
+            } else {
+                msg.textContent = text;
+            }
+
+            sidebarChat.appendChild(msg);
+            sidebarChat.scrollTop = sidebarChat.scrollHeight;
+        }
+
+        function handleSidebarResponse(message) {
+            const lower = message.toLowerCase();
+
+            if (lower.includes('urgent') || lower.includes('security')) {
+                addSidebarMessage(`<strong>Security Training - Due Jan 31</strong><br><br>
+                    You need to:<br>
+                    1. Complete 30-min security awareness course<br>
+                    2. Update your password (12+ characters)<br><br>
+                    This is mandatory for compliance.<br>
+                    <div class="update-actions-inline" style="margin-top: 12px;">
+                        <button class="action-btn danger">Start Training</button>
+                        <button class="action-btn">View Details</button>
+                    </div>`);
+            } else if (lower.includes('all') || lower.includes('update')) {
+                addSidebarMessage(`<strong>Your Updates:</strong><br><br>
+                    🔴 <strong>Security Training</strong> - Due Jan 31<br>
+                    🟡 <strong>Leadership Summit</strong> - Register by Feb 15<br>
+                    🟡 <strong>Work Schedule</strong> - Submit by Jan 31<br>
+                    🟢 <strong>Q1 Learning</strong> - Browse courses<br><br>
+                    Which one would you like to know more about?`);
+            } else if (lower.includes('summit')) {
+                addSidebarMessage(`<strong>2026 Leadership Summit</strong><br><br>
+                    📅 March 15-17, 2026<br>
+                    📍 Seattle<br>
+                    🎯 "Innovating Together"<br>
+                    💰 Early bird: $299 (closes Feb 15)<br><br>
+                    Want to register?<br>
+                    <div class="update-actions-inline" style="margin-top: 12px;">
+                        <button class="action-btn primary">Register Now</button>
+                    </div>`);
+            } else if (lower.includes('hybrid') || lower.includes('work') || lower.includes('schedule')) {
+                addSidebarMessage(`<strong>Hybrid Work Policy</strong><br><br>
+                    ✓ 3 days remote per week<br>
+                    ✓ 2 days in-office minimum<br>
+                    ✓ Submit schedule by Jan 31<br><br>
+                    Ready to submit your schedule?<br>
+                    <div class="update-actions-inline" style="margin-top: 12px;">
+                        <button class="action-btn primary">Submit Schedule</button>
+                    </div>`);
+            } else if (lower.includes('pto')) {
+                addSidebarMessage(`<strong>PTO Policy:</strong><br><br>
+                    • 20 days annually<br>
+                    • Accrues at 1.67 days/month<br>
+                    • Request via Workday 2 weeks advance<br>
+                    • Up to 5 days roll over`);
+            } else {
+                addSidebarMessage('I can help with company updates, policies, benefits, and more. What would you like to know?');
+            }
+        }
+    </script>
+</body>
+</html>

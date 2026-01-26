@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prototype 1: My Company Tab with Priority System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1500px;
+            height: 92vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #6264A7;
+            color: white;
+            padding: 0;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .logo {
+            padding: 15px 25px;
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo::before {
+            content: "🤖";
+            font-size: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            flex: 1;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tab.active {
+            background: rgba(255,255,255,0.15);
+            border-bottom-color: white;
+        }
+
+        .tab-badge {
+            background: #ff4757;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        /* Tab Panels */
+        .tab-panel {
+            display: none;
+            height: 100%;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* My Company Tab */
+        .company-header {
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+            color: white;
+            padding: 40px 40px 30px 40px;
+        }
+
+        .company-branding {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .company-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .company-info h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .company-info p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        .company-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .company-action-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .company-action-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .company-action-btn.primary {
+            background: white;
+            color: #0078d4;
+            border-color: white;
+        }
+
+        .company-action-btn.primary:hover {
+            background: #f0f0f0;
+        }
+
+        /* Updates Container */
+        .updates-container {
+            padding: 30px 40px;
+        }
+
+        .updates-section {
+            margin-bottom: 35px;
+        }
+
+        .section-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: #605e5c;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Priority Update Cards */
+        .update-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s;
+            border-left: 4px solid #ccc;
+        }
+
+        .update-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        .update-card.critical {
+            border-left-color: #d13438;
+            background: #fff5f5;
+        }
+
+        .update-card.important {
+            border-left-color: #ffa500;
+            background: #fffbf0;
+        }
+
+        .update-card.info {
+            border-left-color: #0078d4;
+        }
+
+        .update-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .update-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .update-card.critical .update-icon {
+            background: #d13438;
+        }
+
+        .update-card.important .update-icon {
+            background: #ffa500;
+        }
+
+        .update-card.info .update-icon {
+            background: #0078d4;
+        }
+
+        .update-content {
+            flex: 1;
+        }
+
+        .update-priority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .update-card.critical .update-priority-badge {
+            background: #d13438;
+            color: white;
+        }
+
+        .update-card.important .update-priority-badge {
+            background: #ffa500;
+            color: white;
+        }
+
+        .update-card.info .update-priority-badge {
+            background: #e8f4fd;
+            color: #0078d4;
+        }
+
+        .update-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .update-body {
+            font-size: 14px;
+            color: #605e5c;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .update-meta {
+            font-size: 12px;
+            color: #a19f9d;
+            margin-bottom: 15px;
+        }
+
+        .update-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .update-btn {
+            padding: 9px 18px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .update-btn.primary {
+            background: #0078d4;
+            color: white;
+        }
+
+        .update-btn.primary:hover {
+            background: #106ebe;
+        }
+
+        .update-btn.secondary {
+            background: #f3f2f1;
+            color: #323130;
+            border: 1px solid #d2d0ce;
+        }
+
+        .update-btn.secondary:hover {
+            background: #e1dfdd;
+        }
+
+        .update-btn.danger {
+            background: #d13438;
+            color: white;
+        }
+
+        .update-btn.danger:hover {
+            background: #a4262c;
+        }
+
+        .update-btn.success {
+            background: #107c10;
+            color: white;
+        }
+
+        .update-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #edebe9;
+            font-size: 12px;
+            color: #605e5c;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            width: 420px;
+            background: white;
+            border-left: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+            color: white;
+        }
+
+        .chat-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+
+        .chat-message {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0078d4;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .user-message {
+            background: #0078d4;
+            color: white;
+            border: none;
+            margin-left: 40px;
+        }
+
+        .quick-replies {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-reply {
+            background: #f3f2f1;
+            border: 1px solid #d2d0ce;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .quick-reply:hover {
+            background: #0078d4;
+            color: white;
+            border-color: #0078d4;
+        }
+
+        .chat-input-area {
+            padding: 16px 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+            background: #f3f2f1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .chat-input-container:focus-within {
+            border-color: #0078d4;
+            background: white;
+        }
+
+        .chat-input-container input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .send-btn {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #106ebe;
+        }
+
+        /* General Copilot Tab */
+        .general-chat {
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .welcome {
+            text-align: center;
+            margin: 100px 0 40px 0;
+        }
+
+        .welcome h1 {
+            font-size: 36px;
+            color: #323130;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            font-size: 16px;
+            color: #605e5c;
+        }
+
+        .prototype-label {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .acknowledged-badge {
+            background: #107c10;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .engagement-bar {
+            width: 100%;
+            height: 4px;
+            background: #edebe9;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .engagement-fill {
+            height: 100%;
+            background: #0078d4;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="prototype-label">PROTOTYPE 1: My Company Tab</div>
+
+    <div class="container">
+        <!-- Header with Tabs -->
+        <div class="header">
+            <div class="logo">Microsoft Copilot</div>
+            <div class="tabs">
+                <div class="tab" onclick="switchTab('home')">
+                    <span>Home</span>
+                </div>
+                <div class="tab active" onclick="switchTab('company')">
+                    <span>🏢 My Company</span>
+                    <span class="tab-badge">2</span>
+                </div>
+                <div class="tab" onclick="switchTab('chat')">
+                    <span>Chat</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="content-area">
+                <!-- Home Tab -->
+                <div id="home-tab" class="tab-panel">
+                    <div class="general-chat">
+                        <div class="welcome">
+                            <h1>Welcome to Copilot</h1>
+                            <p>Your AI assistant for work and life</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Company Tab -->
+                <div id="company-tab" class="tab-panel active">
+                    <!-- Company Header -->
+                    <div class="company-header">
+                        <div class="company-branding">
+                            <div class="company-logo">🏢</div>
+                            <div class="company-info">
+                                <h1>Contoso</h1>
+                                <p>Your hub for company updates, policies, and resources</p>
+                            </div>
+                        </div>
+                        <div class="company-actions">
+                            <button class="company-action-btn primary" onclick="scrollToChat()">
+                                💬 Ask Assistant
+                            </button>
+                            <button class="company-action-btn">
+                                📊 View All Updates
+                            </button>
+                            <button class="company-action-btn">
+                                ⚙️ Preferences
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Updates -->
+                    <div class="updates-container">
+                        <!-- Critical Updates -->
+                        <div class="updates-section">
+                            <div class="section-header">
+                                🔴 Action Required
+                            </div>
+
+                            <div class="update-card critical">
+                                <div class="update-header">
+                                    <div class="update-icon">⚠️</div>
+                                    <div class="update-content">
+                                        <div class="update-priority-badge">🔴 Critical</div>
+                                        <div class="update-title">New Security Policy - Action Required by Jan 31</div>
+                                        <div class="update-meta">Posted Jan 12, 2026 • IT Security Team</div>
+                                        <div class="update-body">
+                                            All employees must complete the new security training and update their
+                                            passwords by January 31, 2026. This is mandatory for compliance. Failure
+                                            to complete will result in account suspension.
+                                        </div>
+                                        <div class="update-actions">
+                                            <button class="update-btn danger" onclick="acknowledgeUpdate(this, 'security')">
+                                                ✓ Complete Training
+                                            </button>
+                                            <button class="update-btn secondary" onclick="askAbout('security policy')">
+                                                ❓ Ask Questions
+                                            </button>
+                                            <button class="update-btn secondary">
+                                                📄 View Policy
+                                            </button>
+                                        </div>
+                                        <div class="update-stats">
+                                            <div class="stat-item">👥 1,247 completed</div>
+                                            <div class="stat-item">⏱️ 3 days left</div>
+                                        </div>
+                                        <div class="engagement-bar">
+                                            <div class="engagement-fill" style="width: 62%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Important Updates -->
+                        <div class="updates-section">
+                            <div class="section-header">
+                                🟡 Important Updates
+                            </div>
+
+                            <div class="update-card important">
+                                <div class="update-header">
+                                    <div class="update-icon">📢</div>
+                                    <div class="update-content">
+                                        <div class="update-priority-badge">🟡 Important</div>
+                                        <div class="update-title">Annual Leadership Summit - Registration Closing Soon</div>
+                                        <div class="update-meta">Posted Jan 10, 2026 • Corporate Communications</div>
+                                        <div class="update-body">
+                                            Join us for our 2026 Leadership Summit on March 15-17 in Seattle.
+                                            Theme: "Innovating Together." Early bird registration closes February 15.
+                                            Limited spots available - register today!
+                                        </div>
+                                        <div class="update-actions">
+                                            <button class="update-btn primary" onclick="acknowledgeUpdate(this, 'summit')">
+                                                🎫 Register Now
+                                            </button>
+                                            <button class="update-btn secondary" onclick="askAbout('leadership summit')">
+                                                ℹ️ Learn More
+                                            </button>
+                                            <button class="update-btn secondary">
+                                                📅 Add to Calendar
+                                            </button>
+                                        </div>
+                                        <div class="update-stats">
+                                            <div class="stat-item">👥 342 registered</div>
+                                            <div class="stat-item">💬 28 questions asked</div>
+                                            <div class="stat-item">⏱️ Early bird: 34 days left</div>
+                                        </div>
+                                        <div class="engagement-bar">
+                                            <div class="engagement-fill" style="width: 45%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="update-card important">
+                                <div class="update-header">
+                                    <div class="update-icon">🏠</div>
+                                    <div class="update-content">
+                                        <div class="update-priority-badge">🟡 Important</div>
+                                        <div class="update-title">Updated Hybrid Work Policy - Submit Schedule</div>
+                                        <div class="update-meta">Posted Jan 8, 2026 • HR Department</div>
+                                        <div class="update-body">
+                                            Our new hybrid work policy allows 3 days remote per week. Please submit
+                                            your preferred schedule through Workday by January 31. Contact your manager
+                                            with any questions.
+                                        </div>
+                                        <div class="update-actions">
+                                            <button class="update-btn primary" onclick="acknowledgeUpdate(this, 'hybrid')">
+                                                📝 Submit Schedule
+                                            </button>
+                                            <button class="update-btn secondary" onclick="askAbout('hybrid work policy')">
+                                                📋 Read Policy
+                                            </button>
+                                            <button class="update-btn secondary">
+                                                💬 Ask HR
+                                            </button>
+                                        </div>
+                                        <div class="update-stats">
+                                            <div class="stat-item">👥 823 submitted</div>
+                                            <div class="stat-item">💬 156 questions</div>
+                                        </div>
+                                        <div class="engagement-bar">
+                                            <div class="engagement-fill" style="width: 78%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Informational Updates -->
+                        <div class="updates-section">
+                            <div class="section-header">
+                                🟢 Latest News
+                            </div>
+
+                            <div class="update-card info">
+                                <div class="update-header">
+                                    <div class="update-icon">🎓</div>
+                                    <div class="update-content">
+                                        <div class="update-priority-badge">🟢 Info</div>
+                                        <div class="update-title">Q1 Learning & Development Opportunities</div>
+                                        <div class="update-meta">Posted Jan 5, 2026 • L&D Team</div>
+                                        <div class="update-body">
+                                            Kick off 2026 with professional development! 20+ courses available including
+                                            Leadership, Technical Skills, and D&I training. $2,000 annual budget per employee.
+                                        </div>
+                                        <div class="update-actions">
+                                            <button class="update-btn primary">
+                                                📚 Browse Courses
+                                            </button>
+                                            <button class="update-btn secondary" onclick="askAbout('learning courses')">
+                                                ❓ Ask About This
+                                            </button>
+                                        </div>
+                                        <div class="update-stats">
+                                            <div class="stat-item">👀 1,892 views</div>
+                                            <div class="stat-item">💬 45 questions</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="update-card info">
+                                <div class="update-header">
+                                    <div class="update-icon">🌟</div>
+                                    <div class="update-content">
+                                        <div class="update-priority-badge">🟢 Info</div>
+                                        <div class="update-title">Q4 2025 Company Results</div>
+                                        <div class="update-meta">Posted Jan 3, 2026 • Finance Team</div>
+                                        <div class="update-body">
+                                            Q4 2025 exceeded expectations with 18% revenue growth and three major product launches.
+                                            Thank you for your hard work!
+                                        </div>
+                                        <div class="update-actions">
+                                            <button class="update-btn primary">
+                                                📊 View Report
+                                            </button>
+                                            <button class="update-btn secondary">
+                                                🎥 Watch CEO Message
+                                            </button>
+                                        </div>
+                                        <div class="update-stats">
+                                            <div class="stat-item">👀 2,341 views</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Tab -->
+                <div id="chat-tab" class="tab-panel">
+                    <div class="general-chat">
+                        <div class="welcome">
+                            <h1>How can I help you today?</h1>
+                            <p>Ask me anything</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contoso Assistant Chat -->
+            <div class="chat-area">
+                <div class="chat-header">
+                    <div class="chat-title">
+                        <span>🏢</span>
+                        <span>Contoso Assistant</span>
+                    </div>
+                    <div class="chat-subtitle">Ask about updates, policies, and more</div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message">
+                        <div class="chat-message-header">🤖 Contoso Assistant</div>
+                        <div>
+                            Hi! I'm here to help with company updates and questions. I see you have
+                            <strong>1 critical action</strong> and <strong>2 important updates</strong>
+                            that need your attention. Would you like to discuss any of them?
+                        </div>
+                        <div class="quick-replies">
+                            <button class="quick-reply" onclick="askAbout('security policy')">Tell me about the security training</button>
+                            <button class="quick-reply" onclick="askAbout('leadership summit')">What's the leadership summit?</button>
+                            <button class="quick-reply" onclick="askAbout('all updates')">Summarize all my updates</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="chat-input-container">
+                        <input
+                            type="text"
+                            id="chatInput"
+                            placeholder="Ask about Contoso..."
+                            onkeypress="handleChatEnter(event)"
+                        />
+                        <button class="send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+
+        function switchTab(tabName) {
+            // Update tab active states
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.closest('.tab').classList.add('active');
+
+            // Update panel active states
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        function scrollToChat() {
+            document.querySelector('.chat-input-area input').focus();
+        }
+
+        function acknowledgeUpdate(button, type) {
+            button.innerHTML = '✓ Completed';
+            button.classList.remove('danger', 'primary');
+            button.classList.add('success');
+            button.disabled = true;
+
+            // Add acknowledgment badge
+            const card = button.closest('.update-card');
+            const actions = card.querySelector('.update-actions');
+            const badge = document.createElement('span');
+            badge.className = 'acknowledged-badge';
+            badge.innerHTML = '✓ You completed this';
+            actions.appendChild(badge);
+
+            // Send confirmation to chat
+            addChatMessage(`Great! I've marked the ${type} update as completed for you.`, false);
+        }
+
+        function askAbout(topic) {
+            chatInput.value = `Tell me about ${topic}`;
+            sendMessage();
+            scrollToChat();
+        }
+
+        function handleChatEnter(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            addChatMessage(message, true);
+            chatInput.value = '';
+
+            setTimeout(() => {
+                const response = getResponse(message);
+                addChatMessage(response, false);
+            }, 1000);
+        }
+
+        function addChatMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message' + (isUser ? ' user-message' : '');
+
+            if (!isUser) {
+                messageDiv.innerHTML = `
+                    <div class="chat-message-header">🤖 Contoso Assistant</div>
+                    <div>${text}</div>
+                `;
+            } else {
+                messageDiv.textContent = text;
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getResponse(message) {
+            const lower = message.toLowerCase();
+
+            if (lower.includes('security') || lower.includes('training')) {
+                return `<strong>Security Training Requirements:</strong><br><br>
+                    You need to complete two things by Jan 31:<br>
+                    1. Complete the 30-min security awareness course<br>
+                    2. Update your password (must be 12+ characters)<br><br>
+                    Click "Complete Training" on the update card to start, or I can open the training portal for you now.`;
+            } else if (lower.includes('summit') || lower.includes('leadership')) {
+                return `<strong>2026 Leadership Summit Details:</strong><br><br>
+                    📅 March 15-17, 2026<br>
+                    📍 Seattle Convention Center<br>
+                    🎯 Theme: "Innovating Together"<br>
+                    💰 Early bird: $299 (regular: $399)<br>
+                    ⏰ Early bird closes: Feb 15<br><br>
+                    The summit includes keynotes, workshops, and networking. Registration takes 5 minutes. Want me to help you register?`;
+            } else if (lower.includes('hybrid') || lower.includes('work') || lower.includes('remote')) {
+                return `<strong>Hybrid Work Policy:</strong><br><br>
+                    ✓ Work remotely up to 3 days/week<br>
+                    ✓ Minimum 2 days in-office<br>
+                    ✓ Submit schedule via Workday by Jan 31<br>
+                    ✓ Schedule can be adjusted quarterly<br><br>
+                    Need help deciding your schedule or have questions? I can help!`;
+            } else if (lower.includes('all') || lower.includes('summarize')) {
+                return `<strong>Your Updates Summary:</strong><br><br>
+                    🔴 <strong>1 Critical:</strong> Security training due Jan 31<br>
+                    🟡 <strong>2 Important:</strong> Leadership summit registration, Hybrid work schedule<br>
+                    🟢 <strong>2 Informational:</strong> Learning courses, Q4 results<br><br>
+                    The security training is most urgent. Want to tackle that first?`;
+            } else {
+                return `I can help you with company updates, policies, benefits, and more. Try asking about:<br><br>
+                    • Security training requirements<br>
+                    • Leadership summit details<br>
+                    • Hybrid work policy<br>
+                    • Learning opportunities<br><br>
+                    What would you like to know?`;
+            }
+        }
+
+        // Badge update
+        function updateBadgeCount() {
+            const criticalCount = document.querySelectorAll('.update-card.critical').length;
+            const importantCount = document.querySelectorAll('.update-card.important').length;
+            const badge = document.querySelector('.tab-badge');
+            const total = criticalCount + importantCount;
+            badge.textContent = total;
+            if (total === 0) {
+                badge.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
