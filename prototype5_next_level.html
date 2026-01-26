@@ -168,6 +168,7 @@
             display: grid;
             grid-template-columns: 1fr 600px;
             overflow: hidden;
+            position: relative;
         }
 
         /* Content Stream */
@@ -353,12 +354,13 @@
 
         /* Agent Panel */
         .agent-panel {
-            background: rgba(18, 18, 26, 0.95);
-            backdrop-filter: blur(10px);
+            background: #12121A;
             border-left: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             position: relative;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         /* Agent Header */
@@ -385,7 +387,7 @@
             font-size: 36px;
             box-shadow: var(--glow-primary);
             position: relative;
-            animation: breathe 4s infinite ease-in-out;
+            animation: none;
         }
 
         @keyframes breathe {
