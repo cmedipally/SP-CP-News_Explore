@@ -1031,6 +1031,220 @@
         .confidence-detail:hover {
             color: var(--primary);
         }
+
+        /* Detail Panel Overlay */
+        .detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 15, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .detail-panel {
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .detail-header {
+            padding: 32px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.05) 0%, rgba(123, 97, 255, 0.05) 100%);
+        }
+
+        .detail-header.company-news {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.05) 0%, rgba(123, 97, 255, 0.05) 100%);
+        }
+
+        .detail-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .detail-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            background: rgba(0, 102, 255, 0.1);
+        }
+
+        .detail-header.company-news .detail-icon {
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        .detail-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .detail-close:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .detail-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .detail-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .detail-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .detail-body::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .detail-section {
+            margin-bottom: 32px;
+        }
+
+        .detail-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-section-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .detail-list-item {
+            padding: 16px;
+            background: rgba(0, 102, 255, 0.05);
+            border-left: 3px solid var(--primary);
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .detail-footer {
+            padding: 24px 32px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-light);
+            display: flex;
+            gap: 12px;
+        }
+
+        .detail-action-btn {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .detail-action-btn.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .detail-action-btn.secondary:hover {
+            background: var(--surface-hover);
+            border-color: var(--primary);
+        }
+
+        .detail-action-btn.primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            box-shadow: var(--glow-primary);
+        }
+
+        .detail-action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0, 102, 255, 0.5);
+        }
         .context-banner {
             background: linear-gradient(90deg, rgba(255, 107, 157, 0.15), rgba(123, 97, 255, 0.15));
             border: 1px solid rgba(255, 107, 157, 0.3);
@@ -1473,8 +1687,107 @@
             }
         };
 
-        // Explore insight
+        // Explore insight - Show detail panel instead of starting chat
         function exploreInsight(index) {
+            const insight = insights[index];
+            const response = insightResponses[index];
+
+            showDetailPanel(insight, response);
+        }
+
+        // Show detail panel
+        function showDetailPanel(insight, response) {
+            const isCompanyNews = insight.type === 'company-news';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'detail-overlay';
+            overlay.onclick = (e) => {
+                if (e.target === overlay) closeDetailPanel();
+            };
+
+            overlay.innerHTML = `
+                <div class="detail-panel" onclick="event.stopPropagation()">
+                    <div class="detail-header ${isCompanyNews ? 'company-news' : ''}">
+                        <div class="detail-header-top">
+                            <div class="detail-icon">${insight.icon}</div>
+                            <button class="detail-close" onclick="closeDetailPanel()">✕</button>
+                        </div>
+                        <h2 class="detail-title">${insight.title}</h2>
+                        <div class="detail-meta">
+                            <span>${insight.meta}</span>
+                            <span class="ai-badge-small">${isCompanyNews ? 'News' : 'AI'}</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-body">
+                        <div class="detail-section">
+                            <div class="detail-section-title">
+                                <span>🎯</span>
+                                <span>Overview</span>
+                            </div>
+                            <div class="detail-section-content">
+                                ${insight.desc}
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="detail-section-title">
+                                <span>🤖</span>
+                                <span>Nova's Analysis</span>
+                            </div>
+                            <div class="detail-section-content">
+                                ${response.initial}
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="detail-section-title">
+                                <span>💡</span>
+                                <span>Key Insights & Recommendations</span>
+                            </div>
+                            <div class="detail-section-content">
+                                ${response.detail}
+                            </div>
+                        </div>
+
+                        ${response.confidence ? `
+                        <div class="detail-section">
+                            <div class="confidence-indicator">
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" style="width: ${response.confidence}%"></div>
+                                </div>
+                                <span class="confidence-text">${response.confidence}% confident</span>
+                                <span class="confidence-detail">Based on your activity patterns and verified data</span>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="detail-footer">
+                        <button class="detail-action-btn secondary" onclick="closeDetailPanel()">
+                            Close
+                        </button>
+                        <button class="detail-action-btn primary" onclick="discussWithNova(${insights.indexOf(insight)})">
+                            💬 Discuss with Nova
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+        }
+
+        function closeDetailPanel() {
+            const overlay = document.querySelector('.detail-overlay');
+            if (overlay) {
+                overlay.style.animation = 'fadeOut 0.2s ease';
+                setTimeout(() => overlay.remove(), 200);
+            }
+        }
+
+        function discussWithNova(index) {
+            closeDetailPanel();
+
             const insight = insights[index];
             const response = insightResponses[index];
 
