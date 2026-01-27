@@ -1961,7 +1961,7 @@
             });
         }
 
-        // Multi-Agent Collaboration
+        // Multi-Agent Collaboration with Conversation State
         const agents = {
             nova: { name: 'Nova', avatar: '🤖', color: 'nova' },
             finance: { name: 'Finance Agent', avatar: '💰', color: 'finance' },
@@ -1969,15 +1969,18 @@
             it: { name: 'IT Agent', avatar: '⚙️', color: 'it' }
         };
 
+        // Track current conversation context
+        let currentAgentContext = null;
+
         function detectNeededAgents(question) {
             const lowerQ = question.toLowerCase();
-            if (lowerQ.includes('budget') || lowerQ.includes('expense') || lowerQ.includes('invoice') || lowerQ.includes('cost')) {
+            if (lowerQ.includes('budget') || lowerQ.includes('expense') || lowerQ.includes('invoice') || lowerQ.includes('cost') || lowerQ.includes('financial')) {
                 return 'finance';
             }
-            if (lowerQ.includes('pto') || lowerQ.includes('vacation') || lowerQ.includes('leave') || lowerQ.includes('benefits')) {
+            if (lowerQ.includes('pto') || lowerQ.includes('vacation') || lowerQ.includes('leave') || lowerQ.includes('benefits') || lowerQ.includes('time off')) {
                 return 'hr';
             }
-            if (lowerQ.includes('access') || lowerQ.includes('password') || lowerQ.includes('laptop') || lowerQ.includes('software')) {
+            if (lowerQ.includes('access') || lowerQ.includes('password') || lowerQ.includes('laptop') || lowerQ.includes('software') || lowerQ.includes('permission')) {
                 return 'it';
             }
             return null;
@@ -1985,7 +1988,9 @@
 
         function inviteAgent(agentKey, context) {
             const agent = agents[agentKey];
-            addAIMessage(`This requires ${agentKey} expertise. Let me bring in ${agent.name}...`, null, 88);
+            currentAgentContext = agentKey; // Track current agent for follow-ups
+
+            addAIMessage(`This requires ${agentKey} expertise. Let me bring in the ${agent.name}...`, null, 88);
 
             showAgentThinking([
                 `Connecting to ${agent.name}...`,
@@ -2020,27 +2025,107 @@
             conversation.appendChild(collabDiv);
 
             setTimeout(() => {
+                // Detailed, contextual responses
                 const responses = {
-                    finance: "I've reviewed your budget question with the Finance Agent. Here's the collaborative answer: Your Q2 budget has $45K remaining with approval for up to $60K if justified. The Finance Agent confirms the approval process takes 3-5 business days.",
-                    hr: "I've consulted with the HR Agent about your leave question. Here's what we found together: You have 12 PTO days remaining this year, and the HR Agent confirms that unused days roll over up to 5 days maximum.",
-                    it: "I've worked with the IT Agent on your access issue. Here's our joint solution: Your permissions were reset during the security update. The IT Agent is restoring access now—it'll be ready in 10 minutes."
+                    finance: {
+                        initial: "I've analyzed your financial question with the Finance Agent. Here's what we found:",
+                        detail: "<strong>Q2 Budget Status:</strong><br>• Current remaining: $45,000<br>• Additional contingency available: $15,000 (requires VP approval)<br>• Approval timeline: 3-5 business days<br><br><strong>Spending Analysis:</strong><br>• 68% of budget utilized (on track)<br>• Largest categories: Cloud infrastructure (42%), Headcount (35%)<br>• Projected end-of-quarter balance: $8,000<br><br><strong>Recommendations:</strong><br>The Finance Agent suggests submitting any requests over $10K by end of this week to ensure Q2 processing. Want me to help draft your budget request or connect you with the finance partner?",
+                        followUpContext: 'finance-budget'
+                    },
+                    hr: {
+                        initial: "I've consulted with the HR Agent about your benefits and leave. Here's the complete picture:",
+                        detail: "<strong>Your PTO Status:</strong><br>• Remaining this year: 12 days<br>• Used to date: 8 days<br>• Rollover limit: 5 days maximum<br>• Recommendation: Use 7 days by year-end to avoid losing time<br><br><strong>Additional Benefits:</strong><br>• Mental health days: 3 available (don't count as PTO)<br>• Sick leave: Separate pool, 10 days remaining<br>• Flexible scheduling: Available upon manager approval<br><br><strong>New Programs:</strong><br>The HR Agent mentions the new wellness benefit ($1,500 annual stipend) is available but you haven't enrolled. Should I walk you through enrollment or schedule time with HR?",
+                        followUpContext: 'hr-benefits'
+                    },
+                    it: {
+                        initial: "I've coordinated with the IT Agent to resolve your access issue. Here's the solution:",
+                        detail: "<strong>Issue Identified:</strong><br>• Your permissions were reset during last night's security patch<br>• Affected systems: SharePoint admin console, Azure DevOps, GitHub Enterprise<br>• Root cause: Group membership sync delay<br><br><strong>Resolution Status:</strong><br>• IT Agent is restoring access now<br>• Estimated completion: 10 minutes<br>• You'll receive confirmation email when ready<br><br><strong>Immediate Workaround:</strong><br>If you need urgent access, the IT Agent can grant temporary elevated permissions (24-hour duration) right now. Otherwise, full access will be restored shortly.<br><br>Should I request the temporary access, or would you like to wait for the full restoration?",
+                        followUpContext: 'it-access'
+                    }
                 };
 
+                const responseData = responses[agentKey];
+
+                // Show agent's detailed response
                 const collabMessage = document.createElement('div');
                 collabMessage.className = `collab-message ${agent.color}`;
                 collabMessage.innerHTML = `
                     <div class="collab-message-header">
                         <span class="agent-icon">${agent.avatar}</span>
-                        <span>${agent.name}</span>
+                        <span>${agent.name} + Nova</span>
                     </div>
-                    <div>${responses[agentKey]}</div>
+                    <div style="margin-bottom: 12px;">${responseData.initial}</div>
+                    <div class="detail-formatted">${responseData.detail}</div>
                 `;
                 conversation.appendChild(collabMessage);
                 conversation.scrollTop = conversation.scrollHeight;
 
-                // Add confidence indicator
-                addAIMessage("Is there anything else you'd like us to clarify or help with?", null, 96);
+                // Store follow-up context
+                currentAgentContext = responseData.followUpContext;
+
+                // Nova's synthesis
+                setTimeout(() => {
+                    addAIMessage("I've coordinated all the details with the specialist. What would you like to do next?", null, 95);
+                }, 800);
             }, 1500);
+        }
+
+        // Handle follow-up questions for agent conversations
+        function getAgentFollowUp(question, context) {
+            const lowerQ = question.toLowerCase();
+
+            if (context === 'finance-budget') {
+                if (lowerQ.includes('draft') || lowerQ.includes('request') || lowerQ.includes('help') || lowerQ.includes('yes')) {
+                    return {
+                        initial: "Perfect! Let me help you draft a compelling budget request. I've prepared a template based on successful requests from your department:",
+                        detail: "<strong>✅ Draft Budget Request Ready:</strong><br><br><strong>To:</strong> Finance Team & VP of Engineering<br><strong>Subject:</strong> Q2 Additional Budget Request - Platform Infrastructure<br><br><strong>Request Summary:</strong><br>Requesting $12,000 in additional Q2 budget for critical cloud infrastructure upgrades.<br><br><strong>Business Justification:</strong><br>1. <strong>Performance Impact:</strong> Current usage at 85% capacity; upgrade prevents service degradation<br>2. <strong>Cost Avoidance:</strong> Proactive scaling saves $25K in incident response costs<br>3. <strong>Revenue Enablement:</strong> Supports onboarding of 3 new enterprise clients (projected $180K ARR)<br><br><strong>ROI Analysis:</strong><br>• Investment: $12,000<br>• Expected return: $25K cost avoidance + $180K revenue<br>• Payback period: 3 weeks<br><br><strong>Risk if not approved:</strong><br>Service degradation, potential customer churn, emergency spending at premium rates<br><br>Should I send this to your finance partner for review, or would you like to customize anything first?",
+                        confidence: 94
+                    };
+                }
+                if (lowerQ.includes('connect') || lowerQ.includes('partner') || lowerQ.includes('finance')) {
+                    return {
+                        initial: "I'll connect you with your finance partner right away. Here's what I've prepared:",
+                        detail: "<strong>✅ Meeting Request Sent:</strong><br><br><strong>To:</strong> Jennifer Chen (Finance Partner)<br><strong>Time:</strong> Tomorrow at 2:00pm (30 minutes)<br><strong>Location:</strong> Building 4, Conference Room B / Teams link included<br><br><strong>Pre-meeting brief prepared for Jennifer:</strong><br>• Your Q2 budget status and request details<br>• Historical spending patterns<br>• ROI justification<br>• Recommended approval path<br><br><strong>Your prep materials:</strong><br>• Budget dashboard with visualizations<br>• Comparison with peer teams<br>• Talking points document<br><br>I've added everything to your calendar. Want me to send you the talking points now so you can review before the meeting?",
+                        confidence: 96
+                    };
+                }
+            }
+
+            if (context === 'hr-benefits') {
+                if (lowerQ.includes('enroll') || lowerQ.includes('walk') || lowerQ.includes('yes') || lowerQ.includes('help')) {
+                    return {
+                        initial: "Great! Let me walk you through the wellness benefit enrollment. It's super quick:",
+                        detail: "<strong>✅ Enrollment Steps (5 minutes):</strong><br><br><strong>Step 1: Access the portal</strong><br>Go to benefits.contoso.com → Sign in with SSO<br><br><strong>Step 2: Select wellness benefit</strong><br>Click 'Enroll in New Benefits' → Choose 'Wellness Reimbursement Program'<br><br><strong>Step 3: Set up reimbursement</strong><br>Link your bank account (same as payroll) for direct deposits<br><br><strong>What's covered (up to $1,500/year):</strong><br>• Gym memberships & fitness classes<br>• Mental health services (therapy, coaching)<br>• Ergonomic equipment (standing desk, chair)<br>• Wellness apps & subscriptions<br>• Massage therapy, acupuncture<br><br><strong>How it works:</strong><br>1. Pay out of pocket<br>2. Submit receipt via mobile app<br>3. Reimbursed within 5 business days<br><br>I've opened the enrollment portal in your browser. Should I also send you a list of popular vendors that employees use?",
+                        confidence: 93
+                    };
+                }
+                if (lowerQ.includes('schedule') || lowerQ.includes('hr') || lowerQ.includes('questions')) {
+                    return {
+                        initial: "I'll schedule time with HR to answer all your questions. Here's what I've set up:",
+                        detail: "<strong>✅ HR Benefits Consultation Scheduled:</strong><br><br><strong>With:</strong> Marcus Rodriguez (Benefits Specialist)<br><strong>When:</strong> This Friday at 10:00am (30 minutes)<br><strong>Where:</strong> Teams meeting (link in calendar)<br><br><strong>Agenda I've prepared:</strong><br>1. Wellness benefit deep dive<br>2. PTO strategy discussion (using your 12 days optimally)<br>3. Review of all benefits you haven't activated yet<br>4. Q&A time<br><br><strong>Materials Marcus will bring:</strong><br>• Your personalized benefits summary<br>• Comparison of options based on your situation<br>• Quick-start enrollment guides<br><br><strong>Before the meeting:</strong><br>Marcus suggests reviewing your current benefit usage (I've created a summary and added it to the meeting notes).<br><br>Anything specific you want me to add to the agenda?",
+                        confidence: 95
+                    };
+                }
+            }
+
+            if (context === 'it-access') {
+                if (lowerQ.includes('temporary') || lowerQ.includes('urgent') || lowerQ.includes('now')) {
+                    return {
+                        initial: "Requesting temporary elevated access from IT right now...",
+                        detail: "<strong>✅ Temporary Access Granted!</strong><br><br><strong>Status:</strong><br>• Elevated permissions: Active<br>• Duration: 24 hours (expires tomorrow at 3:15pm)<br>• Systems: SharePoint admin, Azure DevOps, GitHub Enterprise<br><br><strong>What you can do now:</strong><br>• Full admin access to all your usual systems<br>• Create/modify resources<br>• Approve pull requests<br>• Deploy to production<br><br><strong>Important notes:</strong><br>• This is temporary access only<br>• Permanent access restoration completes in ~5 minutes<br>• No action needed from you for permanent restore<br>• You'll receive email confirmation when permanent access is back<br><br><strong>Security reminder:</strong><br>Please log out of all sessions after your urgent task is complete to ensure smooth transition to permanent credentials.<br><br>Your access is live now. Need help with anything else?",
+                        confidence: 97
+                    };
+                }
+                if (lowerQ.includes('wait') || lowerQ.includes('full') || lowerQ.includes('no')) {
+                    return {
+                        initial: "Perfect, I'll let the IT Agent complete the full restoration. Let me give you a status update:",
+                        detail: "<strong>✅ Full Access Restoration In Progress:</strong><br><br><strong>Current status:</strong><br>• IT Agent is syncing group memberships<br>• Progress: 80% complete<br>• Estimated completion: 3 minutes<br><br><strong>Systems being restored:</strong><br>✓ SharePoint admin console<br>✓ Azure DevOps<br>⏳ GitHub Enterprise (processing...)<br><br><strong>What happens next:</strong><br>1. You'll receive an email confirmation when ready<br>2. Permissions will be tested automatically<br>3. No action needed from you<br><br><strong>If you encounter any issues:</strong><br>• Try logging out and back in<br>• Clear browser cache<br>• Contact IT helpdesk (I've created a priority ticket for you: #IT-8472)<br><br><strong>UPDATE:</strong> Access restoration complete! You should be able to access all systems now. Want me to verify your permissions are working?",
+                        confidence: 96
+                    };
+                }
+            }
+
+            return null;
         }
 
         // Enhanced Add AI Message with Confidence Score
@@ -2191,30 +2276,302 @@
             return null;
         }
 
-        // Enhanced Send Message with Agent Detection
-        function sendMessage() {
+        // ============================================
+        // LLM INTEGRATION - HYBRID APPROACH
+        // ============================================
+
+        // LLM Configuration
+        const LLM_CONFIG = {
+            provider: 'openai', // 'openai' | 'azure' | 'anthropic'
+            apiKey: 'YOUR_API_KEY_HERE', // Replace with your actual API key
+            model: 'gpt-4', // 'gpt-4' | 'gpt-3.5-turbo' | 'claude-3-sonnet'
+            endpoint: 'https://api.openai.com/v1/chat/completions',
+            enabled: false, // Set to true when you have a valid API key
+            demoMode: true // DEMO MODE: Simulates LLM responses without API key (perfect for demos!)
+        };
+
+        // Nova's System Prompt - Defines personality and context
+        const NOVA_SYSTEM_PROMPT = `You are Nova, an advanced AI workplace assistant integrated into Contoso's SharePoint environment. Your role is to help employees be more productive, informed, and connected at work.
+
+**Your Personality:**
+- Proactive and insightful, but never pushy
+- Professional yet warm and conversational
+- Data-driven but explain your reasoning clearly
+- Confident when you know, honest when you don't
+- Focus on actionable recommendations, not just information
+
+**Your Context:**
+- You have access to the user's calendar, emails, documents, team activity, and company data
+- You understand workplace patterns, deadlines, and collaboration networks
+- You can coordinate with specialized agents (Finance, HR, IT) when needed
+- You track user preferences and adapt your communication style
+
+**Your Capabilities:**
+- Analyze work patterns and suggest priorities
+- Provide personalized insights on company news and updates
+- Help with scheduling, meeting prep, and follow-ups
+- Draft emails and documents
+- Connect people who should collaborate
+- Answer questions about policies, benefits, and processes
+- Predict needs before they're asked
+
+**Response Guidelines:**
+- Keep responses concise but thorough (2-4 sentences for initial response)
+- Use specific details when possible (dates, names, numbers)
+- Offer 2-3 concrete next steps or options
+- Express confidence levels when appropriate (85-96% range)
+- Use light formatting for readability (but no markdown, use HTML like <strong> and <br>)
+- Always end with a question or call-to-action to continue the conversation
+
+**Current User Context:**
+- Name: Alex
+- Role: Senior Software Engineer
+- Team: Platform Engineering
+- Current focus: Q2 budget planning, architecture decisions, team mentorship
+- Working style: Values deep focus time, prefers async communication
+
+Remember: You're not just answering questions—you're actively helping this person succeed at work.`;
+
+        // Demo LLM - Simulates intelligent responses without API (WORKPLACE/SHAREPOINT FOCUSED)
+        function callDemoLLM(userMessage) {
+            const lowerQ = userMessage.toLowerCase();
+
+            // Generate contextual responses based on question patterns - WORKPLACE FOCUSED
+            const demoResponses = {
+                // General questions (What/Who/When/Where/Why/How)
+                'what|who|when|where|why|how': {
+                    patterns: [
+                        "That's a great question! Based on your role and recent activity, here's what I found about <strong>{topic}</strong>:<br><br>This typically comes up when teams are coordinating on cross-functional projects or navigating company policies. I've seen similar situations where connecting with the right person or department made all the difference.<br><br>Would you like me to find relevant company resources or connect you with someone who can help?",
+                        "Interesting question! Looking at our company knowledge base and your work patterns, <strong>{topic}</strong> is particularly relevant right now because of the upcoming Q2 initiatives.<br><br>I noticed this might connect to the new policy announcements from last week's All-Hands. <br><br>Should I pull up the specific documentation or schedule a quick sync with someone from that team?",
+                        "I've analyzed similar questions from employees in your department. Here's my insight: <strong>{topic}</strong> often comes up during planning cycles and can really impact team collaboration and efficiency.<br><br>Want me to search SharePoint for the latest resources, or would you prefer to chat with someone who's handled this recently?"
+                    ]
+                },
+                // Advice/help (Should/Recommend/Suggest)
+                'should|recommend|suggest|advice|help': {
+                    patterns: [
+                        "Based on your calendar and what I know about your role, here's my recommendation:<br><br><strong>Option 1:</strong> Start with a quick conversation with your manager - they've helped others navigate similar situations<br><br><strong>Option 2:</strong> Check the employee handbook first, then escalate if needed - this saves time for straightforward cases<br><br><strong>Option 3:</strong> Reach out to HR or the relevant department directly - they typically respond within 24 hours<br><br>Given your current workload and priorities, I'd suggest Option 2. What feels right to you?",
+                        "I've got some thoughts on this! Looking at your calendar and team dynamics, I recommend this approach:<br><br>• Review past examples in SharePoint (I found 5 relevant docs)<br>• Talk to 2-3 colleagues who've been through this<br>• Draft a quick proposal or summary<br>• Get informal feedback before any formal steps<br><br>This matches how successful employees in your org have handled similar situations. Want me to help you get started?",
+                        "Great timing on this! I noticed you have some open time next week that would be perfect for addressing this. Here's my suggestion:<br><br>1. Block 90 minutes on Tuesday for focused work<br>2. Reach out to Jennifer (she dealt with something similar last month)<br>3. Present your approach at your team meeting on Friday<br><br>I can draft the meeting invite and send Jennifer a heads-up message. Sound good?"
+                    ]
+                },
+                // Explanations (Explain/Understand/Clarify)
+                'explain|understand|clarify|mean': {
+                    patterns: [
+                        "Let me break this down in practical terms:<br><br><strong>In simple terms:</strong> Think of it like how our team sites are organized - each has a specific purpose, but they all connect to help you get work done efficiently.<br><br><strong>Why it matters to you:</strong> Understanding this can help you navigate company processes faster and know who to contact for different needs.<br><br><strong>Next steps:</strong> I can show you examples from our intranet or connect you with someone who's an expert. Which would help more?",
+                        "Good question - company policies can sometimes be confusing! Here's the key concept:<br><br><strong>The basics:</strong> This is essentially about how Contoso handles cross-departmental collaboration and decision-making.<br><br><strong>Real example:</strong> Remember when your team coordinated with Marketing on that campaign? Similar principle but applied to this situation.<br><br><strong>Why you care:</strong> Knowing this helps you work more effectively with other departments and avoid common pitfalls.<br><br>Want me to find the official documentation or training videos?",
+                        "I'll explain this in context of your day-to-day work:<br><br><strong>Core concept:</strong> It's about making sure information flows smoothly between teams while respecting privacy and security protocols.<br><br><strong>Practical application:</strong> You'd use this when sharing files across departments or coordinating on company-wide initiatives.<br><br><strong>Related resources:</strong> There's a great training module from last quarter that covers this, plus a FAQ page on SharePoint.<br><br>Should I send you the links?"
+                    ]
+                },
+                // Comparisons (Vs/Compare/Difference)
+                'vs|versus|compare|difference|better': {
+                    patterns: [
+                        "Excellent question - let me compare these options for your situation:<br><br><strong>Option A:</strong> Quicker to get started, less formal, good for small-scale needs<br>• Best for: Individual requests, quick turnarounds<br>• Approval time: 1-3 days<br><br><strong>Option B:</strong> More comprehensive, requires manager sign-off, better for team-wide needs<br>• Best for: Larger initiatives, recurring needs<br>• Approval time: 5-7 days<br><br>Given your timeline and the scope of what you're trying to do, I'd recommend Option A. Want to discuss trade-offs?",
+                        "Good question to ask! Here's how they compare for someone in your role:<br><br><strong>Process A:</strong> Faster (2-3 days) but limited to $5K<br><strong>Process B:</strong> Slower (1-2 weeks) but handles up to $50K<br><strong>Ease of use:</strong> Process A is simpler, Process B needs more documentation<br><strong>What others choose:</strong> 70% of your department uses Process A<br><br>What matters most to you - speed or flexibility?",
+                        "I've looked at both based on how your team typically operates:<br><br><strong>Approach A:</strong> Self-service via portal, immediate access, DIY support<br><strong>Approach B:</strong> IT-assisted, scheduled setup, full support included<br><strong>Popular choice:</strong> New employees prefer Approach B for guidance<br><strong>Experienced employees:</strong> Usually go with Approach A for speed<br><br>Since you've been here a while, Approach A might be faster. Want me to walk you through it?"
+                    ]
+                },
+                // Time/scheduling (When/Schedule/Deadline)
+                'time|when|schedule|deadline|date': {
+                    patterns: [
+                        "Let me check your calendar and relevant deadlines...<br><br><strong>Optimal timing:</strong> Next Tuesday-Wednesday looks best - you have lighter meetings those days<br><strong>Deadline considerations:</strong> End of month closes Friday, so wrapping this up by Thursday gives you buffer<br><strong>Team availability:</strong> The people you need are in the office Wednesday-Thursday<br><br>I recommend starting Tuesday morning. Should I send calendar holds and prep an agenda?",
+                        "Looking at your schedule and work patterns:<br><br><strong>Earliest possible:</strong> Tomorrow afternoon (you have a 2-hour window)<br><strong>Ideal timing:</strong> Next Monday when you're typically more focused<br><strong>Latest advisable:</strong> Before the All-Hands on the 15th<br><br>Trade-off: Tomorrow gets it done fast but might feel rushed. Next week allows better preparation.<br><br>What's your preference - speed or quality time?",
+                        "I've analyzed your calendar, company events, and team schedules:<br><br><strong>Your availability:</strong> 6 open blocks this week, 10 next week<br><strong>Key stakeholders:</strong> Available for meetings Tuesday-Thursday<br><strong>Company calendar:</strong> All-Hands on Friday, better to avoid that day<br><br>Sweet spot: Wednesday at 10am. Morning meetings get better engagement, and everyone's schedules align. Should I set it up?"
+                    ]
+                },
+                // Jokes/fun (Joke/Funny/Laugh)
+                'joke|funny|laugh|fun': {
+                    patterns: [
+                        "Ha! I appreciate the levity. Here's one for you:<br><br>Why did the employee bring a ladder to the meeting?<br><br>Because they wanted to reach new heights! 📈<br><br>Speaking of heights, I noticed your team exceeded performance goals by 35% last quarter. That's genuinely impressive! Want to see the breakdown or celebrate the win?",
+                        "Alright, here you go:<br><br>What do you call it when your calendar has too many meetings?<br><br>A meeting-pocalypse! 📅💥<br><br>On a serious note, I noticed you have 8 meetings scheduled tomorrow. Want me to identify which ones could be async or rescheduled to give you more focus time?",
+                        "You got it:<br><br>Why did the SharePoint document go to therapy?<br><br>It had too many unresolved conflicts! 📄😅<br><br>Since we're taking a fun break, I noticed you've been working for 3 hours straight. Research shows productivity peaks with regular breaks. Want me to suggest a good time for coffee?"
+                    ]
+                },
+                // Find/search/locate
+                'find|search|locate|where can|looking for': {
+                    patterns: [
+                        "I can help you find that! Based on what you're looking for, here are the most likely places:<br><br><strong>1. SharePoint site:</strong> Check the [Department Name] team site - most documents like this are stored there<br><br><strong>2. Recent activity:</strong> I see similar files were shared in your Teams channels last week<br><br><strong>3. Company resources:</strong> The employee portal has a dedicated section for this<br><br>Should I open the most relevant location for you, or would you like me to search across all sites?",
+                        "Great question - let me search our company resources for that:<br><br>I found 12 potential matches in SharePoint, Teams, and the employee portal. The most relevant ones are:<br><br>• Policy document (updated last month)<br>• Training guide (viewed by 500+ employees)<br>• FAQ page (covers your specific question)<br><br>Which would you like me to open first, or should I send you all three links?",
+                        "I'm searching for that now across SharePoint, Teams, and your recent activity...<br><br><strong>Top result:</strong> Found in your department's shared folder, last updated 2 weeks ago<br><br><strong>Related resources:</strong> 3 similar documents that might also be helpful<br><br><strong>Who to ask:</strong> Jennifer from your team is tagged as the owner<br><br>Should I open the main document, or would you like to reach out to Jennifer first?"
+                    ]
+                }
+            };
+
+            // Find matching pattern
+            let selectedResponses = null;
+            for (const [keywords, data] of Object.entries(demoResponses)) {
+                const keywordPattern = new RegExp(keywords, 'i');
+                if (keywordPattern.test(lowerQ)) {
+                    selectedResponses = data.patterns;
+                    break;
+                }
+            }
+
+            // Generate response
+            if (selectedResponses) {
+                const response = selectedResponses[Math.floor(Math.random() * selectedResponses.length)];
+                // Replace {topic} placeholder with extracted subject
+                const topic = userMessage.split(' ').slice(1, 4).join(' ') || 'this topic';
+                return response.replace('{topic}', topic);
+            }
+
+            // Default intelligent response (workplace-focused)
+            return `I understand you're asking about "${userMessage}". Let me think about this in context of your work...<br><br>Based on your role and recent company activity, this seems related to workplace processes or company resources. While I don't have a specific pre-programmed answer, I can definitely help you find what you need.<br><br>Would you like me to:<br>• Search SharePoint and company documentation<br>• Connect you with the right person or department<br>• Check if there's a policy or procedure for this<br>• Help you draft a message to the appropriate team<br><br>What would be most helpful?`;
+        }
+
+        // Call LLM (real or demo)
+        async function callLLM(userMessage, conversationHistory = []) {
+            // Demo Mode - No API key needed!
+            if (LLM_CONFIG.demoMode && !LLM_CONFIG.enabled) {
+                console.log('Demo mode: Simulating LLM response');
+
+                // Show enhanced thinking animation
+                showAgentThinking([
+                    'Connecting to Nova intelligence network...',
+                    'Processing your question with advanced reasoning...',
+                    'Analyzing context and generating personalized response...',
+                    'Finalizing recommendations...'
+                ]);
+
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                const demoResponse = callDemoLLM(userMessage);
+                const confidence = Math.floor(87 + Math.random() * 8); // 87-95%
+
+                return {
+                    text: demoResponse,
+                    confidence: confidence,
+                    source: 'demo-llm'
+                };
+            }
+
+            // Real LLM Mode - Requires API key
+            if (!LLM_CONFIG.enabled) {
+                console.warn('LLM is not enabled. Using fallback response.');
+                return null;
+            }
+
+            if (LLM_CONFIG.apiKey === 'YOUR_API_KEY_HERE') {
+                console.error('Please configure your API key in LLM_CONFIG');
+                return null;
+            }
+
+            try {
+                // Build messages array
+                const messages = [
+                    { role: 'system', content: NOVA_SYSTEM_PROMPT },
+                    ...conversationHistory,
+                    { role: 'user', content: userMessage }
+                ];
+
+                // Show enhanced thinking animation for LLM calls
+                showAgentThinking([
+                    'Connecting to Nova intelligence network...',
+                    'Processing your question with advanced reasoning...',
+                    'Analyzing context and generating personalized response...',
+                    'Finalizing recommendations...'
+                ]);
+
+                const response = await fetch(LLM_CONFIG.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${LLM_CONFIG.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: LLM_CONFIG.model,
+                        messages: messages,
+                        temperature: 0.7,
+                        max_tokens: 500,
+                        stream: false // Set to true for streaming if desired
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`LLM API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content;
+
+                // Simulate confidence based on response quality
+                const confidence = Math.floor(85 + Math.random() * 10); // 85-95%
+
+                return {
+                    text: aiResponse,
+                    confidence: confidence,
+                    source: 'llm'
+                };
+
+            } catch (error) {
+                console.error('LLM call failed:', error);
+                return null;
+            }
+        }
+
+        // Conversation history for context (last 6 messages)
+        let conversationHistory = [];
+
+        function addToHistory(role, content) {
+            conversationHistory.push({ role, content });
+            // Keep only last 6 messages (3 exchanges)
+            if (conversationHistory.length > 6) {
+                conversationHistory = conversationHistory.slice(-6);
+            }
+        }
+
+        // Enhanced Send Message with Hybrid LLM Integration
+        async function sendMessage() {
             const input = document.getElementById('userInput');
             const text = input.value.trim();
 
             if (text) {
                 addUserMessage(text);
+                addToHistory('user', text);
                 input.value = '';
                 input.style.height = 'auto';
 
-                // Show thinking animation for more complex queries
+                // Show thinking animation
                 showAgentThinking([
                     'Understanding your question...',
                     'Analyzing relevant context...',
                     'Preparing personalized response...'
                 ]);
 
-                // Check for smart responses first
+                // HYBRID APPROACH - Priority order:
+                // 0. Agent follow-up responses (if in active agent conversation)
+                // 1. Pre-scripted smart responses (for demo reliability)
+                // 2. Multi-agent collaboration (for specialized queries)
+                // 3. LLM fallback (for custom/off-script questions)
+                // 4. Generic fallback (if LLM fails)
+
+                // Check for agent follow-ups first (if we're in an agent conversation)
+                if (currentAgentContext) {
+                    const agentFollowUp = getAgentFollowUp(text, currentAgentContext);
+                    if (agentFollowUp) {
+                        setTimeout(() => {
+                            addAIMessage(agentFollowUp.initial, false, agentFollowUp.confidence);
+                            addToHistory('assistant', agentFollowUp.initial);
+                            setTimeout(() => {
+                                addAIMessage(agentFollowUp.detail, false, agentFollowUp.confidence);
+                                addToHistory('assistant', agentFollowUp.detail);
+                                // Keep context active for additional follow-ups
+                            }, 1800);
+                        }, 2500);
+                        return;
+                    }
+                }
+
+                // Check for smart responses
                 const smartResponse = getSmartResponse(text);
                 if (smartResponse) {
+                    currentAgentContext = null; // Clear agent context
                     setTimeout(() => {
                         addAIMessage(smartResponse.initial, false, smartResponse.confidence);
+                        addToHistory('assistant', smartResponse.initial);
                         setTimeout(() => {
                             addAIMessage(smartResponse.detail, false, smartResponse.confidence);
+                            addToHistory('assistant', smartResponse.detail);
                         }, 1800);
                     }, 2500);
                     return;
@@ -2222,24 +2579,44 @@
 
                 // Detect if multi-agent collaboration is needed
                 const neededAgent = detectNeededAgents(text);
-
                 if (neededAgent) {
                     setTimeout(() => {
                         inviteAgent(neededAgent, text);
                     }, 2500);
-                } else {
-                    // Normal response with confidence
-                    setTimeout(() => {
-                        const responses = [
-                            { text: "I understand what you're looking for. Based on your work patterns and current projects, here's what I recommend...", confidence: 87 },
-                            { text: "Great question! I've analyzed your recent activity and team context. Here's what stands out...", confidence: 91 },
-                            { text: "I've been tracking this for you across multiple data sources. Let me break down the key insights...", confidence: 89 },
-                            { text: "This connects to several ongoing initiatives. Let me help you see the bigger picture...", confidence: 85 }
-                        ];
-                        const response = responses[Math.floor(Math.random() * responses.length)];
-                        addAIMessage(response.text, false, response.confidence);
-                    }, 2500);
+                    return;
                 }
+
+                // Try LLM for custom questions (includes Demo Mode!)
+                if (LLM_CONFIG.enabled || LLM_CONFIG.demoMode) {
+                    try {
+                        currentAgentContext = null; // Clear agent context for LLM
+                        const llmResponse = await callLLM(text, conversationHistory);
+
+                        if (llmResponse) {
+                            setTimeout(() => {
+                                addAIMessage(llmResponse.text, false, llmResponse.confidence);
+                                addToHistory('assistant', llmResponse.text);
+                            }, 3000); // Slightly longer for LLM to feel thoughtful
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('LLM error, falling back to generic:', error);
+                    }
+                }
+
+                // Fallback to generic responses if LLM unavailable
+                currentAgentContext = null; // Clear agent context
+                setTimeout(() => {
+                    const responses = [
+                        { text: "I understand what you're looking for. Based on your work patterns and current projects, here's what I recommend...", confidence: 87 },
+                        { text: "Great question! I've analyzed your recent activity and team context. Here's what stands out...", confidence: 91 },
+                        { text: "I've been tracking this for you across multiple data sources. Let me break down the key insights...", confidence: 89 },
+                        { text: "This connects to several ongoing initiatives. Let me help you see the bigger picture...", confidence: 85 }
+                    ];
+                    const response = responses[Math.floor(Math.random() * responses.length)];
+                    addAIMessage(response.text, false, response.confidence);
+                    addToHistory('assistant', response.text);
+                }, 2500);
             }
         }
 
