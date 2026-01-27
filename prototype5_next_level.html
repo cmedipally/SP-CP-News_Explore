@@ -1974,7 +1974,7 @@
 
         function detectNeededAgents(question) {
             const lowerQ = question.toLowerCase();
-            if (lowerQ.includes('budget') || lowerQ.includes('invoice') || lowerQ.includes('cost') || lowerQ.includes('financial')) {
+            if (lowerQ.includes('budget') || lowerQ.includes('expense') || lowerQ.includes('invoice') || lowerQ.includes('cost') || lowerQ.includes('financial') || lowerQ.includes('reimburs')) {
                 return 'finance';
             }
             if (lowerQ.includes('pto') || lowerQ.includes('vacation') || lowerQ.includes('leave') || lowerQ.includes('benefits') || lowerQ.includes('time off')) {
@@ -2025,12 +2025,20 @@
             conversation.appendChild(collabDiv);
 
             setTimeout(() => {
+                // Detect if Finance Agent question is about expense reports
+                const lowerContext = context.toLowerCase();
+                const isExpenseReport = lowerContext.includes('expense') || lowerContext.includes('reimburs') || lowerContext.includes('receipt');
+
                 // Detailed, contextual responses
                 const responses = {
                     finance: {
-                        initial: "I've analyzed your financial question with the Finance Agent. Here's what we found:",
-                        detail: "<strong>Q2 Budget Status:</strong><br>• Current remaining: $45,000<br>• Additional contingency available: $15,000 (requires VP approval)<br>• Approval timeline: 3-5 business days<br><br><strong>Spending Analysis:</strong><br>• 68% of budget utilized (on track)<br>• Largest categories: Cloud infrastructure (42%), Headcount (35%)<br>• Projected end-of-quarter balance: $8,000<br><br><strong>Recommendations:</strong><br>The Finance Agent suggests submitting any requests over $10K by end of this week to ensure Q2 processing. Want me to help draft your budget request or connect you with the finance partner?",
-                        followUpContext: 'finance-budget'
+                        initial: isExpenseReport ?
+                            "I've consulted with the Finance Agent about expense reporting. Here's the step-by-step process:" :
+                            "I've analyzed your financial question with the Finance Agent. Here's what we found:",
+                        detail: isExpenseReport ?
+                            "<strong>📱 STEP 1: Use Concur Expense Tool</strong><br>• Go to <strong>concur.contoso.com</strong> or download the Concur mobile app<br>• Sign in with your company credentials (SSO)<br><br><strong>📸 STEP 2: Upload Receipts</strong><br>• Take photos of receipts (mobile) or upload PDFs/images (web)<br>• System auto-detects merchant, date, and amount (you can edit if needed)<br><br><strong>📝 STEP 3: Create Expense Report</strong><br>• Click 'Create New Report'<br>• Add business purpose (e.g., 'Client meeting,' 'Team offsite')<br>• Select cost center/project code<br>• Attach all receipts to the report<br><br><strong>✅ STEP 4: Submit for Approval</strong><br>• Review all entries<br>• Click 'Submit' - goes to your manager automatically<br>• Timeline: Approval within 2-3 business days, reimbursement 5-7 days after approval<br><br><strong>💡 PRO TIPS from Finance Agent:</strong><br>• Receipts required for expenses over $25<br>• Submit within 30 days of expense date<br>• Hotel and airfare auto-populate from booking system<br>• Per diem rates: $50/day for meals (no receipts needed)<br><br><strong>COMPANY POLICIES:</strong><br>• Travel: Pre-approval needed for international travel<br>• Meals: Client meals fully reimbursable, solo meals follow per diem<br>• Mileage: $0.65/mile for personal vehicle use<br><br>Need help with a specific expense or want me to open Concur for you?" :
+                            "<strong>Q2 Budget Status:</strong><br>• Current remaining: $45,000<br>• Additional contingency available: $15,000 (requires VP approval)<br>• Approval timeline: 3-5 business days<br><br><strong>Spending Analysis:</strong><br>• 68% of budget utilized (on track)<br>• Largest categories: Cloud infrastructure (42%), Headcount (35%)<br>• Projected end-of-quarter balance: $8,000<br><br><strong>Recommendations:</strong><br>The Finance Agent suggests submitting any requests over $10K by end of this week to ensure Q2 processing. Want me to help draft your budget request or connect you with the finance partner?",
+                        followUpContext: isExpenseReport ? 'finance-expense' : 'finance-budget'
                     },
                     hr: {
                         initial: "I've consulted with the HR Agent about your benefits and leave. Here's the complete picture:",
