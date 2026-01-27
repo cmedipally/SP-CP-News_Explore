@@ -1974,7 +1974,7 @@
 
         function detectNeededAgents(question) {
             const lowerQ = question.toLowerCase();
-            if (lowerQ.includes('budget') || lowerQ.includes('expense') || lowerQ.includes('invoice') || lowerQ.includes('cost') || lowerQ.includes('financial')) {
+            if (lowerQ.includes('budget') || lowerQ.includes('invoice') || lowerQ.includes('cost') || lowerQ.includes('financial')) {
                 return 'finance';
             }
             if (lowerQ.includes('pto') || lowerQ.includes('vacation') || lowerQ.includes('leave') || lowerQ.includes('benefits') || lowerQ.includes('time off')) {
