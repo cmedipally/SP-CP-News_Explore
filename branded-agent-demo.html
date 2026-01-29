@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Intranet - SharePoint Maven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            color: #1e5631;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .description {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .description p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .description a {
+            color: #0078d4;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e5631, #2d7a47);
+            color: white;
+            padding: 60px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .hero-content h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .hero-content h2 .highlight {
+            color: #90ee90;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-image {
+            width: 400px;
+            height: 250px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .quick-links h3 {
+            color: #1e5631;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .link-item:hover {
+            background: #f0f0f0;
+        }
+
+        .link-icon {
+            width: 40px;
+            height: 40px;
+            background: #1e5631;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Retail Tools */
+        .retail-tools {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .retail-tools h3 {
+            color: #1e5631;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .tool-card {
+            background: #1e5631;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .tool-card h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .tool-card p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* News and Events */
+        .news-events {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-card h3 {
+            color: #1e5631;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .news-item:hover {
+            background: #f9f9f9;
+        }
+
+        .news-image {
+            width: 80px;
+            height: 60px;
+            background: #ddd;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .news-content h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #1e5631;
+        }
+
+        .news-content p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .fab {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(30, 86, 49, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 3px solid white;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(30, 86, 49, 0.5);
+        }
+
+        .fab-icon {
+            font-size: 32px;
+            color: white;
+        }
+
+        .fab.active {
+            transform: rotate(45deg);
+        }
+
+        /* Agent Modal */
+        .agent-modal {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            width: 440px;
+            max-height: 85vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1);
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .agent-modal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+
+        /* Modal Header */
+        .modal-header {
+            background: linear-gradient(135deg, #1e5631, #4a9d5f, #5db36e);
+            color: white;
+            padding: 24px 24px 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: headerShine 6s infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-30%, -30%); }
+        }
+
+        .modal-header-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+
+        .modal-header-content {
+            z-index: 1;
+        }
+
+        .modal-header-content h3 {
+            font-size: 19px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .modal-header-content p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            max-height: calc(85vh - 170px);
+            overflow-y: auto;
+            padding: 20px 20px 10px 20px;
+        }
+
+        .feature-section {
+            margin-bottom: 28px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e5631;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid rgba(30, 86, 49, 0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 86, 49, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .info-card:hover {
+            border-color: #1e5631;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(30, 86, 49, 0.15);
+        }
+
+        .info-card:hover::before {
+            opacity: 1;
+        }
+
+        .info-card.expanded {
+            background: white;
+            border-color: #1e5631;
+            box-shadow: 0 12px 32px rgba(30, 86, 49, 0.2);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .video-thumbnail {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.4s;
+        }
+
+        .info-card:hover .video-thumbnail {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .info-card-content h4 {
+            font-size: 15px;
+            margin-bottom: 4px;
+            color: #1e5631;
+            font-weight: 600;
+        }
+
+        .info-card-content p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .info-card-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 11px;
+            color: #999;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .info-card-expanded-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .info-card.expanded .info-card-expanded-content {
+            max-height: 600px;
+            opacity: 1;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        /* Quick Task Cards */
+        .task-card {
+            background: linear-gradient(135deg, #1e5631, #2d7a47, #3a9155);
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(30, 86, 49, 0.2);
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: cardShine 8s infinite;
+        }
+
+        @keyframes cardShine {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20%, -20%); }
+        }
+
+        .task-card.completed {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            animation: taskComplete 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes taskComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .task-card h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .task-card p {
+            font-size: 13px;
+            opacity: 0.95;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            padding: 11px 22px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #1e5631;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+        }
+
+        /* Chat Messages Container */
+        .chat-messages-container {
+            display: none;
+            height: 300px;
+            background: #f8f9fa;
+            border-top: 1px solid rgba(30, 86, 49, 0.1);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .chat-messages-container.active {
+            display: block;
+        }
+
+        /* Chat Bar */
+        .chat-bar {
+            padding: 16px 20px;
+            background: white;
+            border-top: 2px solid rgba(30, 86, 49, 0.1);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-messages {
+            padding: 16px;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 14px;
+            animation: slideInMessage 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .message.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message.agent {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 13px 17px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #1e5631, #2d7a47);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.agent .message-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 6px;
+            border: 1px solid rgba(30, 86, 49, 0.1);
+        }
+
+        .message-link {
+            color: #0078d4;
+            text-decoration: none;
+            display: block;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .message-link:hover {
+            text-decoration: underline;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 13px 18px;
+            border: 2px solid rgba(30, 86, 49, 0.2);
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .chat-input:focus {
+            border-color: #1e5631;
+            background: white;
+        }
+
+        .chat-input::placeholder {
+            color: #999;
+        }
+
+        .send-button {
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 12px rgba(30, 86, 49, 0.3);
+            font-size: 18px;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(30, 86, 49, 0.4);
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+            box-shadow: none;
+        }
+
+        .video-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 12px;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .video-player video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        /* Scrollbar Styling */
+        .modal-content::-webkit-scrollbar,
+        .chat-messages-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track,
+        .chat-messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb,
+        .chat-messages-container::-webkit-scrollbar-thumb {
+            background: rgba(30, 86, 49, 0.3);
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover,
+        .chat-messages-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(30, 86, 49, 0.6);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e5631;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #90ee90;
+            text-decoration: none;
+        }
+
+        /* Pulse effect for FAB */
+        @keyframes fabPulse {
+            0%, 100% {
+                box-shadow: 0 6px 20px rgba(30, 86, 49, 0.4);
+            }
+            50% {
+                box-shadow: 0 6px 20px rgba(30, 86, 49, 0.6), 0 0 0 10px rgba(30, 86, 49, 0.1);
+            }
+        }
+
+        .fab {
+            animation: fabPulse 3s infinite;
+        }
+
+        /* Shimmer effect */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200px 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .agent-modal {
+                right: 20px;
+                width: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 30px;
+            }
+
+            .hero-image {
+                width: 100%;
+                margin-top: 20px;
+            }
+
+            .news-events {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .agent-modal {
+                bottom: 100px;
+                right: 10px;
+                left: 10px;
+                width: auto;
+                max-height: 80vh;
+            }
+
+            .modal-content {
+                max-height: calc(80vh - 90px);
+            }
+
+            .fab-container {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .fab {
+                width: 60px;
+                height: 60px;
+            }
+
+            .fab-icon {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Retail Intranet</h1>
+        <div class="logo">
+            <div class="logo-icon">SM</div>
+            <div class="logo-text">SHAREPOINT<br>MAVEN</div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Description -->
+        <div class="description">
+            <p>SharePoint Intranet built for the retail industry and supermarket chains, connecting store employees, regional managers, and corporate teams across multiple locations.</p>
+            <p>Learn more: <a href="#" target="_blank">https://lookbook365.com/intranet-retail-supermarket-sharepoint/</a></p>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h2>Welcome to<br><span class="highlight">Sanderson's World Foods</span></h2>
+                <p>The digital hub for our supermarket locations. Stay connected with company news, retail tools, and regional updates—all in one place for our retail teams!</p>
+            </div>
+            <div class="hero-image">
+                <span>🛒 Welcome Image Placeholder</span>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="two-column">
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <h3>Quick Links</h3>
+                <div class="link-item">
+                    <div class="link-icon">📅</div>
+                    <span>Scheduling Portal (ATS, PTO, swaps)</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">💰</div>
+                    <span>Payroll & Benefits Access</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">❓</div>
+                    <span>IT Helpdesk</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">📖</div>
+                    <span>Store Operations Manual</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">📍</div>
+                    <span>Our Locations</span>
+                </div>
+            </div>
+
+            <!-- Retail Tools & Resources -->
+            <div class="retail-tools">
+                <h3>Retail Tools & Resources</h3>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h4>Weekly Ads &<br>Flyer Preview</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Merchandising<br>Manual</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Product Recall<br>Notifications</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Inventory<br>Count & Track</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Daily POS<br>Sales Dashboard</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Store Promotion<br>& Event Toolkit</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News and Events -->
+        <div class="news-events">
+            <div class="section-card">
+                <h3>Company News</h3>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ddeedd;"></div>
+                    <div class="news-content">
+                        <h4>Sanderson's Expands: Grand Opening of 4th Store in Valley Heights</h4>
+                        <p>Dec 15, 2025 • Corporate HQ</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #eeddee;"></div>
+                    <div class="news-content">
+                        <h4>Digital Reach Partners Brings CLICK & COLLECT to Stores 1 & 3</h4>
+                        <p>Dec 8, 2025 • Tech & Innovation</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ddeeff;"></div>
+                    <div class="news-content">
+                        <h4>Employee Spotlight: Sandra Awarded Best Fresh Produce Team</h4>
+                        <p>Nov 30, 2025 • HR Department</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>Events</h3>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ffeecc;"></div>
+                    <div class="news-content">
+                        <h4>Annual Holiday Shifts Schedule Released</h4>
+                        <p>Dec 20, 2025 • All Stores</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ffdddd;"></div>
+                    <div class="news-content">
+                        <h4>New Year's Food Drive: Accepting Donations Now</h4>
+                        <p>Jan 5, 2026</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ddffdd;"></div>
+                    <div class="news-content">
+                        <h4>Employee Appreciation Barbecue</h4>
+                        <p>Jan 15, 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Need Help with SharePoint implementation? Email me at: <a href="mailto:greg@sharepointmaven.com">greg@sharepointmaven.com</a></p>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="fab-container">
+        <div class="fab" id="fabButton">
+            <div class="fab-icon">🤖</div>
+        </div>
+    </div>
+
+    <!-- Agent Modal -->
+    <div class="agent-modal" id="agentModal">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <div class="modal-header-icon">SM</div>
+            <div class="modal-header-content">
+                <h3>Sanderson's Assistant</h3>
+                <p>Your AI-powered workplace companion</p>
+            </div>
+        </div>
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <!-- Information Consumption -->
+            <div class="feature-section">
+                <div class="section-title">
+                    <span>📺</span> Information & Updates
+                </div>
+
+                <!-- Weekly Recap Card -->
+                <div class="info-card" id="weeklyRecapCard">
+                    <div class="info-card-header" onclick="toggleWeeklyRecap()">
+                        <div class="video-thumbnail">▶️</div>
+                        <div class="info-card-content">
+                            <h4>Weekly Recap</h4>
+                            <p>Your 30-second digest of company highlights and important updates</p>
+                        </div>
+                    </div>
+                    <div class="info-card-meta">
+                        <span>🕐 30 seconds</span>
+                        <span>📅 This week</span>
+                        <span>🔥 5 updates</span>
+                    </div>
+
+                    <!-- Expanded Video Content -->
+                    <div class="info-card-expanded-content" id="weeklyRecapExpanded">
+                        <div class="video-player">
+                            <video id="weeklyVideo" controls style="width: 100%; border-radius: 12px;">
+                                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="video-info" style="margin-top: 14px;">
+                            <h3 style="font-size: 16px; color: #1e5631; margin-bottom: 10px;">This Week's Highlights</h3>
+                            <ul style="padding-left: 20px; line-height: 1.8; font-size: 13px; color: #666;">
+                                <li>🎉 Grand opening of our 4th location in Valley Heights</li>
+                                <li>📱 Click & Collect now available at 2 stores</li>
+                                <li>🏆 Q4 sales exceeded targets by 12%</li>
+                                <li>🎄 Holiday schedule and bonus announcements</li>
+                                <li>👥 New leadership appointments in Operations</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary" style="background: #1e5631; color: white; width: 100%; margin-top: 14px;" onclick="event.stopPropagation(); startRecapChat();">
+                            💬 Ask about these updates
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Leadership Card -->
+                <div class="info-card" id="leadershipCard">
+                    <div class="info-card-header" onclick="toggleLeadership()">
+                        <div class="video-thumbnail" style="background: linear-gradient(135deg, #f093fb, #f5576c);">💭</div>
+                        <div class="info-card-content">
+                            <h4>Top of Mind from Leadership</h4>
+                            <p>See what's important to your manager and org leadership right now</p>
+                        </div>
+                    </div>
+                    <div class="info-card-meta">
+                        <span>👤 From: Sarah Chen (Manager)</span>
+                        <span>🎯 3 priorities</span>
+                    </div>
+
+                    <!-- Expanded Leadership Content -->
+                    <div class="info-card-expanded-content" id="leadershipExpanded">
+                        <div style="background: linear-gradient(135deg, #f8f9fa, #ffffff); padding: 16px; border-radius: 12px; margin-bottom: 12px;">
+                            <h4 style="font-size: 14px; color: #1e5631; margin-bottom: 12px; font-weight: 600;">📌 From Sarah Chen (Your Manager):</h4>
+                            <div style="font-size: 13px; color: #666; line-height: 1.8;">
+                                <p style="margin-bottom: 8px;"><strong>1.</strong> Focus on customer experience during holiday rush</p>
+                                <p style="margin-bottom: 8px;"><strong>2.</strong> Complete Q1 training modules by Jan 15</p>
+                                <p style="margin-bottom: 0;"><strong>3.</strong> Team building event planning for February</p>
+                            </div>
+                        </div>
+                        <div style="background: linear-gradient(135deg, #e3f2fd, #ffffff); padding: 14px; border-radius: 12px; font-size: 13px; color: #666; margin-bottom: 12px;">
+                            💡 <strong>Tip:</strong> You have a 1:1 sync with Sarah in 2 days. Would you like help preparing talking points?
+                        </div>
+                        <button class="btn btn-primary" style="background: #1e5631; color: white; width: 100%;" onclick="event.stopPropagation(); startLeadershipChat();">
+                            💬 Discuss with Assistant
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Tasks -->
+            <div class="feature-section">
+                <div class="section-title">
+                    <span>⚡</span> Quick Tasks
+                </div>
+
+                <div class="task-card" id="lunchCard">
+                    <h4>🍽️ Order Lunch Today</h4>
+                    <p><strong>Today's Special:</strong> Mediterranean Chicken Bowl with Quinoa & Fresh Veggies<br>
+                    ⭐⭐⭐⭐⭐ (4.8/5) - Your favorite! Available at Cafeteria B until 2:00 PM</p>
+                    <div class="task-actions">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); reviewLunch();">Review Order</button>
+                        <button class="btn btn-secondary" onclick="event.stopPropagation(); alert('Opening cafeteria menu...');">View Menu</button>
+                    </div>
+                </div>
+
+                <div class="task-card" id="claimCard" style="background: linear-gradient(135deg, #4a9d5f, #1e5631, #3a9155);">
+                    <h4>💰 Submit Reimbursement Claim</h4>
+                    <p>I found a new receipt in your OneDrive: "Office Supplies - Staples" ($47.82) from Dec 18, 2025<br>
+                    Would you like to file a reimbursement?</p>
+                    <div class="task-actions">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); reviewClaim();">Review & Submit</button>
+                        <button class="btn btn-secondary" onclick="event.stopPropagation(); dismissClaim();">Dismiss</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Persistent Chat Messages (expandable) -->
+        <div class="chat-messages-container" id="chatMessagesContainer">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here dynamically -->
+            </div>
+        </div>
+
+        <!-- Persistent Chat Bar -->
+        <div class="chat-bar">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything..." onkeypress="handleChatEnter(event)">
+            <button class="send-button" id="sendButton" onclick="sendMessage()">
+                ➤
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let chatContext = 'general';
+
+        // FAB Toggle
+        const fabButton = document.getElementById('fabButton');
+        const agentModal = document.getElementById('agentModal');
+
+        fabButton.addEventListener('click', () => {
+            const isActive = agentModal.classList.contains('active');
+
+            if (isActive) {
+                closeModal();
+            } else {
+                openModal();
+            }
+        });
+
+        function openModal() {
+            agentModal.classList.add('active');
+            fabButton.classList.add('active');
+
+            // Focus chat input for immediate typing
+            setTimeout(() => {
+                document.getElementById('chatInput').focus();
+            }, 500);
+        }
+
+        function closeModal() {
+            agentModal.classList.remove('active');
+            fabButton.classList.remove('active');
+
+            // Collapse all expanded sections after modal closes
+            setTimeout(() => {
+                collapseAll();
+            }, 400);
+        }
+
+        function collapseAll() {
+            document.getElementById('weeklyRecapCard').classList.remove('expanded');
+            document.getElementById('leadershipCard').classList.remove('expanded');
+            document.getElementById('chatMessagesContainer').classList.remove('active');
+            const video = document.getElementById('weeklyVideo');
+            if (video) video.pause();
+        }
+
+        // Toggle Weekly Recap
+        function toggleWeeklyRecap() {
+            const card = document.getElementById('weeklyRecapCard');
+            const isExpanded = card.classList.contains('expanded');
+
+            // Collapse others
+            document.getElementById('leadershipCard').classList.remove('expanded');
+
+            if (isExpanded) {
+                card.classList.remove('expanded');
+                const video = document.getElementById('weeklyVideo');
+                video.pause();
+            } else {
+                card.classList.add('expanded');
+                setTimeout(() => {
+                    const video = document.getElementById('weeklyVideo');
+                    video.play();
+                    // Smooth scroll to show expanded content
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 300);
+            }
+        }
+
+        // Toggle Leadership
+        function toggleLeadership() {
+            const card = document.getElementById('leadershipCard');
+            const isExpanded = card.classList.contains('expanded');
+
+            // Collapse others
+            document.getElementById('weeklyRecapCard').classList.remove('expanded');
+            const video = document.getElementById('weeklyVideo');
+            video.pause();
+
+            if (isExpanded) {
+                card.classList.remove('expanded');
+            } else {
+                card.classList.add('expanded');
+                setTimeout(() => {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 300);
+            }
+        }
+
+        // Start chats from expanded cards
+        function startRecapChat() {
+            chatContext = 'recap';
+            document.getElementById('weeklyRecapCard').classList.remove('expanded');
+
+            const container = document.getElementById('chatMessagesContainer');
+            container.classList.add('active');
+
+            // Scroll the chat bar into view
+            setTimeout(() => {
+                const chatBar = document.querySelector('.chat-bar');
+                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 100);
+
+            setTimeout(() => {
+                addAgentMessage("I'm here to answer any questions about this week's updates! What would you like to know more about?");
+            }, 400);
+        }
+
+        function startLeadershipChat() {
+            chatContext = 'leadership';
+            document.getElementById('leadershipCard').classList.remove('expanded');
+
+            const container = document.getElementById('chatMessagesContainer');
+            container.classList.add('active');
+
+            // Scroll the chat bar into view
+            setTimeout(() => {
+                const chatBar = document.querySelector('.chat-bar');
+                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 100);
+
+            setTimeout(() => {
+                addAgentMessage("I can help you prepare for your 1:1 with Sarah. Would you like me to suggest talking points or help you discuss any of the priorities she mentioned?");
+            }, 400);
+        }
+
+        // Chat Functions
+        function handleChatEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Show chat messages container first
+            const container = document.getElementById('chatMessagesContainer');
+            container.classList.add('active');
+
+            // Scroll the chat bar into view
+            setTimeout(() => {
+                const chatBar = document.querySelector('.chat-bar');
+                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 100);
+
+            // Add user message
+            const chatMessages = document.getElementById('chatMessages');
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'message user';
+            userMsgDiv.innerHTML = `<div class="message-bubble">${message}</div>`;
+            chatMessages.appendChild(userMsgDiv);
+
+            // Clear input
+            input.value = '';
+
+            // Scroll chat container to bottom
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 150);
+
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message agent';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+
+            // Scroll to show typing
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 200);
+
+            // Simulate AI response
+            setTimeout(() => {
+                // Remove typing indicator
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) indicator.remove();
+
+                // Add agent response
+                respondToMessage(message);
+            }, 1500);
+        }
+
+        function addAgentMessage(text) {
+            const container = document.getElementById('chatMessagesContainer');
+            const chatMessages = document.getElementById('chatMessages');
+
+            if (!chatMessages || !container) return;
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message agent';
+            messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
+            chatMessages.appendChild(messageDiv);
+
+            // Scroll to bottom
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 50);
+        }
+
+        function respondToMessage(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+
+            // Context-aware responses
+            let response = '';
+
+            if (lowerMessage.includes('pto') || lowerMessage.includes('time off') || lowerMessage.includes('vacation')) {
+                response = "To request PTO at Sanderson's:<br><br>1. Go to the Scheduling Portal<br>2. Select 'Request Time Off'<br>3. Choose your dates<br>4. Submit for manager approval<br><br>You currently have <strong>15 PTO days</strong> remaining for 2026. Would you like me to open the scheduling portal?<br><br><a href='#' class='message-link'>→ Open Scheduling Portal</a>";
+            } else if (lowerMessage.includes('benefit') || lowerMessage.includes('insurance') || lowerMessage.includes('health')) {
+                response = "Sanderson's offers comprehensive benefits including:<br><br>• Medical, Dental, Vision Insurance<br>• 401(k) with 4% company match<br>• Life Insurance<br>• Employee Discount (20% on all products)<br>• Wellness Programs<br><br>For detailed information, visit:<br><br><a href='#' class='message-link'>→ Benefits Portal</a>";
+            } else if (lowerMessage.includes('store') || lowerMessage.includes('location')) {
+                response = "Sanderson's World Foods has 4 locations:<br><br>📍 Store 1: Downtown (Flagship)<br>📍 Store 2: Riverside Plaza<br>📍 Store 3: Northgate Center<br>📍 Store 4: Valley Heights (New!)<br><br>Which location would you like to know more about?<br><br><a href='#' class='message-link'>→ View Store Directory</a>";
+            } else if (lowerMessage.includes('payroll') || lowerMessage.includes('salary') || lowerMessage.includes('pay')) {
+                response = "For payroll questions:<br><br>• Pay periods: Bi-weekly (every other Friday)<br>• Next pay date: January 3, 2026<br>• Access pay stubs in the Payroll Portal<br>• Direct deposit changes: Contact HR<br><br><a href='#' class='message-link'>→ Open Payroll Portal</a>";
+            } else if (lowerMessage.includes('training') || lowerMessage.includes('learn')) {
+                response = "Available training resources:<br><br>📚 New Employee Orientation<br>📚 Customer Service Excellence<br>📚 Food Safety Certification<br>📚 Leadership Development<br>📚 Tech Skills Workshops<br><br>You have 2 required trainings due by Jan 15.<br><br><a href='#' class='message-link'>→ View Training Dashboard</a>";
+            } else if (lowerMessage.includes('manager') || lowerMessage.includes('sarah')) {
+                response = "Your manager is <strong>Sarah Chen</strong>, Regional Store Manager.<br><br>• Email: sarah.chen@sandersons.com<br>• Office: Store 1, 2nd Floor<br>• Next 1:1: January 31, 2026 at 2:00 PM<br><br>Would you like me to help you prepare for your upcoming 1:1?";
+            } else if (lowerMessage.includes('help') || lowerMessage.includes('what can you')) {
+                response = "I can assist you with:<br><br>✅ Finding company policies & procedures<br>✅ Benefits & payroll information<br>✅ Store locations & hours<br>✅ Training resources<br>✅ IT support<br>✅ Event information<br>✅ Contact directory<br>✅ And much more!<br><br>Just ask me anything about working at Sanderson's!";
+            } else {
+                response = "I understand you're asking about: <em>\"" + userMessage + "\"</em><br><br>Based on Sanderson's knowledge base, here are some relevant resources:<br><br><a href='#' class='message-link'>→ Employee Handbook - Section 4.2</a><br><a href='#' class='message-link'>→ Operations Manual - Store Procedures</a><br><a href='#' class='message-link'>→ HR Portal - Common Questions</a><br><br>Would you like me to provide more specific information?";
+            }
+
+            addAgentMessage(response);
+        }
+
+        // Quick Task Actions - Review First
+        function reviewLunch() {
+            const card = document.getElementById('lunchCard');
+            card.innerHTML = `
+                <h4>🍽️ Review Your Order</h4>
+                <div style="background: rgba(255,255,255,0.2); padding: 14px; border-radius: 10px; margin-bottom: 14px;">
+                    <p style="margin-bottom: 8px;"><strong>Item:</strong> Mediterranean Chicken Bowl</p>
+                    <p style="margin-bottom: 8px;"><strong>Price:</strong> $12.50</p>
+                    <p style="margin-bottom: 8px;"><strong>Location:</strong> Cafeteria B</p>
+                    <p style="margin-bottom: 0;"><strong>Pickup Time:</strong> 12:30 PM</p>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); confirmLunchOrder();">Confirm Order</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); cancelLunchReview();">Cancel</button>
+                </div>
+            `;
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function confirmLunchOrder() {
+            const card = document.getElementById('lunchCard');
+
+            // Show loading state
+            card.innerHTML = `
+                <h4>⏳ Placing Order...</h4>
+                <p>Please wait while we process your order</p>
+            `;
+
+            setTimeout(() => {
+                card.classList.add('completed');
+                card.innerHTML = `
+                    <h4>✅ Order Confirmed!</h4>
+                    <p><strong>Mediterranean Chicken Bowl</strong><br>
+                    Pickup: 12:30 PM at Cafeteria B<br>
+                    Order #: 4782<br>
+                    Price: $12.50</p>
+                    <div class="task-actions">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); showOrderDetails();">View Details</button>
+                    </div>
+                `;
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 1500);
+        }
+
+        function cancelLunchReview() {
+            const card = document.getElementById('lunchCard');
+            card.innerHTML = `
+                <h4>🍽️ Order Lunch Today</h4>
+                <p><strong>Today's Special:</strong> Mediterranean Chicken Bowl with Quinoa & Fresh Veggies<br>
+                ⭐⭐⭐⭐⭐ (4.8/5) - Your favorite! Available at Cafeteria B until 2:00 PM</p>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); reviewLunch();">Review Order</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); alert('Opening cafeteria menu...');">View Menu</button>
+                </div>
+            `;
+        }
+
+        function showOrderDetails() {
+            const container = document.getElementById('chatMessagesContainer');
+            container.classList.add('active');
+
+            // Scroll the chat bar into view
+            setTimeout(() => {
+                const chatBar = document.querySelector('.chat-bar');
+                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 100);
+
+            setTimeout(() => {
+                addAgentMessage("🍽️ <strong>Order Details</strong><br><br>Item: Mediterranean Chicken Bowl<br>Price: $12.50<br>Pickup Time: 12:30 PM<br>Location: Cafeteria B<br>Order #: 4782<br><br>Need to make changes? Just let me know!");
+            }, 400);
+        }
+
+        function reviewClaim() {
+            const card = document.getElementById('claimCard');
+            card.innerHTML = `
+                <h4>💰 Review Reimbursement</h4>
+                <div style="background: rgba(255,255,255,0.2); padding: 14px; border-radius: 10px; margin-bottom: 14px;">
+                    <p style="margin-bottom: 8px;"><strong>Vendor:</strong> Staples</p>
+                    <p style="margin-bottom: 8px;"><strong>Amount:</strong> $47.82</p>
+                    <p style="margin-bottom: 8px;"><strong>Date:</strong> Dec 18, 2025</p>
+                    <p style="margin-bottom: 0;"><strong>Category:</strong> Office Supplies</p>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); confirmClaimSubmit();">Submit Claim</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); cancelClaimReview();">Cancel</button>
+                </div>
+            `;
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function confirmClaimSubmit() {
+            const card = document.getElementById('claimCard');
+
+            // Show loading state
+            card.innerHTML = `
+                <h4>📤 Submitting Claim...</h4>
+                <p>Please wait while we process your request</p>
+            `;
+
+            setTimeout(() => {
+                card.classList.add('completed');
+                card.innerHTML = `
+                    <h4>✅ Claim Submitted!</h4>
+                    <p><strong>Reimbursement Request</strong><br>
+                    Amount: $47.82<br>
+                    Status: Pending Manager Approval<br>
+                    Expected: 3-5 business days<br>
+                    Claim ID: CLM-2026-001234</p>
+                    <div class="task-actions">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); trackClaim();">Track Status</button>
+                    </div>
+                `;
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 1500);
+        }
+
+        function cancelClaimReview() {
+            const card = document.getElementById('claimCard');
+            card.innerHTML = `
+                <h4>💰 Submit Reimbursement Claim</h4>
+                <p>I found a new receipt in your OneDrive: "Office Supplies - Staples" ($47.82) from Dec 18, 2025<br>
+                Would you like to file a reimbursement?</p>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); reviewClaim();">Review & Submit</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); dismissClaim();">Dismiss</button>
+                </div>
+            `;
+        }
+
+        function dismissClaim() {
+            const card = document.getElementById('claimCard');
+
+            // Animate dismissal
+            card.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            card.style.opacity = '0';
+            card.style.transform = 'translateX(100%)';
+
+            setTimeout(() => {
+                card.remove();
+            }, 500);
+        }
+
+        function trackClaim() {
+            const container = document.getElementById('chatMessagesContainer');
+            container.classList.add('active');
+
+            // Scroll the chat bar into view
+            setTimeout(() => {
+                const chatBar = document.querySelector('.chat-bar');
+                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 100);
+
+            setTimeout(() => {
+                addAgentMessage("💰 <strong>Claim Status</strong><br><br>Claim ID: CLM-2026-001234<br>Amount: $47.82<br>Status: Pending Manager Approval<br>Submitted: Today<br>Approver: Sarah Chen<br><br>You'll receive an email notification once it's approved. Average approval time is 2-3 days.");
+            }, 400);
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!agentModal.contains(event.target) && !fabButton.contains(event.target) && agentModal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Prevent modal close when clicking inside
+        agentModal.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+
+        // Log successful initialization
+        console.log('%c🤖 Sanderson\'s AI Assistant loaded successfully!', 'color: #1e5631; font-size: 16px; font-weight: bold;');
+        console.log('%cChat system ready. Type in the chat box to test.', 'color: #666; font-size: 14px;');
+    </script>
+</body>
+</html>

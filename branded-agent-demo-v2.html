@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Intranet - SharePoint Maven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            color: #1e5631;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .description {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .description p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .description a {
+            color: #0078d4;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e5631, #2d7a47);
+            color: white;
+            padding: 60px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .hero-content h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .hero-content h2 .highlight {
+            color: #90ee90;
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .hero-image {
+            width: 400px;
+            height: 250px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .quick-links h3 {
+            color: #1e5631;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .link-item:hover {
+            background: #f0f0f0;
+        }
+
+        .link-icon {
+            width: 40px;
+            height: 40px;
+            background: #1e5631;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Retail Tools */
+        .retail-tools {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .retail-tools h3 {
+            color: #1e5631;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .tool-card {
+            background: #1e5631;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .tool-card h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .tool-card p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* News and Events */
+        .news-events {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-card h3 {
+            color: #1e5631;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .news-item:hover {
+            background: #f9f9f9;
+        }
+
+        .news-image {
+            width: 80px;
+            height: 60px;
+            background: #ddd;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .news-content h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #1e5631;
+        }
+
+        .news-content p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .fab {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(30, 86, 49, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 3px solid white;
+            animation: fabPulse 3s infinite;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(30, 86, 49, 0.5);
+        }
+
+        .fab-icon {
+            font-size: 32px;
+            color: white;
+        }
+
+        .fab.active {
+            transform: scale(0.9);
+        }
+
+        @keyframes fabPulse {
+            0%, 100% {
+                box-shadow: 0 6px 20px rgba(30, 86, 49, 0.4);
+            }
+            50% {
+                box-shadow: 0 6px 20px rgba(30, 86, 49, 0.6), 0 0 0 10px rgba(30, 86, 49, 0.1);
+            }
+        }
+
+        /* Modern Agent Modal - Large & In Charge */
+        .agent-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            width: 900px;
+            height: 85vh;
+            max-height: 800px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .agent-modal.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: all;
+        }
+
+        /* Modal backdrop */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+            z-index: 998;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Modal Header - Prominent */
+        .modal-header {
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            color: white;
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-header-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .modal-header-text h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .modal-header-text p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .close-button {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #90ee90;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Chat Area - Takes Full Space */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Message Styles */
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .message.agent .message-avatar {
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .message-content {
+            max-width: 75%;
+        }
+
+        .message-bubble {
+            padding: 16px 20px;
+            border-radius: 20px;
+            font-size: 15px;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .message.agent .message-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #1e5631, #2d7a47);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 4px;
+            padding: 0 4px;
+        }
+
+        /* Suggestion Cards - Prominent */
+        .suggestion-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suggestion-card:hover {
+            border-color: #1e5631;
+            box-shadow: 0 8px 24px rgba(30, 86, 49, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .suggestion-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-icon {
+            font-size: 32px;
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .suggestion-card h4 {
+            font-size: 16px;
+            color: #1e5631;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .suggestion-card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .suggestion-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .suggestion-btn {
+            padding: 12px 24px;
+            border-radius: 14px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suggestion-btn.primary {
+            background: #1e5631;
+            color: white;
+        }
+
+        .suggestion-btn.primary:hover {
+            background: #2d7a47;
+            transform: translateY(-1px);
+        }
+
+        .suggestion-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .suggestion-btn.secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Quick Action Chips */
+        .quick-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            padding: 8px 14px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .chip:hover {
+            background: #e8f5e9;
+            border-color: #1e5631;
+            color: #1e5631;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 18px;
+            width: fit-content;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            padding: 16px 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .chat-input:focus {
+            border-color: #1e5631;
+            background: white;
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #1e5631, #4a9d5f);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(30, 86, 49, 0.3);
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(30, 86, 49, 0.4);
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: scale(1);
+            box-shadow: none;
+        }
+
+        /* Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(30, 86, 49, 0.3);
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(30, 86, 49, 0.6);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e5631;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #90ee90;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .agent-modal {
+                right: 20px;
+                width: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 30px;
+            }
+
+            .hero-image {
+                width: 100%;
+                margin-top: 20px;
+            }
+
+            .news-events {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .agent-modal {
+                width: 95%;
+                height: 90vh;
+                max-height: 90vh;
+            }
+
+            .agent-modal.active {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            .fab-container {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .fab {
+                width: 60px;
+                height: 60px;
+            }
+
+            .fab-icon {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Retail Intranet</h1>
+        <div class="logo">
+            <div class="logo-icon">SM</div>
+            <div class="logo-text">SHAREPOINT<br>MAVEN</div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Description -->
+        <div class="description">
+            <p>SharePoint Intranet built for the retail industry and supermarket chains, connecting store employees, regional managers, and corporate teams across multiple locations.</p>
+            <p>Learn more: <a href="#" target="_blank">https://lookbook365.com/intranet-retail-supermarket-sharepoint/</a></p>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h2>Welcome to<br><span class="highlight">Sanderson's World Foods</span></h2>
+                <p>The digital hub for our supermarket locations. Stay connected with company news, retail tools, and regional updates—all in one place for our retail teams!</p>
+            </div>
+            <div class="hero-image">
+                <span>🛒 Welcome Image Placeholder</span>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="two-column">
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <h3>Quick Links</h3>
+                <div class="link-item">
+                    <div class="link-icon">📅</div>
+                    <span>Scheduling Portal (ATS, PTO, swaps)</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">💰</div>
+                    <span>Payroll & Benefits Access</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">❓</div>
+                    <span>IT Helpdesk</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">📖</div>
+                    <span>Store Operations Manual</span>
+                </div>
+                <div class="link-item">
+                    <div class="link-icon">📍</div>
+                    <span>Our Locations</span>
+                </div>
+            </div>
+
+            <!-- Retail Tools & Resources -->
+            <div class="retail-tools">
+                <h3>Retail Tools & Resources</h3>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h4>Weekly Ads &<br>Flyer Preview</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Merchandising<br>Manual</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Product Recall<br>Notifications</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Inventory<br>Count & Track</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Daily POS<br>Sales Dashboard</h4>
+                    </div>
+                    <div class="tool-card">
+                        <h4>Store Promotion<br>& Event Toolkit</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News and Events -->
+        <div class="news-events">
+            <div class="section-card">
+                <h3>Company News</h3>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ddeedd;"></div>
+                    <div class="news-content">
+                        <h4>Sanderson's Expands: Grand Opening of 4th Store in Valley Heights</h4>
+                        <p>Dec 15, 2025 • Corporate HQ</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #eeddee;"></div>
+                    <div class="news-content">
+                        <h4>Digital Reach Partners Brings CLICK & COLLECT to Stores 1 & 3</h4>
+                        <p>Dec 8, 2025 • Tech & Innovation</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ddeeff;"></div>
+                    <div class="news-content">
+                        <h4>Employee Spotlight: Sandra Awarded Best Fresh Produce Team</h4>
+                        <p>Nov 30, 2025 • HR Department</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>Events</h3>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ffeecc;"></div>
+                    <div class="news-content">
+                        <h4>Annual Holiday Shifts Schedule Released</h4>
+                        <p>Dec 20, 2025 • All Stores</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ffdddd;"></div>
+                    <div class="news-content">
+                        <h4>New Year's Food Drive: Accepting Donations Now</h4>
+                        <p>Jan 5, 2026</p>
+                    </div>
+                </div>
+                <div class="news-item">
+                    <div class="news-image" style="background: #ddffdd;"></div>
+                    <div class="news-content">
+                        <h4>Employee Appreciation Barbecue</h4>
+                        <p>Jan 15, 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Need Help with SharePoint implementation? Email me at: <a href="mailto:greg@sharepointmaven.com">greg@sharepointmaven.com</a></p>
+    </div>
+
+    <!-- Floating Action Button -->
+    <div class="fab-container">
+        <div class="fab" id="fabButton">
+            <div class="fab-icon">🤖</div>
+        </div>
+    </div>
+
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+
+    <!-- Modern Agent Modal -->
+    <div class="agent-modal" id="agentModal">
+        <!-- Header -->
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <div class="modal-header-icon">🤖</div>
+                <div class="modal-header-text">
+                    <h3>Sanderson's Assistant</h3>
+                    <p>Your AI-powered workplace companion</p>
+                </div>
+            </div>
+            <button class="close-button" onclick="closeModal()">✕</button>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome message will be added here -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <input
+                    type="text"
+                    class="chat-input"
+                    id="chatInput"
+                    placeholder="Ask me anything or choose a suggestion..."
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button class="send-button" id="sendButton" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+
+        // FAB Toggle
+        const fabButton = document.getElementById('fabButton');
+        const agentModal = document.getElementById('agentModal');
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const chatMessages = document.getElementById('chatMessages');
+
+        fabButton.addEventListener('click', () => {
+            const isActive = agentModal.classList.contains('active');
+
+            if (isActive) {
+                closeModal();
+            } else {
+                openModal();
+            }
+        });
+
+        // Close on backdrop click
+        modalBackdrop.addEventListener('click', closeModal);
+
+        function openModal() {
+            agentModal.classList.add('active');
+            modalBackdrop.classList.add('active');
+            fabButton.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+
+            // Show welcome message if first time
+            if (chatMessages.children.length === 0) {
+                setTimeout(() => {
+                    showWelcomeMessage();
+                }, 300);
+            }
+
+            // Focus input
+            setTimeout(() => {
+                document.getElementById('chatInput').focus();
+            }, 500);
+        }
+
+        function closeModal() {
+            agentModal.classList.remove('active');
+            modalBackdrop.classList.remove('active');
+            fabButton.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scroll
+        }
+
+        // Show welcome message with suggestions
+        function showWelcomeMessage() {
+            addAgentMessage("👋 <strong>Welcome back!</strong> I've reviewed your schedule and found several items that need your attention today.");
+
+            setTimeout(() => {
+                addAgentMessage("Let me walk you through what's important:");
+                setTimeout(() => showSmartSuggestions(), 500);
+            }, 800);
+        }
+
+        // Show personalized smart suggestions
+        function showSmartSuggestions() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message agent';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">✨</div>
+                <div class="message-content">
+                    <div class="message-bubble"><strong>1. You have a new expense to submit</strong></div>
+
+                    <div class="suggestion-card" onclick="showExpenseClaim()">
+                        <div class="suggestion-card-header">
+                            <div class="suggestion-icon">💰</div>
+                            <div>
+                                <h4>Pending Reimbursement</h4>
+                                <p style="color: #1e5631; font-weight: 600; margin-top: 4px;">Action Required</p>
+                            </div>
+                        </div>
+                        <p>I found a receipt in your OneDrive: <strong>Office Supplies - Staples ($47.82)</strong> from Dec 18, 2025. I can submit this for you now.</p>
+                        <div class="suggestion-actions">
+                            <button class="suggestion-btn primary" onclick="event.stopPropagation(); reviewClaim();">Review & Submit Now</button>
+                            <button class="suggestion-btn secondary" onclick="event.stopPropagation(); dismissCard(event);">Not Now</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+
+            setTimeout(() => {
+                const messageDiv2 = document.createElement('div');
+                messageDiv2.className = 'message agent';
+                messageDiv2.innerHTML = `
+                    <div class="message-avatar">🍽️</div>
+                    <div class="message-content">
+                        <div class="message-bubble"><strong>2. It's almost lunch time</strong></div>
+
+                        <div class="suggestion-card" onclick="showLunchOrder()">
+                            <div class="suggestion-card-header">
+                                <div class="suggestion-icon">🍽️</div>
+                                <div>
+                                    <h4>Today's Special: Mediterranean Chicken Bowl</h4>
+                                    <p style="color: #1e5631; margin-top: 4px;">⭐⭐⭐⭐⭐ <strong>Your favorite!</strong></p>
+                                </div>
+                            </div>
+                            <p><strong>$12.50</strong> • Cafeteria B • Available until 2:00 PM<br>I can place your order right now so it's ready when you arrive.</p>
+                            <div class="suggestion-actions">
+                                <button class="suggestion-btn primary" onclick="event.stopPropagation(); orderLunch();">Order for 12:30 PM</button>
+                                <button class="suggestion-btn secondary" onclick="event.stopPropagation(); showMenu();">See Full Menu</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(messageDiv2);
+                scrollToBottom();
+
+                setTimeout(() => {
+                    const messageDiv3 = document.createElement('div');
+                    messageDiv3.className = 'message agent';
+                    messageDiv3.innerHTML = `
+                        <div class="message-avatar">📺</div>
+                        <div class="message-content">
+                            <div class="message-bubble"><strong>3. This week's company updates</strong></div>
+
+                            <div class="suggestion-card" onclick="showWeeklyRecap()">
+                                <div class="suggestion-card-header">
+                                    <div class="suggestion-icon">📺</div>
+                                    <div>
+                                        <h4>Weekly Recap Video</h4>
+                                        <p style="color: #666; margin-top: 4px;">30 seconds • 5 major updates</p>
+                                    </div>
+                                </div>
+                                <p>Important updates: New store opening, Click & Collect launch, Q4 results (+12%), holiday schedule, and new leadership announcements.</p>
+                            </div>
+
+                            <div class="suggestion-card" onclick="showLeadershipPriorities()" style="margin-top: 12px;">
+                                <div class="suggestion-card-header">
+                                    <div class="suggestion-icon">💭</div>
+                                    <div>
+                                        <h4>Your Manager's Priorities</h4>
+                                        <p style="color: #1e5631; font-weight: 600; margin-top: 4px;">1:1 meeting in 2 days</p>
+                                    </div>
+                                </div>
+                                <p>Sarah Chen shared 3 priorities for the week. Want me to help you prepare talking points for your upcoming 1:1?</p>
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageDiv3);
+                    scrollToBottom();
+
+                    setTimeout(() => {
+                        addAgentMessage("I'm here to help with anything else you need. Just ask me a question or tap one of the items above!");
+                    }, 1000);
+                }, 1200);
+            }, 1200);
+        }
+
+        // Handle key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            addUserMessage(message);
+            input.value = '';
+
+            showTypingIndicator();
+
+            setTimeout(() => {
+                hideTypingIndicator();
+                respondToMessage(message);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        // Add user message
+        function addUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">👤</div>
+                <div class="message-content">
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time">${getCurrentTime()}</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Add agent message
+        function addAgentMessage(text, showTime = true) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message agent';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">${text}</div>
+                    ${showTime ? `<div class="message-time">${getCurrentTime()}</div>` : ''}
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message agent';
+            messageDiv.id = 'typingIndicator';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 50);
+        }
+
+        // Respond to messages
+        function respondToMessage(message) {
+            const lower = message.toLowerCase();
+
+            if (lower.includes('pto') || lower.includes('time off') || lower.includes('vacation')) {
+                addAgentMessage("To request PTO at Sanderson's:<br><br>1. Go to the Scheduling Portal<br>2. Select 'Request Time Off'<br>3. Choose your dates<br>4. Submit for manager approval<br><br>You currently have <strong>15 PTO days</strong> remaining for 2026. Would you like me to open the scheduling portal?");
+            } else if (lower.includes('benefit') || lower.includes('insurance') || lower.includes('health')) {
+                addAgentMessage("Sanderson's offers comprehensive benefits including:<br><br>• Medical, Dental, Vision Insurance<br>• 401(k) with 4% company match<br>• Life Insurance<br>• Employee Discount (20% on all products)<br>• Wellness Programs");
+            } else if (lower.includes('lunch') || lower.includes('food') || lower.includes('cafeteria')) {
+                showLunchOrder();
+            } else if (lower.includes('news') || lower.includes('update') || lower.includes('announce')) {
+                addAgentMessage("Here are the latest updates:<br><br>📍 <strong>New Store Opening</strong><br>Valley Heights location opened Dec 15<br><br>📱 <strong>Click & Collect</strong><br>Now available at Stores 1 & 3<br><br>📊 <strong>Q4 Results</strong><br>Sales exceeded targets by 12%<br><br>Would you like more details on any of these?");
+            } else {
+                addAgentMessage("I can help you with that! Here are some resources:<br><br>• Company policies & procedures<br>• Benefits & payroll information<br>• Training resources<br>• Contact directory<br><br>What specific information do you need?");
+            }
+        }
+
+        // Quick action handlers
+        function askAboutPTO() {
+            addUserMessage("Tell me about PTO");
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                respondToMessage("Tell me about PTO");
+            }, 1200);
+        }
+
+        function askAboutNews() {
+            addUserMessage("What are the latest company updates?");
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                respondToMessage("What are the latest company updates?");
+            }, 1200);
+        }
+
+        function showLunchOptions() {
+            addUserMessage("Show me lunch options");
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                showLunchOrder();
+            }, 1000);
+        }
+
+        function askAboutTraining() {
+            addUserMessage("What training do I need to complete?");
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addAgentMessage("You have 2 required trainings due by Jan 15:<br><br>1. <strong>Q1 Customer Service</strong> (45 min)<br>2. <strong>Food Safety Certification</strong> (60 min)<br><br>Would you like me to open the training portal?");
+            }, 1200);
+        }
+
+        function showWeeklyRecap() {
+            addUserMessage("Show me the weekly recap");
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addAgentMessage("Here's this week's recap:<br><br>🎉 Grand opening of 4th location<br>📱 Click & Collect launched<br>🏆 Q4 sales +12%<br>🎄 Holiday schedule posted<br>👥 New Operations leadership<br><br>Would you like more details on any of these?");
+            }, 1000);
+        }
+
+        function showLunchOrder() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message agent';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">Here's today's lunch special:</div>
+                    <div class="suggestion-card">
+                        <div class="suggestion-card-header">
+                            <div class="suggestion-icon">🍽️</div>
+                            <div>
+                                <h4>Mediterranean Chicken Bowl</h4>
+                            </div>
+                        </div>
+                        <p><strong>$12.50</strong> • Cafeteria B • Available until 2:00 PM<br>⭐⭐⭐⭐⭐ (4.8/5) - Your favorite!</p>
+                        <div class="suggestion-actions">
+                            <button class="suggestion-btn primary" onclick="orderLunch();">Order Now</button>
+                            <button class="suggestion-btn secondary" onclick="showMenu();">View Full Menu</button>
+                        </div>
+                    </div>
+                    <div class="message-time">${getCurrentTime()}</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function orderLunch() {
+            addAgentMessage("Great choice! I'll place your order for the Mediterranean Chicken Bowl.");
+            setTimeout(() => {
+                addAgentMessage("✅ <strong>Order Confirmed!</strong><br><br>Item: Mediterranean Chicken Bowl<br>Pickup: 12:30 PM at Cafeteria B<br>Order #: 4782<br>Price: $12.50<br><br>You'll receive a notification when it's ready!");
+            }, 1500);
+        }
+
+        function showMenu() {
+            addAgentMessage("Here's the full cafeteria menu for today. Which category would you like to see?<br><br>• Main Courses<br>• Salads & Bowls<br>• Sandwiches<br>• Sides<br>• Desserts");
+        }
+
+        function showExpenseClaim() {
+            addUserMessage("Show me the expense claim details");
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                reviewClaim();
+            }, 1000);
+        }
+
+        function reviewClaim() {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message agent';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">Here are the details for your reimbursement:</div>
+                    <div class="suggestion-card">
+                        <div class="suggestion-card-header">
+                            <div class="suggestion-icon">💰</div>
+                            <div>
+                                <h4>Reimbursement Request</h4>
+                            </div>
+                        </div>
+                        <p><strong>Vendor:</strong> Staples<br><strong>Amount:</strong> $47.82<br><strong>Date:</strong> Dec 18, 2025<br><strong>Category:</strong> Office Supplies</p>
+                        <div class="suggestion-actions">
+                            <button class="suggestion-btn primary" onclick="submitClaim();">Submit Claim</button>
+                            <button class="suggestion-btn secondary" onclick="dismissCard(event);">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="message-time">${getCurrentTime()}</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function submitClaim() {
+            addAgentMessage("Submitting your reimbursement claim...");
+            setTimeout(() => {
+                addAgentMessage("✅ <strong>Claim Submitted!</strong><br><br>Claim ID: CLM-2026-001234<br>Amount: $47.82<br>Status: Pending Manager Approval<br>Approver: Sarah Chen<br><br>Expected processing: 3-5 business days");
+            }, 1500);
+        }
+
+        function showLeadershipPriorities() {
+            addUserMessage("What's top of mind for my manager?");
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addAgentMessage("Here's what's important to Sarah Chen this week:<br><br><strong>1.</strong> Focus on customer experience during holiday rush<br><strong>2.</strong> Complete Q1 training modules by Jan 15<br><strong>3.</strong> Team building event planning for February<br><br>💡 Your 1:1 with Sarah is in 2 days. Would you like help preparing talking points?");
+            }, 1200);
+        }
+
+        function dismissCard(event) {
+            event.stopPropagation();
+            addAgentMessage("Got it! I've dismissed that item.");
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!agentModal.contains(event.target) && !fabButton.contains(event.target) && agentModal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Prevent modal close when clicking inside
+        agentModal.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+
+        console.log('%c🤖 Sanderson\'s AI Assistant V2 loaded!', 'color: #1e5631; font-size: 16px; font-weight: bold;');
+    </script>
+</body>
+</html>
