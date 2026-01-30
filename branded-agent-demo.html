@@ -200,11 +200,23 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-start;
         }
 
         .tool-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .tool-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            opacity: 0.95;
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover .tool-icon {
+            transform: scale(1.1);
         }
 
         .tool-card h4 {
@@ -1118,21 +1130,27 @@
                 <h3>Retail Tools & Resources</h3>
                 <div class="tools-grid">
                     <div class="tool-card">
+                        <div class="tool-icon">📰</div>
                         <h4>Weekly Ads &<br>Flyer Preview</h4>
                     </div>
                     <div class="tool-card">
+                        <div class="tool-icon">📋</div>
                         <h4>Merchandising<br>Manual</h4>
                     </div>
                     <div class="tool-card">
+                        <div class="tool-icon">⚠️</div>
                         <h4>Product Recall<br>Notifications</h4>
                     </div>
                     <div class="tool-card">
+                        <div class="tool-icon">📦</div>
                         <h4>Inventory<br>Count & Track</h4>
                     </div>
                     <div class="tool-card">
+                        <div class="tool-icon">📊</div>
                         <h4>Daily POS<br>Sales Dashboard</h4>
                     </div>
                     <div class="tool-card">
+                        <div class="tool-icon">🎉</div>
                         <h4>Store Promotion<br>& Event Toolkit</h4>
                     </div>
                 </div>
