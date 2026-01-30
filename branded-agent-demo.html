@@ -334,7 +334,7 @@
 
         /* Modal Header */
         .modal-header {
-            background: linear-gradient(135deg, #1e5631, #4a9d5f, #5db36e);
+            background: linear-gradient(135deg, #1e5631 0%, #2d7a47 50%, #4a9d5f 100%);
             color: white;
             padding: 24px 24px 20px 24px;
             display: flex;
@@ -342,6 +342,7 @@
             gap: 15px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
         }
 
         .modal-header::before {
@@ -361,17 +362,19 @@
         }
 
         .modal-header-icon {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             background: rgba(255,255,255,0.25);
             backdrop-filter: blur(10px);
-            border-radius: 14px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-weight: 700;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
             z-index: 1;
+            border: 2px solid rgba(255,255,255,0.2);
         }
 
         .modal-header-content {
@@ -379,14 +382,16 @@
         }
 
         .modal-header-content h3 {
-            font-size: 19px;
+            font-size: 20px;
             margin-bottom: 4px;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
         .modal-header-content p {
             font-size: 13px;
-            opacity: 0.85;
+            opacity: 0.9;
+            font-weight: 400;
         }
 
         /* Modal Content */
@@ -401,16 +406,17 @@
         }
 
         .section-title {
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             color: #1e5631;
             margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
-            opacity: 0.8;
+            opacity: 0.7;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            padding-left: 2px;
         }
 
         /* Info Cards */
@@ -420,7 +426,7 @@
             padding: 18px;
             margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             border: 2px solid rgba(30, 86, 49, 0.1);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             position: relative;
@@ -441,12 +447,17 @@
 
         .info-card:hover {
             border-color: #1e5631;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(30, 86, 49, 0.15);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(30, 86, 49, 0.2);
         }
 
         .info-card:hover::before {
             opacity: 1;
+        }
+
+        .info-card:active {
+            transform: translateY(-2px) scale(0.99);
+            transition: all 0.15s ease;
         }
 
         .info-card.expanded {
@@ -473,11 +484,12 @@
             color: white;
             font-size: 24px;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-            transition: all 0.4s;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .info-card:hover .video-thumbnail {
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.15) rotate(8deg);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
         }
 
         .info-card-content h4 {
@@ -495,11 +507,23 @@
 
         .info-card-meta {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             font-size: 11px;
-            color: #999;
+            color: #888;
             margin-top: 10px;
             flex-wrap: wrap;
+            font-weight: 500;
+        }
+
+        .info-card-meta span {
+            padding: 4px 10px;
+            background: rgba(30, 86, 49, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover .info-card-meta span {
+            background: rgba(30, 86, 49, 0.1);
         }
 
         .info-card-expanded-content {
@@ -524,10 +548,19 @@
             border-radius: 16px;
             padding: 20px;
             margin-bottom: 12px;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 16px rgba(30, 86, 49, 0.2);
+        }
+
+        .task-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 36px rgba(30, 86, 49, 0.35);
+        }
+
+        .task-card:active {
+            transform: translateY(-2px) scale(0.99);
         }
 
         .task-card::before {
@@ -618,8 +651,13 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px) scale(0.98);
+            transition: all 0.1s ease;
         }
 
         .btn-secondary {
@@ -632,30 +670,49 @@
         .btn-secondary:hover {
             background: rgba(255,255,255,0.3);
             border-color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+            transition: all 0.1s ease;
         }
 
         /* Chat Messages Container */
         .chat-messages-container {
             display: none;
             height: 300px;
-            background: #f8f9fa;
-            border-top: 1px solid rgba(30, 86, 49, 0.1);
+            background: linear-gradient(to bottom, #fafbfc 0%, #f5f7f9 100%);
+            border-top: 1px solid rgba(30, 86, 49, 0.08);
             overflow-y: auto;
             overflow-x: hidden;
         }
 
         .chat-messages-container.active {
             display: block;
+            animation: fadeInSlide 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 300px;
+            }
         }
 
         /* Chat Bar */
         .chat-bar {
-            padding: 16px 20px;
-            background: white;
-            border-top: 2px solid rgba(30, 86, 49, 0.1);
+            padding: 18px 20px;
+            background: linear-gradient(to bottom, #fafbfc 0%, #ffffff 100%);
+            border-top: 2px solid rgba(30, 86, 49, 0.08);
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
         }
 
         .chat-messages {
@@ -671,11 +728,14 @@
         }
 
         @keyframes slideInMessage {
-            from {
+            0% {
                 opacity: 0;
-                transform: translateY(20px) scale(0.95);
+                transform: translateY(20px) scale(0.9);
             }
-            to {
+            60% {
+                transform: translateY(-3px) scale(1.01);
+            }
+            100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
@@ -699,6 +759,12 @@
             line-height: 1.6;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .message-bubble:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-1px);
         }
 
         .message.user .message-bubble {
@@ -728,19 +794,22 @@
 
         .typing-indicator {
             display: flex;
-            gap: 4px;
-            padding: 12px 16px;
-            background: #f8f9fa;
-            border-radius: 16px;
+            gap: 5px;
+            padding: 14px 18px;
+            background: white;
+            border-radius: 18px;
             width: fit-content;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid rgba(30, 86, 49, 0.1);
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #999;
+            width: 9px;
+            height: 9px;
+            background: #1e5631;
             border-radius: 50%;
             animation: typing 1.4s infinite;
+            opacity: 0.6;
         }
 
         .typing-dot:nth-child(2) {
@@ -767,13 +836,15 @@
             border-radius: 24px;
             font-size: 14px;
             outline: none;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: #f8f9fa;
         }
 
         .chat-input:focus {
             border-color: #1e5631;
             background: white;
+            box-shadow: 0 4px 12px rgba(30, 86, 49, 0.1);
+            transform: translateY(-1px);
         }
 
         .chat-input::placeholder {
@@ -797,8 +868,13 @@
         }
 
         .send-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(30, 86, 49, 0.4);
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(30, 86, 49, 0.5);
+        }
+
+        .send-button:active {
+            transform: scale(1.05) rotate(0deg);
+            transition: all 0.1s ease;
         }
 
         .send-button:disabled {
@@ -919,7 +995,7 @@
 
             .agent-modal {
                 right: 20px;
-                width: 400px;
+                width: 420px;
             }
         }
 
@@ -944,15 +1020,71 @@
             }
 
             .agent-modal {
-                bottom: 100px;
+                bottom: 90px;
                 right: 10px;
                 left: 10px;
                 width: auto;
-                max-height: 80vh;
+                max-height: 75vh;
+                border-radius: 20px;
+            }
+
+            .modal-header {
+                padding: 20px 18px 16px 18px;
+            }
+
+            .modal-header-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+
+            .modal-header-content h3 {
+                font-size: 17px;
+            }
+
+            .modal-header-content p {
+                font-size: 12px;
             }
 
             .modal-content {
-                max-height: calc(80vh - 90px);
+                max-height: calc(75vh - 160px);
+                padding: 16px 16px 8px 16px;
+            }
+
+            .info-card,
+            .task-card {
+                padding: 16px;
+                border-radius: 14px;
+            }
+
+            .section-title {
+                font-size: 11px;
+                margin-bottom: 12px;
+            }
+
+            .chat-messages-container {
+                height: 250px;
+            }
+
+            .chat-bar {
+                padding: 14px 16px;
+                gap: 10px;
+            }
+
+            .chat-input {
+                padding: 11px 16px;
+                font-size: 13px;
+            }
+
+            .send-button {
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+
+            .message-bubble {
+                font-size: 13px;
+                padding: 11px 15px;
             }
 
             .fab-container {
@@ -967,6 +1099,70 @@
 
             .fab-icon {
                 font-size: 28px;
+            }
+
+            .btn {
+                padding: 10px 18px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .agent-modal {
+                bottom: 80px;
+                right: 8px;
+                left: 8px;
+                max-height: 70vh;
+                border-radius: 18px;
+            }
+
+            .modal-header {
+                padding: 18px 16px 14px 16px;
+                gap: 12px;
+            }
+
+            .modal-content {
+                max-height: calc(70vh - 150px);
+                padding: 14px 14px 6px 14px;
+            }
+
+            .info-card-header {
+                gap: 12px;
+            }
+
+            .video-thumbnail {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+            }
+
+            .info-card-content h4 {
+                font-size: 14px;
+            }
+
+            .info-card-content p {
+                font-size: 12px;
+            }
+
+            .task-card h4 {
+                font-size: 15px;
+            }
+
+            .task-card p {
+                font-size: 12px;
+            }
+
+            .chat-messages-container {
+                height: 220px;
+            }
+
+            .fab {
+                width: 56px;
+                height: 56px;
+            }
+
+            .fab-icon {
+                font-size: 26px;
             }
         }
     </style>
@@ -1144,7 +1340,7 @@
                         <div class="video-thumbnail">▶️</div>
                         <div class="info-card-content">
                             <h4>Weekly Recap</h4>
-                            <p>Your 30-second digest of company highlights and important updates</p>
+                            <p>A quick 30-second video covering this week's top updates and wins</p>
                         </div>
                     </div>
                     <div class="info-card-meta">
@@ -1183,7 +1379,7 @@
                         <div class="video-thumbnail" style="background: linear-gradient(135deg, #f093fb, #f5576c);">💭</div>
                         <div class="info-card-content">
                             <h4>Top of Mind from Leadership</h4>
-                            <p>See what's important to your manager and org leadership right now</p>
+                            <p>Your manager's current priorities and what matters most this week</p>
                         </div>
                     </div>
                     <div class="info-card-meta">
@@ -1220,7 +1416,7 @@
                 <div class="task-card" id="lunchCard">
                     <h4>🍽️ Order Lunch Today</h4>
                     <p><strong>Today's Special:</strong> Mediterranean Chicken Bowl with Quinoa & Fresh Veggies<br>
-                    ⭐⭐⭐⭐⭐ (4.8/5) - Your favorite! Available at Cafeteria B until 2:00 PM</p>
+                    ⭐⭐⭐⭐⭐ (4.8/5) • Your go-to favorite! Available at Cafeteria B until 2:00 PM</p>
                     <div class="task-actions">
                         <button class="btn btn-primary" onclick="event.stopPropagation(); reviewLunch();">Review Order</button>
                         <button class="btn btn-secondary" onclick="event.stopPropagation(); alert('Opening cafeteria menu...');">View Menu</button>
@@ -1229,8 +1425,8 @@
 
                 <div class="task-card" id="claimCard" style="background: linear-gradient(135deg, #4a9d5f, #1e5631, #3a9155);">
                     <h4>💰 Submit Reimbursement Claim</h4>
-                    <p>I found a new receipt in your OneDrive: "Office Supplies - Staples" ($47.82) from Dec 18, 2025<br>
-                    Would you like to file a reimbursement?</p>
+                    <p>I noticed a new receipt in your OneDrive: <strong>"Office Supplies - Staples"</strong> ($47.82) from Dec 18, 2025<br>
+                    Ready to submit this for reimbursement?</p>
                     <div class="task-actions">
                         <button class="btn btn-primary" onclick="event.stopPropagation(); reviewClaim();">Review & Submit</button>
                         <button class="btn btn-secondary" onclick="event.stopPropagation(); dismissClaim();">Dismiss</button>
@@ -1345,6 +1541,48 @@
             }
         }
 
+        // Helper function to ensure chat is visible and in focus
+        function ensureChatVisible() {
+            const container = document.getElementById('chatMessagesContainer');
+            const modalContent = document.querySelector('.modal-content');
+            const chatBar = document.querySelector('.chat-bar');
+            const chatInput = document.getElementById('chatInput');
+
+            // Wait for layout to settle, then scroll
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    // Scroll modal content to bottom
+                    if (modalContent) {
+                        modalContent.scrollTop = modalContent.scrollHeight;
+                    }
+
+                    // Scroll chat to bottom
+                    if (container) {
+                        container.scrollTop = container.scrollHeight;
+                    }
+
+                    // After animation completes (400ms), do final scroll
+                    setTimeout(() => {
+                        if (modalContent) {
+                            modalContent.scrollTop = modalContent.scrollHeight;
+                        }
+                        if (container) {
+                            container.scrollTop = container.scrollHeight;
+                        }
+                        // Smooth scroll chat bar into view
+                        if (chatBar) {
+                            chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }
+                    }, 450);
+
+                    // Focus input
+                    setTimeout(() => {
+                        chatInput?.focus();
+                    }, 500);
+                });
+            });
+        }
+
         // Start chats from expanded cards
         function startRecapChat() {
             chatContext = 'recap';
@@ -1353,14 +1591,10 @@
             const container = document.getElementById('chatMessagesContainer');
             container.classList.add('active');
 
-            // Scroll the chat bar into view
-            setTimeout(() => {
-                const chatBar = document.querySelector('.chat-bar');
-                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }, 100);
+            ensureChatVisible();
 
             setTimeout(() => {
-                addAgentMessage("I'm here to answer any questions about this week's updates! What would you like to know more about?");
+                addAgentMessage("I'm here to help! What would you like to know more about from this week's updates? I can dive deeper into any of the highlights.");
             }, 400);
         }
 
@@ -1371,14 +1605,10 @@
             const container = document.getElementById('chatMessagesContainer');
             container.classList.add('active');
 
-            // Scroll the chat bar into view
-            setTimeout(() => {
-                const chatBar = document.querySelector('.chat-bar');
-                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }, 100);
+            ensureChatVisible();
 
             setTimeout(() => {
-                addAgentMessage("I can help you prepare for your 1:1 with Sarah. Would you like me to suggest talking points or help you discuss any of the priorities she mentioned?");
+                addAgentMessage("Let's get you ready for your 1:1 with Sarah! I can help you prepare talking points, review her priorities, or discuss any challenges you're facing. What would be most helpful?");
             }, 400);
         }
 
@@ -1399,12 +1629,6 @@
             const container = document.getElementById('chatMessagesContainer');
             container.classList.add('active');
 
-            // Scroll the chat bar into view
-            setTimeout(() => {
-                const chatBar = document.querySelector('.chat-bar');
-                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }, 100);
-
             // Add user message
             const chatMessages = document.getElementById('chatMessages');
             const userMsgDiv = document.createElement('div');
@@ -1414,11 +1638,6 @@
 
             // Clear input
             input.value = '';
-
-            // Scroll chat container to bottom
-            setTimeout(() => {
-                container.scrollTop = container.scrollHeight;
-            }, 150);
 
             // Show typing indicator
             const typingDiv = document.createElement('div');
@@ -1433,10 +1652,13 @@
             `;
             chatMessages.appendChild(typingDiv);
 
-            // Scroll to show typing
+            // Ensure chat is visible and scrolled after adding message
+            ensureChatVisible();
+
+            // Additional scroll to show typing
             setTimeout(() => {
                 container.scrollTop = container.scrollHeight;
-            }, 200);
+            }, 100);
 
             // Simulate AI response
             setTimeout(() => {
@@ -1452,6 +1674,7 @@
         function addAgentMessage(text) {
             const container = document.getElementById('chatMessagesContainer');
             const chatMessages = document.getElementById('chatMessages');
+            const modalContent = document.querySelector('.modal-content');
 
             if (!chatMessages || !container) return;
 
@@ -1460,9 +1683,18 @@
             messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
             chatMessages.appendChild(messageDiv);
 
-            // Scroll to bottom
+            // Immediately scroll modal and chat to bottom
+            if (modalContent) {
+                modalContent.scrollTop = modalContent.scrollHeight;
+            }
+            container.scrollTop = container.scrollHeight;
+
+            // Then do smooth scroll for polish
             setTimeout(() => {
-                container.scrollTop = container.scrollHeight;
+                container.scrollTo({
+                    top: container.scrollHeight,
+                    behavior: 'smooth'
+                });
             }, 50);
         }
 
@@ -1473,9 +1705,9 @@
             let response = '';
 
             if (lowerMessage.includes('pto') || lowerMessage.includes('time off') || lowerMessage.includes('vacation')) {
-                response = "To request PTO at Sanderson's:<br><br>1. Go to the Scheduling Portal<br>2. Select 'Request Time Off'<br>3. Choose your dates<br>4. Submit for manager approval<br><br>You currently have <strong>15 PTO days</strong> remaining for 2026. Would you like me to open the scheduling portal?<br><br><a href='#' class='message-link'>→ Open Scheduling Portal</a>";
+                response = "Here's how to request time off at Sanderson's:<br><br><strong>📋 Quick Steps:</strong><br>1. Open the Scheduling Portal<br>2. Click 'Request Time Off'<br>3. Select your dates<br>4. Submit for Sarah's approval<br><br><strong>Your Balance:</strong> 15 PTO days remaining for 2026<br><br>💡 <em>Pro tip: Submit requests at least 2 weeks in advance for better approval chances!</em><br><br><a href='#' class='message-link'>→ Open Scheduling Portal</a>";
             } else if (lowerMessage.includes('benefit') || lowerMessage.includes('insurance') || lowerMessage.includes('health')) {
-                response = "Sanderson's offers comprehensive benefits including:<br><br>• Medical, Dental, Vision Insurance<br>• 401(k) with 4% company match<br>• Life Insurance<br>• Employee Discount (20% on all products)<br>• Wellness Programs<br><br>For detailed information, visit:<br><br><a href='#' class='message-link'>→ Benefits Portal</a>";
+                response = "Here's what Sanderson's offers for benefits:<br><br><strong>🏥 Health & Wellness:</strong><br>• Medical, Dental, Vision Insurance<br>• Wellness Programs & Gym Discounts<br><br><strong>💰 Financial:</strong><br>• 401(k) with 4% company match<br>• Life & Disability Insurance<br>• Employee Discount: 20% on all products<br><br><strong>⏰ Time Off:</strong><br>• Paid Time Off (PTO)<br>• Sick Leave<br>• Paid Holidays<br><br>Open enrollment is in November each year.<br><br><a href='#' class='message-link'>→ View Full Benefits Details</a>";
             } else if (lowerMessage.includes('store') || lowerMessage.includes('location')) {
                 response = "Sanderson's World Foods has 4 locations:<br><br>📍 Store 1: Downtown (Flagship)<br>📍 Store 2: Riverside Plaza<br>📍 Store 3: Northgate Center<br>📍 Store 4: Valley Heights (New!)<br><br>Which location would you like to know more about?<br><br><a href='#' class='message-link'>→ View Store Directory</a>";
             } else if (lowerMessage.includes('payroll') || lowerMessage.includes('salary') || lowerMessage.includes('pay')) {
@@ -1485,9 +1717,9 @@
             } else if (lowerMessage.includes('manager') || lowerMessage.includes('sarah')) {
                 response = "Your manager is <strong>Sarah Chen</strong>, Regional Store Manager.<br><br>• Email: sarah.chen@sandersons.com<br>• Office: Store 1, 2nd Floor<br>• Next 1:1: January 31, 2026 at 2:00 PM<br><br>Would you like me to help you prepare for your upcoming 1:1?";
             } else if (lowerMessage.includes('help') || lowerMessage.includes('what can you')) {
-                response = "I can assist you with:<br><br>✅ Finding company policies & procedures<br>✅ Benefits & payroll information<br>✅ Store locations & hours<br>✅ Training resources<br>✅ IT support<br>✅ Event information<br>✅ Contact directory<br>✅ And much more!<br><br>Just ask me anything about working at Sanderson's!";
+                response = "I'm your go-to assistant at Sanderson's! Here's how I can help:<br><br><strong>🔍 Information & Resources:</strong><br>• Company policies & procedures<br>• Training materials & certifications<br>• Store locations & contact directory<br><br><strong>💼 HR & Benefits:</strong><br>• PTO requests & payroll info<br>• Benefits details & enrollment<br>• Manager contact information<br><br><strong>⚡ Quick Actions:</strong><br>• Order lunch from cafeteria<br>• Submit expense claims<br>• Book meeting rooms<br><br><strong>🆘 Support:</strong><br>• IT helpdesk assistance<br>• Operations questions<br>• Event information<br><br>Just ask me anything - I'm here to make your workday easier!";
             } else {
-                response = "I understand you're asking about: <em>\"" + userMessage + "\"</em><br><br>Based on Sanderson's knowledge base, here are some relevant resources:<br><br><a href='#' class='message-link'>→ Employee Handbook - Section 4.2</a><br><a href='#' class='message-link'>→ Operations Manual - Store Procedures</a><br><a href='#' class='message-link'>→ HR Portal - Common Questions</a><br><br>Would you like me to provide more specific information?";
+                response = "Let me help you with: <em>\"" + userMessage + "\"</em><br><br>I've found these resources in Sanderson's knowledge base:<br><br><a href='#' class='message-link'>📖 Employee Handbook - Section 4.2</a><br><a href='#' class='message-link'>📋 Operations Manual - Store Procedures</a><br><a href='#' class='message-link'>❓ HR Portal - FAQ</a><br><br>Need something more specific? Try asking in a different way, or I can connect you with the right team member!";
             }
 
             addAgentMessage(response);
@@ -1554,11 +1786,7 @@
             const container = document.getElementById('chatMessagesContainer');
             container.classList.add('active');
 
-            // Scroll the chat bar into view
-            setTimeout(() => {
-                const chatBar = document.querySelector('.chat-bar');
-                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }, 100);
+            ensureChatVisible();
 
             setTimeout(() => {
                 addAgentMessage("🍽️ <strong>Order Details</strong><br><br>Item: Mediterranean Chicken Bowl<br>Price: $12.50<br>Pickup Time: 12:30 PM<br>Location: Cafeteria B<br>Order #: 4782<br><br>Need to make changes? Just let me know!");
@@ -1639,11 +1867,7 @@
             const container = document.getElementById('chatMessagesContainer');
             container.classList.add('active');
 
-            // Scroll the chat bar into view
-            setTimeout(() => {
-                const chatBar = document.querySelector('.chat-bar');
-                chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }, 100);
+            ensureChatVisible();
 
             setTimeout(() => {
                 addAgentMessage("💰 <strong>Claim Status</strong><br><br>Claim ID: CLM-2026-001234<br>Amount: $47.82<br>Status: Pending Manager Approval<br>Submitted: Today<br>Approver: Sarah Chen<br><br>You'll receive an email notification once it's approved. Average approval time is 2-3 days.");
