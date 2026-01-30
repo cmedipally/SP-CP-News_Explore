@@ -288,14 +288,18 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 16px rgba(30, 86, 49, 0.3);
+            box-shadow:
+                0 8px 24px rgba(30, 86, 49, 0.4),
+                0 4px 12px rgba(0, 0, 0, 0.15);
             transition: all 0.2s ease;
             border: none;
         }
 
         .fab:hover {
             transform: scale(1.08);
-            box-shadow: 0 6px 20px rgba(30, 86, 49, 0.4);
+            box-shadow:
+                0 12px 32px rgba(30, 86, 49, 0.5),
+                0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         .fab-icon {
@@ -305,17 +309,17 @@
             align-items: center;
             justify-content: center;
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
         }
 
-        .microsoft-logo {
-            width: 26px;
-            height: 26px;
+        .sanderson-logo {
+            width: 34px;
+            height: 34px;
         }
 
-        .microsoft-logo-small {
-            width: 26px;
-            height: 26px;
+        .sanderson-logo-small {
+            width: 34px;
+            height: 34px;
         }
 
         .fab.active {
@@ -331,8 +335,11 @@
             max-height: 88vh;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1);
+            border-radius: 32px;
+            box-shadow:
+                0 32px 64px rgba(30, 86, 49, 0.25),
+                0 16px 32px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(30, 86, 49, 0.1);
             opacity: 0;
             transform: translateY(30px) scale(0.95);
             pointer-events: none;
@@ -357,19 +364,20 @@
             gap: 14px;
             position: relative;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-radius: 32px 32px 0 0;
         }
 
         .modal-header-icon {
             width: 44px;
             height: 44px;
             background: white;
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             flex-shrink: 0;
         }
 
@@ -413,19 +421,19 @@
         /* Info Cards */
         .info-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 16px;
             margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid #edebe9;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
             position: relative;
         }
 
         .info-card:hover {
             border-color: #1e5631;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(30, 86, 49, 0.15);
             transform: translateY(-2px);
         }
 
@@ -437,7 +445,7 @@
         .info-card.expanded {
             background: white;
             border-color: #1e5631;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            box-shadow: 0 12px 32px rgba(30, 86, 49, 0.2);
         }
 
         .info-card-header {
@@ -451,7 +459,7 @@
             width: 48px;
             height: 48px;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -519,18 +527,18 @@
         .task-card {
             background: linear-gradient(135deg, #1e5631, #2d7a47);
             color: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 18px;
             margin-bottom: 10px;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(30, 86, 49, 0.25);
             border: 1px solid rgba(255,255,255,0.1);
         }
 
         .task-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(30, 86, 49, 0.2);
+            box-shadow: 0 8px 24px rgba(30, 86, 49, 0.35);
         }
 
         .task-card:active {
@@ -562,7 +570,7 @@
 
         .btn {
             padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-size: 13px;
@@ -1066,11 +1074,6 @@
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Description -->
-        <div class="description">
-            <p>SharePoint Intranet built for the retail industry and supermarket chains, connecting store employees, regional managers, and corporate teams across multiple locations.</p>
-            <p>Learn more: <a href="#" target="_blank">https://lookbook365.com/intranet-retail-supermarket-sharepoint/</a></p>
-        </div>
 
         <!-- Hero Section -->
         <div class="hero">
@@ -1199,11 +1202,38 @@
     <div class="fab-container">
         <div class="fab" id="fabButton">
             <div class="fab-icon">
-                <svg class="microsoft-logo-small" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0" y="0" width="11" height="11" fill="#F25022"/>
-                    <rect x="12" y="0" width="11" height="11" fill="#7FBA00"/>
-                    <rect x="0" y="12" width="11" height="11" fill="#00A4EF"/>
-                    <rect x="12" y="12" width="11" height="11" fill="#FFB900"/>
+                <svg class="sanderson-logo-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Outer circle -->
+                    <circle cx="50" cy="50" r="48" fill="none" stroke="#1e5631" stroke-width="3"/>
+                    <!-- Crown/Star -->
+                    <polygon points="50,15 52,22 59,22 53,27 55,34 50,29 45,34 47,27 41,22 48,22" fill="#1e5631"/>
+                    <!-- Crown points left -->
+                    <polygon points="28,25 30,30 35,28 32,33" fill="#1e5631"/>
+                    <polygon points="20,35 22,40 27,38 24,43" fill="#1e5631"/>
+                    <!-- Crown points right -->
+                    <polygon points="72,25 70,30 65,28 68,33" fill="#1e5631"/>
+                    <polygon points="80,35 78,40 73,38 76,43" fill="#1e5631"/>
+                    <!-- Face -->
+                    <ellipse cx="50" cy="50" rx="15" ry="18" fill="#1e5631"/>
+                    <!-- Eyes -->
+                    <ellipse cx="45" cy="48" rx="2" ry="3" fill="#fff"/>
+                    <ellipse cx="55" cy="48" rx="2" ry="3" fill="#fff"/>
+                    <!-- Smile -->
+                    <path d="M 45 54 Q 50 56 55 54" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                    <!-- Hair left -->
+                    <path d="M 35 45 Q 32 50 30 58 Q 28 65 30 72" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 37 48 Q 35 53 34 60 Q 33 67 35 74" stroke="#1e5631" stroke-width="2.5" fill="none"/>
+                    <path d="M 40 50 Q 39 55 38 62 Q 37 69 39 76" stroke="#1e5631" stroke-width="2" fill="none"/>
+                    <!-- Hair right -->
+                    <path d="M 65 45 Q 68 50 70 58 Q 72 65 70 72" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 63 48 Q 65 53 66 60 Q 67 67 65 74" stroke="#1e5631" stroke-width="2.5" fill="none"/>
+                    <path d="M 60 50 Q 61 55 62 62 Q 63 69 61 76" stroke="#1e5631" stroke-width="2" fill="none"/>
+                    <!-- Body waves left -->
+                    <path d="M 30 72 Q 25 78 22 85" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 35 74 Q 30 80 27 85" stroke="#1e5631" stroke-width="2.5" fill="none"/>
+                    <!-- Body waves right -->
+                    <path d="M 70 72 Q 75 78 78 85" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 65 74 Q 70 80 73 85" stroke="#1e5631" stroke-width="2.5" fill="none"/>
                 </svg>
             </div>
         </div>
@@ -1214,11 +1244,38 @@
         <!-- Modal Header -->
         <div class="modal-header">
             <div class="modal-header-icon">
-                <svg class="microsoft-logo" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0" y="0" width="11" height="11" fill="#F25022"/>
-                    <rect x="12" y="0" width="11" height="11" fill="#7FBA00"/>
-                    <rect x="0" y="12" width="11" height="11" fill="#00A4EF"/>
-                    <rect x="12" y="12" width="11" height="11" fill="#FFB900"/>
+                <svg class="sanderson-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Outer circle -->
+                    <circle cx="50" cy="50" r="48" fill="none" stroke="#1e5631" stroke-width="3"/>
+                    <!-- Crown/Star -->
+                    <polygon points="50,15 52,22 59,22 53,27 55,34 50,29 45,34 47,27 41,22 48,22" fill="#1e5631"/>
+                    <!-- Crown points left -->
+                    <polygon points="28,25 30,30 35,28 32,33" fill="#1e5631"/>
+                    <polygon points="20,35 22,40 27,38 24,43" fill="#1e5631"/>
+                    <!-- Crown points right -->
+                    <polygon points="72,25 70,30 65,28 68,33" fill="#1e5631"/>
+                    <polygon points="80,35 78,40 73,38 76,43" fill="#1e5631"/>
+                    <!-- Face -->
+                    <ellipse cx="50" cy="50" rx="15" ry="18" fill="#1e5631"/>
+                    <!-- Eyes -->
+                    <ellipse cx="45" cy="48" rx="2" ry="3" fill="#fff"/>
+                    <ellipse cx="55" cy="48" rx="2" ry="3" fill="#fff"/>
+                    <!-- Smile -->
+                    <path d="M 45 54 Q 50 56 55 54" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                    <!-- Hair left -->
+                    <path d="M 35 45 Q 32 50 30 58 Q 28 65 30 72" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 37 48 Q 35 53 34 60 Q 33 67 35 74" stroke="#1e5631" stroke-width="2.5" fill="none"/>
+                    <path d="M 40 50 Q 39 55 38 62 Q 37 69 39 76" stroke="#1e5631" stroke-width="2" fill="none"/>
+                    <!-- Hair right -->
+                    <path d="M 65 45 Q 68 50 70 58 Q 72 65 70 72" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 63 48 Q 65 53 66 60 Q 67 67 65 74" stroke="#1e5631" stroke-width="2.5" fill="none"/>
+                    <path d="M 60 50 Q 61 55 62 62 Q 63 69 61 76" stroke="#1e5631" stroke-width="2" fill="none"/>
+                    <!-- Body waves left -->
+                    <path d="M 30 72 Q 25 78 22 85" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 35 74 Q 30 80 27 85" stroke="#1e5631" stroke-width="2.5" fill="none"/>
+                    <!-- Body waves right -->
+                    <path d="M 70 72 Q 75 78 78 85" stroke="#1e5631" stroke-width="3" fill="none"/>
+                    <path d="M 65 74 Q 70 80 73 85" stroke="#1e5631" stroke-width="2.5" fill="none"/>
                 </svg>
             </div>
             <div class="modal-header-content">
