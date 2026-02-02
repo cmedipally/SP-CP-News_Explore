@@ -1960,9 +1960,76 @@
         }
 
         // ===== MAIN RESPONSE HANDLER =====
-        // This is where you would plug in a real LLM API call
-        function respondToMessage(userMessage) {
-            // Special handling for greetings and help
+        // NOW POWERED BY REAL CLAUDE API! 🚀
+
+        // Configuration
+        const API_URL = 'http://localhost:3000/api/chat';
+        const USE_LOCAL_BACKEND = true; // Set to false to use mock system
+        let conversationHistory = []; // Track conversation for context
+
+        async function respondToMessage(userMessage) {
+            if (USE_LOCAL_BACKEND) {
+                // Call real Claude API via backend
+                await callClaudeAPI(userMessage);
+            } else {
+                // Fallback to mock system
+                useMockResponse(userMessage);
+            }
+        }
+
+        // Call real Claude API
+        async function callClaudeAPI(userMessage) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: userMessage,
+                        conversationHistory: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Backend returned ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.message) {
+                    // Add to conversation history
+                    conversationHistory.push({ role: 'user', content: userMessage });
+                    conversationHistory.push({ role: 'assistant', content: data.message });
+
+                    // Keep history manageable (last 10 messages)
+                    if (conversationHistory.length > 10) {
+                        conversationHistory = conversationHistory.slice(-10);
+                    }
+
+                    // Display response
+                    addAgentMessage(data.message);
+                } else {
+                    throw new Error('Invalid response from backend');
+                }
+
+            } catch (error) {
+                console.error('Error calling Claude API:', error);
+
+                // Show helpful error message
+                const errorMessage = `<strong>⚠️ Connection Error</strong><br><br>` +
+                    `I couldn't connect to the AI backend. ` +
+                    `Make sure the backend server is running:<br><br>` +
+                    `<code style="background: #f0f0f0; padding: 4px 8px; border-radius: 4px;">cd backend && npm start</code><br><br>` +
+                    `Then refresh this page.<br><br>` +
+                    `<em>Error details: ${error.message}</em>`;
+
+                addAgentMessage(errorMessage);
+            }
+        }
+
+        // Fallback mock system (same as before)
+        function useMockResponse(userMessage) {
             const lowerMessage = userMessage.toLowerCase();
 
             if (lowerMessage.match(/^(hi|hello|hey|good morning|good afternoon)$/i)) {
@@ -1997,37 +2064,10 @@
                 return;
             }
 
-            // ===== THIS IS WHERE YOU'D CALL A REAL LLM API =====
-            // For now, we simulate it with RAG retrieval + response generation
-
-            // Step 1: Retrieve relevant knowledge (simulates RAG)
+            // Use mock RAG system
             const retrievedKnowledge = retrieveKnowledge(userMessage);
-
-            // Step 2: Generate response using retrieved context (simulates LLM)
             const response = generateResponse(userMessage, retrievedKnowledge);
-
-            // Step 3: Return response to user
             addAgentMessage(response);
-
-            /*
-            FUTURE: Replace above with real LLM API call like this:
-
-            async function callRealLLM(userMessage, context) {
-                const response = await fetch('YOUR_API_ENDPOINT', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer YOUR_API_KEY'
-                    },
-                    body: JSON.stringify({
-                        message: userMessage,
-                        context: context,
-                        system: "You are Sanderson's helpful AI assistant..."
-                    })
-                });
-                return await response.json();
-            }
-            */
         }
 
         // Quick Task Actions - Review First
