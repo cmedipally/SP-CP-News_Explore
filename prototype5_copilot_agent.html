@@ -88,8 +88,9 @@
 
         /* Welcome Section */
         .welcome-section {
-            max-width: 1400px;
+            max-width: 900px;
             margin: 0 auto 40px;
+            text-align: center;
         }
 
         .welcome-header {
@@ -111,9 +112,12 @@
         /* Starter Prompts */
         .starter-prompts {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 16px;
             margin-bottom: 48px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .prompt-card {
@@ -125,6 +129,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            text-align: left;
         }
 
         .prompt-card::before {
@@ -167,10 +172,10 @@
 
         /* Content Grid */
         .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 24px;
-            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -181,6 +186,7 @@
             padding: 32px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
+            text-align: left;
         }
 
         .space-container:hover {
