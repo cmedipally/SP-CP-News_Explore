@@ -79,17 +79,111 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Sidebar - Agent Section */
+        .agent-sidebar {
+            width: 320px;
+            background: white;
+            border-right: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .sidebar-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #242424;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: #707070;
+        }
+
+        .agent-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .agent-item {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .agent-item:hover {
+            background: #f8f9fa;
+            border-color: #6366F1;
+        }
+
+        .agent-item.active {
+            background: #EDE9FE;
+            border-color: #6366F1;
+        }
+
+        .agent-item-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .agent-item-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #242424;
+            margin-bottom: 4px;
+        }
+
+        .agent-item-desc {
+            font-size: 12px;
+            color: #707070;
+            line-height: 1.4;
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
             overflow-y: auto;
             padding: 32px;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Welcome Section */
         .welcome-section {
-            max-width: 900px;
-            margin: 0 auto 40px;
+            max-width: 800px;
+            margin: 0 auto;
             text-align: center;
         }
 
@@ -114,8 +208,8 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-bottom: 48px;
-            max-width: 900px;
+            margin-bottom: 32px;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -170,69 +264,78 @@
             line-height: 1.5;
         }
 
-        /* Content Grid */
+        /* Spaces Below Chat */
+        .spaces-section {
+            background: white;
+            border-top: 2px solid #e0e0e0;
+            padding: 32px;
+            flex-shrink: 0;
+        }
+
         .content-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            max-width: 900px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         /* Big Agentic Cards */
         .space-container {
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            padding: 24px;
             transition: all 0.3s;
             text-align: left;
+            height: 100%;
         }
 
         .space-container:hover {
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
-            transform: translateY(-4px);
+            border-color: #6366F1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
         }
 
         .space-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .space-title {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .space-icon-large {
-            width: 48px;
-            height: 48px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
 
         .space-title h3 {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: 600;
             color: #242424;
         }
 
         .edit-space-btn {
-            padding: 8px 16px;
-            background: #f5f5f5;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
+            padding: 6px 12px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -246,11 +349,11 @@
 
         /* Rich Content Cards */
         .rich-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border: 2px solid #e8e8e8;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
@@ -258,28 +361,28 @@
 
         .rich-card:hover {
             border-color: #6366F1;
-            transform: translateX(4px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+            transform: translateX(2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
         }
 
         .rich-card-header {
             display: flex;
             align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 16px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
 
         .rich-card-icon {
-            width: 56px;
-            height: 56px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 20px;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
         }
 
         .rich-card-title-area {
@@ -287,20 +390,20 @@
         }
 
         .rich-card-title {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 600;
             color: #242424;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .rich-card-subtitle {
-            font-size: 13px;
+            font-size: 11px;
             color: #707070;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .rich-card-content {
-            margin-left: 72px;
+            margin-left: 52px;
         }
 
         .content-list {
@@ -310,11 +413,11 @@
         }
 
         .content-list-item {
-            padding: 12px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #f0f0f0;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .content-list-item:last-child {
@@ -322,8 +425,8 @@
         }
 
         .content-list-item .bullet {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: #6366F1;
             border-radius: 50%;
             flex-shrink: 0;
@@ -336,18 +439,18 @@
 
         .content-list-item span {
             color: #242424;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 12px;
+            line-height: 1.5;
         }
 
         .card-action {
-            margin-top: 16px;
-            padding: 12px 20px;
+            margin-top: 12px;
+            padding: 10px 16px;
             background: #6366F1;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -363,15 +466,12 @@
 
         /* Chat Input */
         .chat-input-container {
-            background: white;
-            border-top: 2px solid #e0e0e0;
             padding: 24px 32px;
             flex-shrink: 0;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
         }
 
         .chat-input-wrapper {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             position: relative;
             display: flex;
@@ -501,16 +601,55 @@
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <div class="welcome-section">
-            <div class="welcome-header">
-                <h2>Good afternoon! Here's what needs your attention</h2>
-                <p>I've prepared personalized insights based on your calendar, tasks, and company updates</p>
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Agent Sidebar -->
+        <div class="agent-sidebar">
+            <div class="sidebar-header">
+                <h3>Knowledge Agents</h3>
+                <p>Specialized AI assistants for your work</p>
             </div>
+            <div class="agent-list">
+                <div class="agent-item active">
+                    <div class="agent-item-icon">📋</div>
+                    <div class="agent-item-title">My Workspace</div>
+                    <div class="agent-item-desc">Your personalized hub for tasks, schedule, and priorities</div>
+                </div>
+                <div class="agent-item">
+                    <div class="agent-item-icon">📢</div>
+                    <div class="agent-item-title">Company News</div>
+                    <div class="agent-item-desc">Stay updated with announcements and milestones</div>
+                </div>
+                <div class="agent-item">
+                    <div class="agent-item-icon">👥</div>
+                    <div class="agent-item-title">Team Connect</div>
+                    <div class="agent-item-desc">Collaborate and connect with colleagues</div>
+                </div>
+                <div class="agent-item">
+                    <div class="agent-item-icon">📚</div>
+                    <div class="agent-item-title">Knowledge Base</div>
+                    <div class="agent-item-desc">Search policies, guides, and documentation</div>
+                </div>
+                <div class="agent-item">
+                    <div class="agent-item-icon">🎓</div>
+                    <div class="agent-item-title">Learning & Development</div>
+                    <div class="agent-item-desc">Training courses and skill development</div>
+                </div>
+            </div>
+        </div>
 
-            <!-- Starter Prompts -->
-            <div class="starter-prompts">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div class="welcome-section">
+                    <div class="welcome-header">
+                        <h2>Good afternoon! Here's what needs your attention</h2>
+                        <p>I've prepared personalized insights based on your calendar, tasks, and company updates</p>
+                    </div>
+
+                    <!-- Starter Prompts -->
+                    <div class="starter-prompts">
                 <div class="prompt-card" onclick="startChat('tasks')">
                     <div class="prompt-label">📋 MY PRIORITIES</div>
                     <div class="prompt-text">Show me my top priorities for this week</div>
@@ -531,9 +670,26 @@
                     <div class="prompt-text">What events should I know about?</div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Content Grid -->
-            <div class="content-grid">
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+        <div class="chat-input-wrapper">
+            <input type="text"
+                   class="chat-input"
+                   id="chatInput"
+                   placeholder="Ask me anything about your work, team, or company updates..."
+                   onkeypress="handleEnter(event)">
+            <button class="send-btn" onclick="sendMessage()">
+                ➤
+            </button>
+        </div>
+    </div>
+
+    <!-- Spaces Section -->
+    <div class="spaces-section">
+        <div class="content-grid">
                 <!-- My Space -->
                 <div class="space-container">
                     <div class="space-header">
@@ -749,20 +905,8 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Chat Input -->
-    <div class="chat-input-container">
-        <div class="chat-input-wrapper">
-            <input type="text"
-                   class="chat-input"
-                   id="chatInput"
-                   placeholder="Ask me anything about your work, team, or company updates..."
-                   onkeypress="handleEnter(event)">
-            <button class="send-btn" onclick="sendMessage()">
-                ➤
-            </button>
         </div>
+    </div>
     </div>
 
     <script>
