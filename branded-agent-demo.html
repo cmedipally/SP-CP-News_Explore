@@ -303,8 +303,8 @@
             position: fixed;
             bottom: 120px;
             right: 30px;
-            width: 480px;
-            max-height: 88vh;
+            width: 640px;
+            max-height: 75vh;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(20px);
             border-radius: 32px;
@@ -318,6 +318,8 @@
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
             z-index: 999;
+            display: flex;
+            flex-direction: column;
         }
 
         .agent-modal.active {
@@ -337,6 +339,7 @@
             position: relative;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             border-radius: 32px 32px 0 0;
+            flex-shrink: 0;
         }
 
         .modal-header-icon {
@@ -366,12 +369,160 @@
             font-weight: 400;
         }
 
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 6px;
+            padding: 12px 16px 8px 16px;
+            background: white;
+            border-bottom: 2px solid #edebe9;
+            flex-shrink: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-button {
+            flex-shrink: 0;
+            padding: 10px 16px;
+            background: #f3f2f1;
+            border-radius: 20px;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: #605e5c;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background: #e1dfdd;
+            transform: translateY(-1px);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #1e5631, #2d7a47);
+            color: white;
+            box-shadow: 0 3px 10px rgba(30, 86, 49, 0.25);
+        }
+
+        .tab-count {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 2px 7px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .tab-button.active .tab-count {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Modal Content Wrapper */
+        .modal-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+            min-height: 0;
+        }
+
         /* Modal Content */
         .modal-content {
-            max-height: calc(88vh - 170px);
+            flex: 1;
             overflow-y: auto;
-            padding: 24px 20px 16px 20px;
+            padding: 0;
             background: #fafafa;
+            min-height: 0;
+            position: relative;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 24px 20px 16px 20px;
+            animation: fadeIn 0.3s ease;
+            width: 100%;
+            background: #fafafa;
+            min-height: 500px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Chat tab has no padding since it has empty state */
+        #chatTab {
+            padding: 0;
+            background: #fafafa;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat Tab Empty State */
+        .chat-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .chat-empty-state.hidden {
+            display: none;
+        }
+
+        .chat-empty-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e5631, #2d7a47);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(30, 86, 49, 0.25);
+        }
+
+        .chat-empty-icon svg {
+            width: 44px;
+            height: 44px;
+        }
+
+        .chat-empty-state h4 {
+            font-size: 18px;
+            color: #201f1e;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .chat-empty-state p {
+            font-size: 13px;
+            color: #605e5c;
+            line-height: 1.5;
+        }
+
+        #chatMessages {
+            max-height: calc(75vh - 280px);
+            overflow-y: auto;
+            padding: 16px;
         }
 
         .feature-section {
@@ -617,6 +768,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .chat-messages {
@@ -1241,13 +1393,61 @@
             </div>
         </div>
 
-        <!-- Modal Content -->
-        <div class="modal-content">
-            <!-- Information Consumption -->
-            <div class="feature-section">
-                <div class="section-title">
-                    <span>📺</span> Information & Updates
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="switchTab('chat', event)">💬 Chat</button>
+            <button class="tab-button" onclick="switchTab('updates', event)">📺 Updates <span class="tab-count">2</span></button>
+            <button class="tab-button" onclick="switchTab('tasks', event)">⚡ Tasks <span class="tab-count">2</span></button>
+            <button class="tab-button" onclick="switchTab('connect', event)">🤝 Connect <span class="tab-count">2</span></button>
+        </div>
+
+        <!-- Modal Content Wrapper -->
+        <div class="modal-content-wrapper">
+            <div class="modal-content">
+                <!-- Chat Tab -->
+                <div id="chatTab" class="tab-content active">
+                    <!-- Empty State -->
+                    <div class="chat-empty-state" id="chatEmptyState">
+                        <div class="chat-empty-icon">
+                            <svg class="sanderson-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="50" cy="50" r="48" fill="none" stroke="#fff" stroke-width="3"/>
+                                <polygon points="50,15 52,22 59,22 53,27 55,34 50,29 45,34 47,27 41,22 48,22" fill="#fff"/>
+                                <polygon points="28,25 30,30 35,28 32,33" fill="#fff"/>
+                                <polygon points="20,35 22,40 27,38 24,43" fill="#fff"/>
+                                <polygon points="72,25 70,30 65,28 68,33" fill="#fff"/>
+                                <polygon points="80,35 78,40 73,38 76,43" fill="#fff"/>
+                                <ellipse cx="50" cy="50" rx="15" ry="18" fill="#fff"/>
+                                <ellipse cx="45" cy="48" rx="2" ry="3" fill="#1e5631"/>
+                                <ellipse cx="55" cy="48" rx="2" ry="3" fill="#1e5631"/>
+                                <path d="M 45 54 Q 50 56 55 54" stroke="#1e5631" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                                <path d="M 35 45 Q 32 50 30 58 Q 28 65 30 72" stroke="#fff" stroke-width="3" fill="none"/>
+                                <path d="M 37 48 Q 35 53 34 60 Q 33 67 35 74" stroke="#fff" stroke-width="2.5" fill="none"/>
+                                <path d="M 40 50 Q 39 55 38 62 Q 37 69 39 76" stroke="#fff" stroke-width="2" fill="none"/>
+                                <path d="M 65 45 Q 68 50 70 58 Q 72 65 70 72" stroke="#fff" stroke-width="3" fill="none"/>
+                                <path d="M 63 48 Q 65 53 66 60 Q 67 67 65 74" stroke="#fff" stroke-width="2.5" fill="none"/>
+                                <path d="M 60 50 Q 61 55 62 62 Q 63 69 61 76" stroke="#fff" stroke-width="2" fill="none"/>
+                                <path d="M 30 72 Q 25 78 22 85" stroke="#fff" stroke-width="3" fill="none"/>
+                                <path d="M 35 74 Q 30 80 27 85" stroke="#fff" stroke-width="2.5" fill="none"/>
+                                <path d="M 70 72 Q 75 78 78 85" stroke="#fff" stroke-width="3" fill="none"/>
+                                <path d="M 65 74 Q 70 80 73 85" stroke="#fff" stroke-width="2.5" fill="none"/>
+                            </svg>
+                        </div>
+                        <h4>Ask me anything</h4>
+                        <p>I can help with policies, benefits, schedules,<br>and everything Sanderson's!</p>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="chat-messages" id="chatMessages" style="padding: 16px; display: none;">
+                        <!-- Messages will be added here dynamically -->
+                    </div>
                 </div>
+
+                <!-- Updates Tab -->
+                <div id="updatesTab" class="tab-content">
+                    <div class="feature-section">
+                        <div class="section-title">
+                            <span>📺</span> Information & Updates
+                        </div>
 
                 <!-- Weekly Recap Card -->
                 <div class="info-card" id="weeklyRecapCard">
@@ -1320,13 +1520,15 @@
                         </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Quick Tasks -->
-            <div class="feature-section">
-                <div class="section-title">
-                    <span>⚡</span> Quick Tasks
+                    </div>
                 </div>
+
+                <!-- Tasks Tab -->
+                <div id="tasksTab" class="tab-content">
+                    <div class="feature-section">
+                        <div class="section-title">
+                            <span>⚡</span> Quick Tasks
+                        </div>
 
                 <div class="task-card" id="lunchCard">
                     <h4>🍽️ Order Lunch Today</h4>
@@ -1347,18 +1549,49 @@
                         <button class="btn btn-secondary" onclick="event.stopPropagation(); dismissClaim();">Dismiss</button>
                     </div>
                 </div>
-            </div>
+                    </div>
+                </div>
 
+                <!-- Connect Tab -->
+                <div id="connectTab" class="tab-content">
+                    <div class="feature-section">
+                        <div class="section-title">
+                            <span>👥</span> Connect with Collaborators
+                        </div>
+
+                        <!-- Teammate 1 -->
+                        <div class="task-card" id="teammate1Card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <h4>💬 Marcus Rodriguez</h4>
+                            <p><strong>Store Operations Lead</strong><br>
+                            Last contact: 18 days ago via Teams<br>
+                            📍 Valley Heights Location • Shared projects: Inventory System Rollout</p>
+                            <div class="task-actions">
+                                <button class="btn btn-primary" onclick="event.stopPropagation(); reviewTeammateMessage('teammate1');">Send Catch-Up Message</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-section">
+                        <div class="section-title">
+                            <span>🎉</span> Connect with Company
+                        </div>
+
+                        <!-- Event 1 -->
+                        <div class="task-card" id="event1Card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                            <h4>🎂 Employee Appreciation Barbecue</h4>
+                            <p><strong>January 15, 2026 • 12:00 PM - 3:00 PM</strong><br>
+                            📍 Downtown Flagship - Outdoor Patio Area<br>
+                            Join us for food, games, and recognition of outstanding team members!</p>
+                            <div class="task-actions">
+                                <button class="btn btn-primary" onclick="event.stopPropagation(); reviewEventRSVP('event1');">RSVP Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Persistent Chat Messages (expandable) -->
-        <div class="chat-messages-container" id="chatMessagesContainer">
-            <div class="chat-messages" id="chatMessages">
-                <!-- Messages will be added here dynamically -->
-            </div>
-        </div>
-
-        <!-- Persistent Chat Bar -->
+        <!-- Chat Bar -->
         <div class="chat-bar">
             <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything..." onkeypress="handleChatEnter(event)">
             <button class="send-button" id="sendButton" onclick="sendMessage()">
@@ -1408,9 +1641,46 @@
         function collapseAll() {
             document.getElementById('weeklyRecapCard').classList.remove('expanded');
             document.getElementById('leadershipCard').classList.remove('expanded');
-            document.getElementById('chatMessagesContainer').classList.remove('active');
             const video = document.getElementById('weeklyVideo');
             if (video) video.pause();
+        }
+
+        // Tab Switching
+        function switchTab(tabName, event) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            const targetTab = document.getElementById(tabName + 'Tab');
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            // Activate button if event is provided
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Fallback: find button by tab name
+                const buttons = document.querySelectorAll('.tab-button');
+                const tabIndex = ['chat', 'updates', 'tasks', 'connect'].indexOf(tabName);
+                if (tabIndex >= 0 && buttons[tabIndex]) {
+                    buttons[tabIndex].classList.add('active');
+                }
+            }
+
+            // If switching to chat, focus input
+            if (tabName === 'chat') {
+                setTimeout(() => {
+                    document.getElementById('chatInput').focus();
+                }, 100);
+            }
         }
 
         // Toggle Weekly Recap
@@ -1458,53 +1728,34 @@
 
         // Helper function to ensure chat is visible and in focus
         function ensureChatVisible() {
-            const container = document.getElementById('chatMessagesContainer');
-            const modalContent = document.querySelector('.modal-content');
-            const chatBar = document.querySelector('.chat-bar');
-            const chatInput = document.getElementById('chatInput');
+            // Switch to chat tab
+            const chatTab = document.getElementById('chatTab');
+            const chatButton = document.querySelectorAll('.tab-button')[0];
 
-            // Wait for layout to settle, then scroll
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    // Scroll modal content to bottom
-                    if (modalContent) {
-                        modalContent.scrollTop = modalContent.scrollHeight;
-                    }
-
-                    // Scroll chat to bottom
-                    if (container) {
-                        container.scrollTop = container.scrollHeight;
-                    }
-
-                    // After animation completes (400ms), do final scroll
-                    setTimeout(() => {
-                        if (modalContent) {
-                            modalContent.scrollTop = modalContent.scrollHeight;
-                        }
-                        if (container) {
-                            container.scrollTop = container.scrollHeight;
-                        }
-                        // Smooth scroll chat bar into view
-                        if (chatBar) {
-                            chatBar.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                        }
-                    }, 450);
-
-                    // Focus input
-                    setTimeout(() => {
-                        chatInput?.focus();
-                    }, 500);
-                });
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
             });
+
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show chat tab
+            chatTab.classList.add('active');
+            chatButton.classList.add('active');
+
+            // Focus input
+            setTimeout(() => {
+                document.getElementById('chatInput')?.focus();
+            }, 100);
         }
 
         // Start chats from expanded cards
         function startRecapChat() {
             chatContext = 'recap';
             document.getElementById('weeklyRecapCard').classList.remove('expanded');
-
-            const container = document.getElementById('chatMessagesContainer');
-            container.classList.add('active');
 
             ensureChatVisible();
 
@@ -1516,9 +1767,6 @@
         function startLeadershipChat() {
             chatContext = 'leadership';
             document.getElementById('leadershipCard').classList.remove('expanded');
-
-            const container = document.getElementById('chatMessagesContainer');
-            container.classList.add('active');
 
             ensureChatVisible();
 
@@ -1540,12 +1788,16 @@
 
             if (!message) return;
 
-            // Show chat messages container first
-            const container = document.getElementById('chatMessagesContainer');
-            container.classList.add('active');
+            const chatMessages = document.getElementById('chatMessages');
+            const emptyState = document.getElementById('chatEmptyState');
+
+            // Hide empty state and show messages
+            if (emptyState) {
+                emptyState.classList.add('hidden');
+            }
+            chatMessages.style.display = 'block';
 
             // Add user message
-            const chatMessages = document.getElementById('chatMessages');
             const userMsgDiv = document.createElement('div');
             userMsgDiv.className = 'message user';
             userMsgDiv.innerHTML = `<div class="message-bubble">${message}</div>`;
@@ -1567,12 +1819,9 @@
             `;
             chatMessages.appendChild(typingDiv);
 
-            // Ensure chat is visible and scrolled after adding message
-            ensureChatVisible();
-
-            // Additional scroll to show typing
+            // Scroll to bottom
             setTimeout(() => {
-                container.scrollTop = container.scrollHeight;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }, 100);
 
             // Simulate AI response
@@ -1587,29 +1836,25 @@
         }
 
         function addAgentMessage(text) {
-            const container = document.getElementById('chatMessagesContainer');
             const chatMessages = document.getElementById('chatMessages');
-            const modalContent = document.querySelector('.modal-content');
+            const emptyState = document.getElementById('chatEmptyState');
 
-            if (!chatMessages || !container) return;
+            if (!chatMessages) return;
+
+            // Hide empty state and show messages
+            if (emptyState) {
+                emptyState.classList.add('hidden');
+            }
+            chatMessages.style.display = 'block';
 
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message agent';
             messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
             chatMessages.appendChild(messageDiv);
 
-            // Immediately scroll modal and chat to bottom
-            if (modalContent) {
-                modalContent.scrollTop = modalContent.scrollHeight;
-            }
-            container.scrollTop = container.scrollHeight;
-
-            // Then do smooth scroll for polish
+            // Scroll to bottom
             setTimeout(() => {
-                container.scrollTo({
-                    top: container.scrollHeight,
-                    behavior: 'smooth'
-                });
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }, 50);
         }
 
@@ -2128,9 +2373,6 @@
         }
 
         function showOrderDetails() {
-            const container = document.getElementById('chatMessagesContainer');
-            container.classList.add('active');
-
             ensureChatVisible();
 
             setTimeout(() => {
@@ -2208,10 +2450,179 @@
             }, 500);
         }
 
-        function trackClaim() {
-            const container = document.getElementById('chatMessagesContainer');
-            container.classList.add('active');
+        // ===== CONNECT FEATURES =====
 
+        // Teammate data
+        const teammateData = {
+            teammate1: {
+                name: 'Marcus Rodriguez',
+                title: 'Store Operations Lead',
+                lastContact: '18 days ago via Teams',
+                location: 'Valley Heights Location',
+                project: 'Inventory System Rollout',
+                gradient: 'linear-gradient(135deg, #667eea, #764ba2)',
+                suggestedMessage: "Hi Marcus! It's been a while since we last connected. I wanted to check in on the Inventory System Rollout at Valley Heights. How's everything progressing? Let me know if you need any support from my end. Would love to catch up soon!"
+            },
+            teammate2: {
+                name: 'Jennifer Park',
+                title: 'Marketing Coordinator',
+                lastContact: '25 days ago via Email',
+                location: 'Downtown Flagship',
+                project: 'Holiday Campaign Planning',
+                gradient: 'linear-gradient(135deg, #fa709a, #fee140)',
+                suggestedMessage: "Hey Jennifer! I hope you're doing well! It's been almost a month since we last touched base. I wanted to follow up on the Holiday Campaign Planning—how did everything turn out? I'd love to hear about the results and see if there's anything we can collaborate on for upcoming projects!"
+            },
+            teammate3: {
+                name: 'David Thompson',
+                title: 'Training & Development Manager',
+                lastContact: '31 days ago via Teams',
+                location: 'Regional Office',
+                project: 'New Employee Onboarding Program',
+                gradient: 'linear-gradient(135deg, #30cfd0, #330867)',
+                suggestedMessage: "Hi David! I realized it's been over a month since we last connected. I wanted to reach out about the New Employee Onboarding Program. I've heard great feedback from new hires—amazing work! Let's sync up soon to discuss any improvements or new initiatives you're planning."
+            }
+        };
+
+        function reviewTeammateMessage(teammateId) {
+            const data = teammateData[teammateId];
+            const card = document.getElementById(teammateId + 'Card');
+
+            card.innerHTML = `
+                <h4>📝 Review Message to ${data.name}</h4>
+                <div style="background: rgba(255,255,255,0.2); padding: 14px; border-radius: 10px; margin-bottom: 14px;">
+                    <p style="margin: 0 0 8px 0;"><strong>Suggested Message:</strong></p>
+                    <div style="font-size: 13px; line-height: 1.6;">${data.suggestedMessage}</div>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); confirmSendMessage('${teammateId}');">Send Message</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); cancelTeammateReview('${teammateId}');">Cancel</button>
+                </div>
+            `;
+        }
+
+        function confirmSendMessage(teammateId) {
+            const data = teammateData[teammateId];
+            const card = document.getElementById(teammateId + 'Card');
+
+            card.innerHTML = `
+                <h4>✅ Message Sent!</h4>
+                <p>Your message to <strong>${data.name}</strong> has been sent via Teams.<br><br>
+                📬 Sent just now<br>
+                💬 They'll be notified immediately</p>
+            `;
+            card.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+
+                setTimeout(() => {
+                    card.remove();
+                }, 500);
+            }, 2000);
+        }
+
+        function cancelTeammateReview(teammateId) {
+            const data = teammateData[teammateId];
+            const card = document.getElementById(teammateId + 'Card');
+
+            card.style.background = data.gradient;
+            card.innerHTML = `
+                <h4>💬 ${data.name}</h4>
+                <p><strong>${data.title}</strong><br>
+                Last contact: ${data.lastContact}<br>
+                📍 ${data.location} • Shared projects: ${data.project}</p>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); reviewTeammateMessage('${teammateId}');">Send Catch-Up Message</button>
+                </div>
+            `;
+        }
+
+        // Event data
+        const eventData = {
+            event1: {
+                name: 'Employee Appreciation Barbecue',
+                date: 'January 15, 2026 • 12:00 PM - 3:00 PM',
+                location: 'Downtown Flagship - Outdoor Patio Area',
+                description: 'Join us for food, games, and recognition of outstanding team members!',
+                gradient: 'linear-gradient(135deg, #f093fb, #f5576c)'
+            },
+            event2: {
+                name: 'Leadership Development Workshop',
+                date: 'January 22, 2026 • 9:00 AM - 4:00 PM',
+                location: 'Regional Training Center',
+                description: 'Enhance your management skills with interactive sessions and networking!',
+                gradient: 'linear-gradient(135deg, #4facfe, #00f2fe)'
+            },
+            event3: {
+                name: "New Year's Food Drive Kickoff",
+                date: 'January 5, 2026 • 10:00 AM - 2:00 PM',
+                location: 'All Store Locations',
+                description: 'Help us launch our annual food drive to support local communities!',
+                gradient: 'linear-gradient(135deg, #43e97b, #38f9d7)'
+            }
+        };
+
+        function reviewEventRSVP(eventId) {
+            const data = eventData[eventId];
+            const card = document.getElementById(eventId + 'Card');
+
+            card.innerHTML = `
+                <h4>📋 Confirm RSVP for ${data.name}</h4>
+                <div style="background: rgba(255,255,255,0.2); padding: 14px; border-radius: 10px; margin-bottom: 14px;">
+                    <p style="margin: 0 0 6px 0;"><strong>📅 ${data.date}</strong></p>
+                    <p style="margin: 0 0 6px 0;"><strong>📍 ${data.location}</strong></p>
+                    <p style="margin: 0;">${data.description}</p>
+                </div>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); confirmEventRSVP('${eventId}');">Confirm RSVP</button>
+                    <button class="btn btn-secondary" onclick="event.stopPropagation(); cancelEventRSVP('${eventId}');">Cancel</button>
+                </div>
+            `;
+        }
+
+        function confirmEventRSVP(eventId) {
+            const data = eventData[eventId];
+            const card = document.getElementById(eventId + 'Card');
+
+            card.innerHTML = `
+                <h4>✅ RSVP Confirmed!</h4>
+                <p>You're registered for <strong>${data.name}</strong><br><br>
+                📅 ${data.date.split('•')[0]}<br>
+                📧 Calendar invite sent to your email<br>
+                🔔 You'll receive a reminder 1 day before</p>
+            `;
+            card.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+
+                setTimeout(() => {
+                    card.remove();
+                }, 500);
+            }, 2000);
+        }
+
+        function cancelEventRSVP(eventId) {
+            const data = eventData[eventId];
+            const card = document.getElementById(eventId + 'Card');
+
+            card.style.background = data.gradient;
+            card.innerHTML = `
+                <h4>🎉 ${data.name}</h4>
+                <p><strong>${data.date}</strong><br>
+                📍 ${data.location}<br>
+                ${data.description}</p>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); reviewEventRSVP('${eventId}');">RSVP Now</button>
+                </div>
+            `;
+        }
+
+        function trackClaim() {
             ensureChatVisible();
 
             setTimeout(() => {
