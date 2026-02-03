@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanderson's AI Workspace</title>
+    <title>Sanderson's Agent - M365 Copilot</title>
     <style>
         * {
             margin: 0;
@@ -12,351 +12,553 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5e6e0;
+            color: #242424;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
         }
 
-        /* Header */
-        .header {
-            padding: 20px 40px;
+        /* Left Sidebar */
+        .sidebar {
+            width: 240px;
+            background: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #1a1a1a;
+            gap: 12px;
         }
 
-        .logo {
-            font-size: 20px;
+        .copilot-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .logo-icon {
-            width: 32px;
-            height: 32px;
+        .sidebar-section {
+            padding: 8px;
+        }
+
+        .sidebar-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-item:hover {
+            background: #f5f5f5;
+        }
+
+        .sidebar-item.active {
+            background: #f0e6ff;
+            color: #6366F1;
+        }
+
+        .sidebar-item-icon {
+            font-size: 16px;
+        }
+
+        .section-label {
+            padding: 16px 12px 8px;
+            font-size: 12px;
+            color: #707070;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Agent Header */
+        .agent-header {
+            padding: 24px 32px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .agent-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .agent-logo {
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 24px;
         }
 
-        /* Main Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 40px 40px;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .hero h1 {
-            font-size: 48px;
+        .agent-title h1 {
+            font-size: 20px;
             font-weight: 600;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #ffffff, #999999);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
-        /* Input Section */
-        .input-section {
-            max-width: 800px;
-            margin: 0 auto 40px;
-        }
-
-        .input-wrapper {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 8px;
-            transition: all 0.2s;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: #6366F1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        .input-area {
+        /* Message Input */
+        .message-input-container {
+            max-width: 700px;
+            margin: 0 auto;
             width: 100%;
-            background: transparent;
+        }
+
+        .message-input-wrapper {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-input-wrapper:focus-within {
+            border-color: #6366F1;
+        }
+
+        .message-input {
+            flex: 1;
             border: none;
             outline: none;
-            color: #ffffff;
-            font-size: 16px;
-            padding: 16px;
-            resize: none;
-            min-height: 100px;
+            padding: 12px;
+            font-size: 14px;
             font-family: inherit;
         }
 
-        .input-area::placeholder {
-            color: #666;
-        }
-
-        .input-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            border-top: 1px solid #2a2a2a;
-        }
-
-        .model-selector {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .tools-btn {
             padding: 6px 12px;
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            border-radius: 8px;
-            color: #ffffff;
+            background: transparent;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
             font-size: 13px;
             cursor: pointer;
-        }
-
-        .submit-btn {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            gap: 6px;
         }
 
-        .submit-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 64px;
-        }
-
-        .action-chip {
-            padding: 10px 20px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 24px;
-            color: #ffffff;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .action-chip:hover {
-            border-color: #6366F1;
-            background: #0f0f0f;
-        }
-
-        /* Templates Section */
-        .templates-section {
-            margin-top: 64px;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 32px;
-        }
-
-        .section-header h2 {
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .section-tabs {
-            display: flex;
-            gap: 24px;
-        }
-
-        .tab {
-            padding: 8px 16px;
+        .icon-btn {
+            width: 32px;
+            height: 32px;
             background: transparent;
             border: none;
-            color: #666;
-            font-size: 14px;
+            border-radius: 6px;
             cursor: pointer;
-            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .icon-btn:hover {
+            background: #f5f5f5;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Card Sections */
+        .card-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .cards-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .cards-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .cards-grid.four-col {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Info Card */
+        .info-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
             transition: all 0.2s;
         }
 
-        .tab.active {
-            color: #ffffff;
-            border-bottom-color: #6366F1;
+        .info-card:hover {
+            border-color: #6366F1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        .browse-all {
-            color: #6366F1;
+        .info-card-header {
+            font-size: 11px;
+            color: #707070;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card-title {
             font-size: 14px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
-        /* Template Cards */
-        .templates-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
+        .info-card-desc {
+            font-size: 13px;
+            color: #707070;
+            line-height: 1.5;
         }
 
-        .template-card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+        .info-card-list {
+            list-style: none;
+            margin: 12px 0 0 0;
+        }
+
+        .info-card-list li {
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-card-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Image Card */
+        .image-card {
+            background: white;
+            border: 1px solid #e0e0e0;
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .template-card:hover {
+        .image-card:hover {
             border-color: #6366F1;
-            transform: translateY(-4px);
+            transform: translateY(-2px);
         }
 
-        .template-preview {
+        .image-card-image {
             width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            height: 120px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
-            border-bottom: 1px solid #2a2a2a;
+            font-size: 32px;
         }
 
-        .template-info {
-            padding: 20px;
+        .image-card-content {
+            padding: 12px;
         }
 
-        .template-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .image-card-label {
+            font-size: 11px;
+            color: #707070;
+            margin-bottom: 4px;
         }
 
-        .template-desc {
+        .image-card-title {
             font-size: 13px;
-            color: #666;
-            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        /* Insight Card */
+        .insight-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .insight-card:hover {
+            border-color: #6366F1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .insight-card-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border-radius: 8px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .insight-card-content {
+            flex: 1;
+        }
+
+        .insight-card-label {
+            font-size: 11px;
+            color: #707070;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .insight-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .insight-card-desc {
+            font-size: 13px;
+            color: #707070;
+        }
+
+        .insight-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .insight-action-btn {
+            width: 32px;
+            height: 32px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="logo">
-            <div class="logo-icon">🏢</div>
-            <span>Sanderson's</span>
+    <!-- Left Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="copilot-icon">M</div>
+            <span class="sidebar-title">M365 Copilot</span>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">🔍</span>
+                <span>Search</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">💬</span>
+                <span>Chat</span>
+            </div>
+        </div>
+
+        <div class="section-label">Agents</div>
+        <div class="sidebar-section">
+            <div class="sidebar-item active">
+                <span class="sidebar-item-icon">🏢</span>
+                <span>Sanderson's Agent</span>
+            </div>
+        </div>
+
+        <div class="section-label">Pages</div>
+        <div class="sidebar-section">
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">📓</span>
+                <span>Notebooks</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">➕</span>
+                <span>Create</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">🎯</span>
+                <span>Apps</span>
+            </div>
         </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Hero -->
-        <div class="hero">
-            <h1>How can I help you today?</h1>
-        </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Agent Header -->
+        <div class="agent-header">
+            <div class="agent-title">
+                <div class="agent-logo">🏢</div>
+                <h1>Sanderson's agent</h1>
+            </div>
 
-        <!-- Input Section -->
-        <div class="input-section">
-            <div class="input-wrapper">
-                <textarea
-                    class="input-area"
-                    placeholder="Ask AI to build..."
-                    id="promptInput"></textarea>
-                <div class="input-footer">
-                    <div class="model-selector">
-                        <span>🤖</span>
-                        <span>AI Assistant</span>
-                        <span>▼</span>
-                    </div>
-                    <button class="submit-btn" onclick="handleSubmit()">↑</button>
+            <div class="message-input-container">
+                <div class="message-input-wrapper">
+                    <button class="icon-btn">➕</button>
+                    <input type="text" class="message-input" placeholder="Message Copilot" id="messageInput">
+                    <button class="tools-btn">
+                        <span>🛠</span>
+                        <span>Tools</span>
+                    </button>
+                    <button class="icon-btn">🎤</button>
+                    <button class="icon-btn">🔊</button>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <button class="action-chip" onclick="quickAction('schedule')">
-                📅 View my schedule
-            </button>
-            <button class="action-chip" onclick="quickAction('tasks')">
-                ✅ Show my tasks
-            </button>
-            <button class="action-chip" onclick="quickAction('team')">
-                👥 Team updates
-            </button>
-            <button class="action-chip" onclick="quickAction('news')">
-                📰 Company news
-            </button>
-            <button class="action-chip" onclick="quickAction('more')">
-                🔄 More options
-            </button>
-        </div>
-
-        <!-- Templates Section -->
-        <div class="templates-section">
-            <div class="section-header">
-                <h2>Start with a template</h2>
-                <div class="section-tabs">
-                    <button class="tab active">🎯 Workspaces</button>
-                    <button class="tab">📊 Dashboards</button>
-                    <button class="tab">📋 Components</button>
-                </div>
-                <a href="#" class="browse-all">Browse all →</a>
-            </div>
-
-            <div class="templates-grid">
-                <div class="template-card" onclick="selectTemplate('workspace')">
-                    <div class="template-preview">📋</div>
-                    <div class="template-info">
-                        <div class="template-title">My Personal Workspace</div>
-                        <div class="template-desc">Your personalized hub for tasks, schedule, and team connections</div>
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="content-wrapper">
+                <!-- Top of Mind -->
+                <div class="card-section">
+                    <h2 class="section-title">Top of mind</h2>
+                    <div class="cards-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">Latest Announcement</div>
+                            <div class="info-card-title">Your Voice Matters: Help Shape the Future of Sanderson's</div>
+                            <ul class="info-card-list">
+                                <li>📋 Recognition - 6 employees received kudos this week</li>
+                                <li>📢 Final call to participate in the Employee, Manager, and Leader Pulse Survey</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div class="template-card" onclick="selectTemplate('company')">
-                    <div class="template-preview">📢</div>
-                    <div class="template-info">
-                        <div class="template-title">Company Updates Hub</div>
-                        <div class="template-desc">Stay updated with announcements, milestones, and upcoming events</div>
+                <!-- Personalized Insights -->
+                <div class="card-section">
+                    <h2 class="section-title">Personalized Insights</h2>
+                    <div class="cards-grid two-col">
+                        <div class="insight-card">
+                            <div class="insight-card-image">📅</div>
+                            <div class="insight-card-content">
+                                <div class="insight-card-label">Day at a glance</div>
+                                <div class="insight-card-title">Day at a glance</div>
+                                <div class="insight-card-desc">Meetings, deadlines, and top priorities in one place</div>
+                            </div>
+                        </div>
+
+                        <div class="insight-card">
+                            <div class="insight-card-image">📰</div>
+                            <div class="insight-card-content">
+                                <div class="insight-card-label">New briefing</div>
+                                <div class="insight-card-title">Daily News Roundup</div>
+                                <div class="insight-card-desc"></div>
+                                <div class="insight-card-actions">
+                                    <button class="insight-action-btn">👍</button>
+                                    <button class="insight-action-btn">👎</button>
+                                    <button class="insight-action-btn">▶</button>
+                                    <button class="insight-action-btn">📤</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="template-card" onclick="selectTemplate('team')">
-                    <div class="template-preview">👥</div>
-                    <div class="template-info">
-                        <div class="template-title">Team Collaboration Center</div>
-                        <div class="template-desc">Connect with colleagues, schedule meetings, and share updates</div>
+                <!-- Today's Essentials -->
+                <div class="card-section">
+                    <h2 class="section-title">Today's Essentials</h2>
+                    <div class="cards-grid four-col">
+                        <div class="image-card">
+                            <div class="image-card-image">🚚</div>
+                            <div class="image-card-content">
+                                <div class="image-card-label">Inventory/Shipping</div>
+                                <div class="image-card-title">5:30 arrival time</div>
+                            </div>
+                        </div>
+
+                        <div class="image-card">
+                            <div class="image-card-image">☕</div>
+                            <div class="image-card-content">
+                                <div class="image-card-label">Break Room</div>
+                                <div class="image-card-title">Cafe 4.0 open now</div>
+                            </div>
+                        </div>
+
+                        <div class="image-card">
+                            <div class="image-card-image">👥</div>
+                            <div class="image-card-content">
+                                <div class="image-card-label">Team Roster</div>
+                                <div class="image-card-title">5 colleagues</div>
+                            </div>
+                        </div>
+
+                        <div class="image-card">
+                            <div class="image-card-image">🎓</div>
+                            <div class="image-card-content">
+                                <div class="image-card-label">Learning</div>
+                                <div class="image-card-title">1 upcoming training</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catch up -->
+                <div class="card-section">
+                    <h2 class="section-title">Catch up</h2>
+                    <div class="cards-grid two-col">
+                        <div class="image-card">
+                            <div class="image-card-image">📊</div>
+                            <div class="image-card-content">
+                                <div class="image-card-label">Summary</div>
+                                <div class="image-card-title">Weekly updates</div>
+                            </div>
+                        </div>
+
+                        <div class="image-card">
+                            <div class="image-card-image">📧</div>
+                            <div class="image-card-content">
+                                <div class="image-card-label">My Inbox</div>
+                                <div class="image-card-title">My 3pm,5 posts from my 48 missing</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -364,43 +566,13 @@
     </div>
 
     <script>
-        function handleSubmit() {
-            const input = document.getElementById('promptInput');
-            const prompt = input.value.trim();
-
-            if (!prompt) return;
-
-            alert(`Creating workspace based on: "${prompt}"\n\nThis would generate a personalized AI workspace tailored to your needs.`);
-            input.value = '';
-        }
-
-        function quickAction(action) {
-            const messages = {
-                'schedule': 'Showing your schedule for today and upcoming week...',
-                'tasks': 'Here are your top priority tasks...',
-                'team': 'Latest updates from your team...',
-                'news': 'Recent company announcements and news...',
-                'more': 'Additional options and features...'
-            };
-
-            alert(messages[action] || 'Loading...');
-        }
-
-        function selectTemplate(template) {
-            const messages = {
-                'workspace': 'Creating your personal workspace with tasks, calendar, and team connections...',
-                'company': 'Setting up company updates hub with news, milestones, and events...',
-                'team': 'Building team collaboration center with chat and project tracking...'
-            };
-
-            alert(messages[template] || 'Creating workspace...');
-        }
-
-        // Handle Enter key in textarea
-        document.getElementById('promptInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit();
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const message = this.value.trim();
+                if (message) {
+                    alert(`Processing request: "${message}"\n\nThe agent would provide personalized assistance based on your query.`);
+                    this.value = '';
+                }
             }
         });
     </script>
