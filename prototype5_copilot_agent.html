@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanderson's - Your Intelligent Workspace</title>
+    <title>Sanderson's AI Workspace</title>
     <style>
         * {
             margin: 0;
@@ -12,798 +12,397 @@
         }
 
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-            color: #242424;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Copilot Header */
-        .copilot-header {
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-            color: white;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
-        }
-
-        .agent-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6366F1;
-            font-weight: 700;
-            font-size: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .agent-title h1 {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .agent-title p {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .header-actions {
-            margin-left: auto;
-            display: flex;
-            gap: 12px;
-        }
-
-        .header-btn {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            color: white;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .header-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 32px;
-        }
-
-        /* Welcome Section */
-        .welcome-section {
-            max-width: 900px;
-            margin: 0 auto 40px;
-            text-align: center;
-        }
-
-        .welcome-header {
-            margin-bottom: 32px;
-        }
-
-        .welcome-header h2 {
-            font-size: 28px;
-            font-weight: 600;
-            color: #6366F1;
-            margin-bottom: 6px;
-        }
-
-        .welcome-header p {
-            font-size: 14px;
-            color: #707070;
-        }
-
-        /* Starter Prompts */
-        .starter-prompts {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 48px;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .prompt-card {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            text-align: left;
-        }
-
-        .prompt-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            transform: scaleY(0);
-            transition: transform 0.3s;
-        }
-
-        .prompt-card:hover {
-            border-color: #6366F1;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
-        }
-
-        .prompt-card:hover::before {
-            transform: scaleY(1);
-        }
-
-        .prompt-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: #6366F1;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-
-        .prompt-text {
-            font-size: 16px;
-            color: #242424;
-            font-weight: 600;
-            line-height: 1.5;
-        }
-
-        /* Content Grid */
-        .content-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        /* Big Agentic Cards */
-        .space-container {
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-            text-align: left;
-        }
-
-        .space-container:hover {
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
-            transform: translateY(-4px);
-        }
-
-        .space-header {
+        /* Header */
+        .header {
+            padding: 20px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 1px solid #1a1a1a;
         }
 
-        .space-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .space-icon-large {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .space-title h3 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #242424;
-        }
-
-        .edit-space-btn {
-            padding: 8px 16px;
-            background: #f5f5f5;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
+        .logo {
+            font-size: 20px;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #707070;
-        }
-
-        .edit-space-btn:hover {
-            background: #6366F1;
-            color: white;
-        }
-
-        /* Rich Content Cards */
-        .rich-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border: 2px solid #e8e8e8;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .rich-card:hover {
-            border-color: #6366F1;
-            transform: translateX(4px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
-        }
-
-        .rich-card-header {
             display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            margin-bottom: 16px;
+            align-items: center;
+            gap: 10px;
         }
 
-        .rich-card-icon {
-            width: 56px;
-            height: 56px;
+        .logo-icon {
+            width: 32px;
+            height: 32px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .rich-card-title-area {
-            flex: 1;
-        }
-
-        .rich-card-title {
             font-size: 18px;
-            font-weight: 700;
-            color: #242424;
-            margin-bottom: 6px;
         }
 
-        .rich-card-subtitle {
-            font-size: 13px;
-            color: #707070;
-            margin-bottom: 12px;
-        }
-
-        .rich-card-content {
-            margin-left: 72px;
-        }
-
-        .content-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .content-list-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .content-list-item:last-child {
-            border-bottom: none;
-        }
-
-        .content-list-item .bullet {
-            width: 8px;
-            height: 8px;
-            background: #6366F1;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .content-list-item strong {
-            color: #6366F1;
-            font-weight: 600;
-        }
-
-        .content-list-item span {
-            color: #242424;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .card-action {
-            margin-top: 16px;
-            padding: 12px 20px;
-            background: #6366F1;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-            text-align: center;
-        }
-
-        .card-action:hover {
-            background: #8B5CF6;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        /* Chat Input */
-        .chat-input-container {
-            background: white;
-            border-top: 2px solid #e0e0e0;
-            padding: 24px 32px;
-            flex-shrink: 0;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .chat-input-wrapper {
-            max-width: 900px;
+        /* Main Container */
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #f8f9fa;
-            border: 3px solid #e0e0e0;
-            border-radius: 32px;
-            padding: 8px 8px 8px 24px;
-            transition: all 0.3s;
+            padding: 80px 40px 40px;
         }
 
-        .chat-input-wrapper:focus-within {
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff, #999999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Input Section */
+        .input-section {
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        .input-wrapper {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 8px;
+            transition: all 0.2s;
+        }
+
+        .input-wrapper:focus-within {
             border-color: #6366F1;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-        .chat-input {
-            flex: 1;
+        .input-area {
+            width: 100%;
+            background: transparent;
             border: none;
             outline: none;
+            color: #ffffff;
             font-size: 16px;
-            padding: 12px 0;
-            background: transparent;
-            color: #242424;
+            padding: 16px;
+            resize: none;
+            min-height: 100px;
+            font-family: inherit;
         }
 
-        .chat-input::placeholder {
-            color: #a0a0a0;
+        .input-area::placeholder {
+            color: #666;
         }
 
-        .send-btn {
-            width: 48px;
-            height: 48px;
+        .input-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .model-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
             border: none;
-            border-radius: 50%;
+            border-radius: 8px;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: all 0.2s;
         }
 
-        .send-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+        .submit-btn:hover {
+            transform: scale(1.05);
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
         }
 
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 20px;
-            }
-
-            .starter-prompts {
-                grid-template-columns: 1fr;
-            }
-
-            .rich-card-content {
-                margin-left: 0;
-            }
+        .action-chip {
+            padding: 10px 20px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 24px;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Animation for card entry */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .action-chip:hover {
+            border-color: #6366F1;
+            background: #0f0f0f;
         }
 
-        .rich-card {
-            animation: slideIn 0.5s ease-out forwards;
+        /* Templates Section */
+        .templates-section {
+            margin-top: 64px;
         }
 
-        .rich-card:nth-child(1) { animation-delay: 0.1s; }
-        .rich-card:nth-child(2) { animation-delay: 0.2s; }
-        .rich-card:nth-child(3) { animation-delay: 0.3s; }
-        .rich-card:nth-child(4) { animation-delay: 0.4s; }
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
 
-        /* Badge */
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            background: #EDE9FE;
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .section-tabs {
+            display: flex;
+            gap: 24px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: #ffffff;
+            border-bottom-color: #6366F1;
+        }
+
+        .browse-all {
             color: #6366F1;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 14px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .badge.urgent {
-            background: #ffebee;
-            color: #c62828;
+        /* Template Cards */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .template-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            border-color: #6366F1;
+            transform: translateY(-4px);
+        }
+
+        .template-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .template-info {
+            padding: 20px;
+        }
+
+        .template-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .template-desc {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
-    <!-- Copilot Header -->
-    <div class="copilot-header">
-        <div class="agent-icon">S</div>
-        <div class="agent-title">
-            <h1>Sanderson's Intelligent Workspace</h1>
-            <p>Personalized • Actionable • Powered by AI</p>
-        </div>
-        <div class="header-actions">
-            <button class="header-btn">⚙️ Settings</button>
-            <button class="header-btn">📌 Pin to Copilot</button>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">🏢</div>
+            <span>Sanderson's</span>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <div class="welcome-section">
-            <div class="welcome-header">
-                <h2>Good afternoon! Here's what needs your attention</h2>
-                <p>I've prepared personalized insights based on your calendar, tasks, and company updates</p>
-            </div>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <h1>What do you want to create?</h1>
+        </div>
 
-            <!-- Starter Prompts -->
-            <div class="starter-prompts">
-                <div class="prompt-card" onclick="startChat('tasks')">
-                    <div class="prompt-label">📋 MY PRIORITIES</div>
-                    <div class="prompt-text">Show me my top priorities for this week</div>
-                </div>
-
-                <div class="prompt-card" onclick="startChat('connect')">
-                    <div class="prompt-label">👥 TEAM CONNECTIONS</div>
-                    <div class="prompt-text">Who should I reach out to and why?</div>
-                </div>
-
-                <div class="prompt-card" onclick="startChat('company')">
-                    <div class="prompt-label">📢 COMPANY PULSE</div>
-                    <div class="prompt-text">What's happening across Sanderson's?</div>
-                </div>
-
-                <div class="prompt-card" onclick="startChat('events')">
-                    <div class="prompt-label">🎉 UPCOMING EVENTS</div>
-                    <div class="prompt-text">What events should I know about?</div>
-                </div>
-            </div>
-
-            <!-- Content Grid -->
-            <div class="content-grid">
-                <!-- My Space -->
-                <div class="space-container">
-                    <div class="space-header">
-                        <div class="space-title">
-                            <div class="space-icon-large">👤</div>
-                            <h3>My Space</h3>
-                        </div>
-                        <button class="edit-space-btn" onclick="openPersonalizationModal('user')">✏️ Personalize</button>
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="input-wrapper">
+                <textarea
+                    class="input-area"
+                    placeholder="Ask AI to build..."
+                    id="promptInput"></textarea>
+                <div class="input-footer">
+                    <div class="model-selector">
+                        <span>🤖</span>
+                        <span>AI Assistant</span>
+                        <span>▼</span>
                     </div>
-
-                    <!-- What's Coming Up Card -->
-                    <div class="rich-card" onclick="startAgenticChat('upcoming')">
-                        <div class="rich-card-header">
-                            <div class="rich-card-icon">📅</div>
-                            <div class="rich-card-title-area">
-                                <div class="rich-card-title">What's Coming Up</div>
-                                <div class="rich-card-subtitle">Your next 3 days • 5 items need attention</div>
-                            </div>
-                        </div>
-                        <div class="rich-card-content">
-                            <ul class="content-list">
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Tomorrow 2:00 PM</strong> - Q1 Review Meeting with Sarah Chen <span class="badge">PRIORITY</span></span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Friday EOD</strong> - Inventory Report Due (Submit to operations@sandersons.com)</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Jan 15</strong> - Complete Food Safety Training (2 hours remaining)</span>
-                                </li>
-                            </ul>
-                            <button class="card-action">Dive deeper into my schedule →</button>
-                        </div>
-                    </div>
-
-                    <!-- Who to Connect With Card -->
-                    <div class="rich-card" onclick="startAgenticChat('connect')">
-                        <div class="rich-card-header">
-                            <div class="rich-card-icon">🤝</div>
-                            <div class="rich-card-title-area">
-                                <div class="rich-card-title">Who to Connect With</div>
-                                <div class="rich-card-subtitle">3 teammates haven't heard from you recently</div>
-                            </div>
-                        </div>
-                        <div class="rich-card-content">
-                            <ul class="content-list">
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Marcus Rodriguez</strong> - Store Operations Lead • Last contact: 18 days ago • Shared project: Inventory System Rollout</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Jennifer Park</strong> - Marketing Coordinator • Last contact: 25 days ago • Shared project: Holiday Campaign</span>
-                                </li>
-                            </ul>
-                            <button class="card-action">Help me draft messages →</button>
-                        </div>
-                    </div>
-
-                    <!-- Weekly Recap Card -->
-                    <div class="rich-card" onclick="startAgenticChat('recap')">
-                        <div class="rich-card-header">
-                            <div class="rich-card-icon">📊</div>
-                            <div class="rich-card-title-area">
-                                <div class="rich-card-title">Your Weekly Recap</div>
-                                <div class="rich-card-subtitle">Key highlights and accomplishments</div>
-                            </div>
-                        </div>
-                        <div class="rich-card-content">
-                            <ul class="content-list">
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span>✅ Completed 8 of 10 weekly tasks</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span>📧 Responded to 42 emails, avg response time: 3.2 hours</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span>🎯 Attended 6 meetings, 2 hours total time</span>
-                                </li>
-                            </ul>
-                            <button class="card-action">See full weekly insights →</button>
-                        </div>
-                    </div>
-
-                    <!-- Leadership Priorities Card -->
-                    <div class="rich-card" onclick="startAgenticChat('leadership')">
-                        <div class="rich-card-header">
-                            <div class="rich-card-icon">💭</div>
-                            <div class="rich-card-title-area">
-                                <div class="rich-card-title">Top of Mind from Leadership</div>
-                                <div class="rich-card-subtitle">From Sarah Chen (Your Manager) • Updated today</div>
-                            </div>
-                        </div>
-                        <div class="rich-card-content">
-                            <ul class="content-list">
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Priority 1:</strong> Focus on customer experience during holiday rush</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Priority 2:</strong> Complete Q1 training modules by Jan 15</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Priority 3:</strong> Team building event planning for February</span>
-                                </li>
-                            </ul>
-                            <button class="card-action">Prepare for my 1:1 with Sarah →</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Company Updates Space -->
-                <div class="space-container">
-                    <div class="space-header">
-                        <div class="space-title">
-                            <div class="space-icon-large">📢</div>
-                            <h3>Company Updates</h3>
-                        </div>
-                        <button class="edit-space-btn" onclick="openPersonalizationModal('comms')">✏️ Personalize</button>
-                    </div>
-
-                    <!-- Important Updates Card -->
-                    <div class="rich-card" onclick="startAgenticChat('updates')">
-                        <div class="rich-card-header">
-                            <div class="rich-card-icon">📰</div>
-                            <div class="rich-card-title-area">
-                                <div class="rich-card-title">Important Company News</div>
-                                <div class="rich-card-subtitle">3 new announcements from leadership</div>
-                            </div>
-                        </div>
-                        <div class="rich-card-content">
-                            <ul class="content-list">
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Grand Opening Alert:</strong> 4th store location opens Dec 22 in Valley Heights <span class="badge">NEW</span></span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Digital Innovation:</strong> Click & Collect now live at stores 1 & 3</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Q4 Success:</strong> Sales exceeded targets by 12% - team bonuses announced!</span>
-                                </li>
-                            </ul>
-                            <button class="card-action">Read full announcements →</button>
-                        </div>
-                    </div>
-
-                    <!-- Company Milestones Card -->
-                    <div class="rich-card" onclick="startAgenticChat('milestones')">
-                        <div class="rich-card-header">
-                            <div class="rich-card-icon">🏆</div>
-                            <div class="rich-card-title-area">
-                                <div class="rich-card-title">Recent Achievements</div>
-                                <div class="rich-card-subtitle">Celebrating our wins together</div>
-                            </div>
-                        </div>
-                        <div class="rich-card-content">
-                            <ul class="content-list">
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span>🌟 Sandra's team wins "Best Fresh Produce Department" award</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span>📈 Reached 10,000 loyal customer program members</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span>🌱 Sustainability initiative: 50% reduction in plastic waste</span>
-                                </li>
-                            </ul>
-                            <button class="card-action">See all achievements →</button>
-                        </div>
-                    </div>
-
-                    <!-- Upcoming Events Card -->
-                    <div class="rich-card" onclick="startAgenticChat('events')">
-                        <div class="rich-card-header">
-                            <div class="rich-card-icon">🎉</div>
-                            <div class="rich-card-title-area">
-                                <div class="rich-card-title">Upcoming Events</div>
-                                <div class="rich-card-subtitle">3 events you might be interested in</div>
-                            </div>
-                        </div>
-                        <div class="rich-card-content">
-                            <ul class="content-list">
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Jan 15, 12-3 PM:</strong> Employee Appreciation BBQ at Downtown Flagship</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Jan 22, All Day:</strong> Leadership Development Workshop • Regional Training Center</span>
-                                </li>
-                                <li class="content-list-item">
-                                    <div class="bullet"></div>
-                                    <span><strong>Jan 5, 10-2 PM:</strong> New Year's Food Drive Kickoff • All stores</span>
-                                </li>
-                            </ul>
-                            <button class="card-action">RSVP to events →</button>
-                        </div>
-                    </div>
+                    <button class="submit-btn" onclick="handleSubmit()">↑</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Chat Input -->
-    <div class="chat-input-container">
-        <div class="chat-input-wrapper">
-            <input type="text"
-                   class="chat-input"
-                   id="chatInput"
-                   placeholder="Ask me anything about your work, team, or company updates..."
-                   onkeypress="handleEnter(event)">
-            <button class="send-btn" onclick="sendMessage()">
-                ➤
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-chip" onclick="quickAction('schedule')">
+                📅 View my schedule
             </button>
+            <button class="action-chip" onclick="quickAction('tasks')">
+                ✅ Show my tasks
+            </button>
+            <button class="action-chip" onclick="quickAction('team')">
+                👥 Team updates
+            </button>
+            <button class="action-chip" onclick="quickAction('news')">
+                📰 Company news
+            </button>
+            <button class="action-chip" onclick="quickAction('more')">
+                🔄 More options
+            </button>
+        </div>
+
+        <!-- Templates Section -->
+        <div class="templates-section">
+            <div class="section-header">
+                <h2>Start with a template</h2>
+                <div class="section-tabs">
+                    <button class="tab active">🎯 Workspaces</button>
+                    <button class="tab">📊 Dashboards</button>
+                    <button class="tab">📋 Components</button>
+                </div>
+                <a href="#" class="browse-all">Browse all →</a>
+            </div>
+
+            <div class="templates-grid">
+                <div class="template-card" onclick="selectTemplate('workspace')">
+                    <div class="template-preview">📋</div>
+                    <div class="template-info">
+                        <div class="template-title">My Personal Workspace</div>
+                        <div class="template-desc">Your personalized hub for tasks, schedule, and team connections</div>
+                    </div>
+                </div>
+
+                <div class="template-card" onclick="selectTemplate('company')">
+                    <div class="template-preview">📢</div>
+                    <div class="template-info">
+                        <div class="template-title">Company Updates Hub</div>
+                        <div class="template-desc">Stay updated with announcements, milestones, and upcoming events</div>
+                    </div>
+                </div>
+
+                <div class="template-card" onclick="selectTemplate('team')">
+                    <div class="template-preview">👥</div>
+                    <div class="template-info">
+                        <div class="template-title">Team Collaboration Center</div>
+                        <div class="template-desc">Connect with colleagues, schedule meetings, and share updates</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        function startChat(type) {
-            alert(`Starting conversation about: ${type}\n\nThis would launch an agentic chat experience where I help you with ${type}.`);
-        }
+        function handleSubmit() {
+            const input = document.getElementById('promptInput');
+            const prompt = input.value.trim();
 
-        function startAgenticChat(cardType) {
-            const messages = {
-                'upcoming': 'Let me help you prepare for your upcoming schedule. Would you like me to:\n\n• Send calendar reminders\n• Draft preparation notes for your Q1 review\n• Set up task reminders for your inventory report\n• Schedule time to complete your training',
-                'connect': 'I can help you reconnect with your teammates. Would you like me to:\n\n• Draft personalized catch-up messages\n• Schedule coffee chats\n• Find common project updates to discuss\n• Suggest collaboration opportunities',
-                'recap': 'Great week so far! Would you like me to:\n\n• Generate a detailed productivity report\n• Share highlights with your manager\n• Identify areas for next week\n• Compare with previous weeks',
-                'leadership': 'Let me help you align with Sarah\'s priorities. I can:\n\n• Prepare talking points for your 1:1\n• Show how your work connects to her goals\n• Draft status updates\n• Suggest action items',
-                'updates': 'I can provide more details on company news:\n\n• Show full announcement details\n• Connect you with project leads\n• Highlight how this affects your work\n• Subscribe to relevant updates',
-                'milestones': 'Let\'s celebrate these wins! Would you like to:\n\n• Share congratulations with teams\n• See how you contributed\n• Nominate colleagues for recognition\n• View achievement timeline',
-                'events': 'I can help you with these events:\n\n• Quick RSVP to all events\n• Add to your calendar\n• Find teammates attending\n• Get directions and details'
-            };
+            if (!prompt) return;
 
-            alert(messages[cardType] || 'Starting agentic conversation...');
-        }
-
-        function openPersonalizationModal(type) {
-            const spaceType = type === 'user' ? 'My Space' : 'Company Updates';
-            alert(`Personalizing ${spaceType}\n\nYou can:\n• Choose which cards to show\n• Reorder cards by priority\n• Set notification preferences\n• Customize content depth`);
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-
-            if (!message) return;
-
-            alert(`Starting intelligent conversation about: "${message}"\n\nI would analyze your question and provide personalized, actionable insights.`);
+            alert(`Creating workspace based on: "${prompt}"\n\nThis would generate a personalized AI workspace tailored to your needs.`);
             input.value = '';
         }
 
-        function handleEnter(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
+        function quickAction(action) {
+            const messages = {
+                'schedule': 'Showing your schedule for today and upcoming week...',
+                'tasks': 'Here are your top priority tasks...',
+                'team': 'Latest updates from your team...',
+                'news': 'Recent company announcements and news...',
+                'more': 'Additional options and features...'
+            };
+
+            alert(messages[action] || 'Loading...');
         }
+
+        function selectTemplate(template) {
+            const messages = {
+                'workspace': 'Creating your personal workspace with tasks, calendar, and team connections...',
+                'company': 'Setting up company updates hub with news, milestones, and events...',
+                'team': 'Building team collaboration center with chat and project tracking...'
+            };
+
+            alert(messages[template] || 'Creating workspace...');
+        }
+
+        // Handle Enter key in textarea
+        document.getElementById('promptInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+            }
+        });
     </script>
 </body>
 </html>
