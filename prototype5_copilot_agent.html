@@ -22,12 +22,13 @@
 
         /* Left Sidebar */
         .sidebar {
-            width: 240px;
+            width: 260px;
             background: #ffffff;
             border-right: 1px solid #e0e0e0;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            overflow-y: auto;
         }
 
         .sidebar-header {
@@ -36,18 +37,22 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
         }
 
         .copilot-icon {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .sidebar-title {
@@ -84,11 +89,17 @@
             font-size: 16px;
         }
 
+        .sidebar-item-text {
+            flex: 1;
+        }
+
         .section-label {
             padding: 16px 12px 8px;
-            font-size: 12px;
+            font-size: 11px;
             color: #707070;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* Main Content */
@@ -112,7 +123,7 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
         }
 
         .agent-logo {
@@ -129,6 +140,12 @@
         .agent-title h1 {
             font-size: 20px;
             font-weight: 600;
+        }
+
+        .agent-subtitle {
+            font-size: 12px;
+            color: #707070;
+            margin-bottom: 20px;
         }
 
         /* Message Input */
@@ -198,7 +215,7 @@
         }
 
         .content-wrapper {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -207,10 +224,34 @@
             margin-bottom: 40px;
         }
 
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
         .section-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 16px;
+        }
+
+        .personalize-btn {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .personalize-btn:hover {
+            border-color: #6366F1;
+            color: #6366F1;
         }
 
         .cards-grid {
@@ -224,6 +265,136 @@
 
         .cards-grid.four-col {
             grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Rich Content Card */
+        .rich-content-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rich-content-card:hover {
+            border-color: #6366F1;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .card-title-area {
+            flex: 1;
+        }
+
+        .card-label {
+            font-size: 11px;
+            color: #707070;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #707070;
+        }
+
+        .card-content {
+            margin-left: 58px;
+        }
+
+        .content-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content-list-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .content-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .bullet {
+            width: 6px;
+            height: 6px;
+            background: #6366F1;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 6px;
+        }
+
+        .content-list-item span {
+            font-size: 13px;
+            color: #242424;
+            line-height: 1.5;
+        }
+
+        .content-list-item strong {
+            color: #6366F1;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #EDE9FE;
+            color: #6366F1;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 6px;
+        }
+
+        .card-action {
+            margin-top: 14px;
+            padding: 10px 16px;
+            background: #6366F1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .card-action:hover {
+            background: #8B5CF6;
         }
 
         /* Info Card */
@@ -253,12 +424,6 @@
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 8px;
-        }
-
-        .info-card-desc {
-            font-size: 13px;
-            color: #707070;
-            line-height: 1.5;
         }
 
         .info-card-list {
@@ -293,7 +458,7 @@
 
         .image-card-image {
             width: 100%;
-            height: 120px;
+            height: 100px;
             background: linear-gradient(135deg, #6366F1, #8B5CF6);
             display: flex;
             align-items: center;
@@ -315,118 +480,64 @@
             font-size: 13px;
             font-weight: 600;
         }
-
-        /* Insight Card */
-        .insight-card {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 16px;
-            display: flex;
-            gap: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .insight-card:hover {
-            border-color: #6366F1;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .insight-card-image {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            border-radius: 8px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-        }
-
-        .insight-card-content {
-            flex: 1;
-        }
-
-        .insight-card-label {
-            font-size: 11px;
-            color: #707070;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
-        .insight-card-title {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .insight-card-desc {
-            font-size: 13px;
-            color: #707070;
-        }
-
-        .insight-card-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .insight-action-btn {
-            width: 32px;
-            height: 32px;
-            background: #f5f5f5;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
     </style>
 </head>
 <body>
     <!-- Left Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <div class="copilot-icon">M</div>
-            <span class="sidebar-title">M365 Copilot</span>
+            <div class="copilot-icon">🏢</div>
+            <span class="sidebar-title">Sanderson's Workspace</span>
         </div>
 
         <div class="sidebar-section">
             <div class="sidebar-item">
                 <span class="sidebar-item-icon">🔍</span>
-                <span>Search</span>
+                <span class="sidebar-item-text">Search</span>
             </div>
             <div class="sidebar-item">
                 <span class="sidebar-item-icon">💬</span>
-                <span>Chat</span>
+                <span class="sidebar-item-text">Chat</span>
             </div>
         </div>
 
-        <div class="section-label">Agents</div>
+        <div class="section-label">Knowledge Agents</div>
         <div class="sidebar-section">
             <div class="sidebar-item active">
-                <span class="sidebar-item-icon">🏢</span>
-                <span>Sanderson's Agent</span>
+                <span class="sidebar-item-icon">📋</span>
+                <span class="sidebar-item-text">My Workspace</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">📢</span>
+                <span class="sidebar-item-text">Company News</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">👥</span>
+                <span class="sidebar-item-text">Team Connect</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">📚</span>
+                <span class="sidebar-item-text">Knowledge Base</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-item-icon">🎓</span>
+                <span class="sidebar-item-text">Learning & Development</span>
             </div>
         </div>
 
-        <div class="section-label">Pages</div>
+        <div class="section-label">Quick Actions</div>
         <div class="sidebar-section">
             <div class="sidebar-item">
                 <span class="sidebar-item-icon">📓</span>
-                <span>Notebooks</span>
+                <span class="sidebar-item-text">Notebooks</span>
             </div>
             <div class="sidebar-item">
                 <span class="sidebar-item-icon">➕</span>
-                <span>Create</span>
+                <span class="sidebar-item-text">Create</span>
             </div>
             <div class="sidebar-item">
                 <span class="sidebar-item-icon">🎯</span>
-                <span>Apps</span>
+                <span class="sidebar-item-text">Apps</span>
             </div>
         </div>
     </div>
@@ -439,6 +550,7 @@
                 <div class="agent-logo">🏢</div>
                 <h1>Sanderson's agent</h1>
             </div>
+            <p class="agent-subtitle">Proactive • Context-Aware • Always Learning</p>
 
             <div class="message-input-container">
                 <div class="message-input-wrapper">
@@ -459,7 +571,9 @@
             <div class="content-wrapper">
                 <!-- Top of Mind -->
                 <div class="card-section">
-                    <h2 class="section-title">Top of mind</h2>
+                    <div class="section-header">
+                        <h2 class="section-title">Top of mind</h2>
+                    </div>
                     <div class="cards-grid">
                         <div class="info-card">
                             <div class="info-card-header">Latest Announcement</div>
@@ -472,31 +586,195 @@
                     </div>
                 </div>
 
-                <!-- Personalized Insights -->
+                <!-- My Space -->
                 <div class="card-section">
-                    <h2 class="section-title">Personalized Insights</h2>
+                    <div class="section-header">
+                        <h2 class="section-title">👤 My Space</h2>
+                        <button class="personalize-btn">
+                            <span>✏️</span>
+                            <span>Personalize</span>
+                        </button>
+                    </div>
                     <div class="cards-grid two-col">
-                        <div class="insight-card">
-                            <div class="insight-card-image">📅</div>
-                            <div class="insight-card-content">
-                                <div class="insight-card-label">Day at a glance</div>
-                                <div class="insight-card-title">Day at a glance</div>
-                                <div class="insight-card-desc">Meetings, deadlines, and top priorities in one place</div>
+                        <!-- What's Coming Up -->
+                        <div class="rich-content-card">
+                            <div class="card-header">
+                                <div class="card-icon">📅</div>
+                                <div class="card-title-area">
+                                    <div class="card-label">Day at a glance</div>
+                                    <div class="card-title">What's Coming Up</div>
+                                    <div class="card-subtitle">Your next 3 days • 5 items need attention</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <ul class="content-list">
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Tomorrow 2:00 PM</strong> - Q1 Review Meeting with Sarah Chen<span class="badge">PRIORITY</span></span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Friday EOD</strong> - Inventory Report Due (Submit to operations@sandersons.com)</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Jan 15</strong> - Complete Food Safety Training (2 hours remaining)</span>
+                                    </li>
+                                </ul>
+                                <button class="card-action">Dive deeper into my schedule →</button>
                             </div>
                         </div>
 
-                        <div class="insight-card">
-                            <div class="insight-card-image">📰</div>
-                            <div class="insight-card-content">
-                                <div class="insight-card-label">New briefing</div>
-                                <div class="insight-card-title">Daily News Roundup</div>
-                                <div class="insight-card-desc"></div>
-                                <div class="insight-card-actions">
-                                    <button class="insight-action-btn">👍</button>
-                                    <button class="insight-action-btn">👎</button>
-                                    <button class="insight-action-btn">▶</button>
-                                    <button class="insight-action-btn">📤</button>
+                        <!-- Who to Connect With -->
+                        <div class="rich-content-card">
+                            <div class="card-header">
+                                <div class="card-icon">👥</div>
+                                <div class="card-title-area">
+                                    <div class="card-label">Team connections</div>
+                                    <div class="card-title">Who to Connect With</div>
+                                    <div class="card-subtitle">3 colleagues you haven't talked to recently</div>
                                 </div>
+                            </div>
+                            <div class="card-content">
+                                <ul class="content-list">
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Mike Rodriguez</strong> - Store Manager • Last contact: 18 days ago • Shared project: Q1 Planning</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Jennifer Park</strong> - Marketing Coordinator • Last contact: 25 days ago • Shared project: Holiday Campaign</span>
+                                    </li>
+                                </ul>
+                                <button class="card-action">Help me draft messages →</button>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Recap -->
+                        <div class="rich-content-card">
+                            <div class="card-header">
+                                <div class="card-icon">📊</div>
+                                <div class="card-title-area">
+                                    <div class="card-label">Productivity insights</div>
+                                    <div class="card-title">Your Weekly Recap</div>
+                                    <div class="card-subtitle">Key highlights and accomplishments</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <ul class="content-list">
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span>✅ Completed 8 of 10 weekly tasks</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span>📧 Responded to 42 emails, avg response time: 3.2 hours</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span>🎯 Attended 6 meetings, 2 hours total time</span>
+                                    </li>
+                                </ul>
+                                <button class="card-action">See full weekly insights →</button>
+                            </div>
+                        </div>
+
+                        <!-- Leadership Priorities -->
+                        <div class="rich-content-card">
+                            <div class="card-header">
+                                <div class="card-icon">💭</div>
+                                <div class="card-title-area">
+                                    <div class="card-label">From your manager</div>
+                                    <div class="card-title">Top of Mind from Leadership</div>
+                                    <div class="card-subtitle">From Sarah Chen • Updated today</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <ul class="content-list">
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Priority 1:</strong> Focus on customer experience during holiday rush</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Priority 2:</strong> Complete Q1 training modules by Jan 15</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Priority 3:</strong> Team building event planning for February</span>
+                                    </li>
+                                </ul>
+                                <button class="card-action">Prepare for my 1:1 with Sarah →</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Updates -->
+                <div class="card-section">
+                    <div class="section-header">
+                        <h2 class="section-title">📢 Company Updates</h2>
+                        <button class="personalize-btn">
+                            <span>✏️</span>
+                            <span>Personalize</span>
+                        </button>
+                    </div>
+                    <div class="cards-grid two-col">
+                        <!-- Important Updates -->
+                        <div class="rich-content-card">
+                            <div class="card-header">
+                                <div class="card-icon">📰</div>
+                                <div class="card-title-area">
+                                    <div class="card-label">News briefing</div>
+                                    <div class="card-title">Important Company News</div>
+                                    <div class="card-subtitle">3 new announcements from leadership</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <ul class="content-list">
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Grand Opening Alert:</strong> 4th store location opens Dec 22 in Valley Heights<span class="badge">NEW</span></span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Digital Innovation:</strong> Click & Collect now live at stores 1 & 3</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span><strong>Q4 Success:</strong> Sales exceeded targets by 12% - team bonuses announced!</span>
+                                    </li>
+                                </ul>
+                                <button class="card-action">Read full announcements →</button>
+                            </div>
+                        </div>
+
+                        <!-- Company Milestones -->
+                        <div class="rich-content-card">
+                            <div class="card-header">
+                                <div class="card-icon">🏆</div>
+                                <div class="card-title-area">
+                                    <div class="card-label">Achievements</div>
+                                    <div class="card-title">Company Milestones</div>
+                                    <div class="card-subtitle">Recent wins worth celebrating</div>
+                                </div>
+                            </div>
+                            <div class="card-content">
+                                <ul class="content-list">
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span>💰 Record revenue: $2.3M in Q4, 18% YoY growth</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span>⭐ Customer satisfaction score reached 4.8/5.0 (highest ever)</span>
+                                    </li>
+                                    <li class="content-list-item">
+                                        <div class="bullet"></div>
+                                        <span>🌱 Sustainability initiative: 50% reduction in plastic waste</span>
+                                    </li>
+                                </ul>
+                                <button class="card-action">See all achievements →</button>
                             </div>
                         </div>
                     </div>
@@ -553,10 +831,10 @@
                         </div>
 
                         <div class="image-card">
-                            <div class="image-card-image">📧</div>
+                            <div class="image-card-image">🎉</div>
                             <div class="image-card-content">
-                                <div class="image-card-label">My Inbox</div>
-                                <div class="image-card-title">My 3pm,5 posts from my 48 missing</div>
+                                <div class="image-card-label">Upcoming Events</div>
+                                <div class="image-card-title">3 events you might be interested in</div>
                             </div>
                         </div>
                     </div>

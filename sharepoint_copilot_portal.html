@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Portal - M365 Copilot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #faf9f8;
+            color: #323130;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ========== Sidebar ========== */
+        .sidebar {
+            width: 320px;
+            background: #fff;
+            border-right: 1px solid #edebe9;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #edebe9;
+        }
+
+        .app-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 18px;
+        }
+
+        .app-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #323130;
+        }
+
+        .nav-section {
+            padding: 12px 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #323130;
+            transition: background 0.1s;
+        }
+
+        .nav-item:hover {
+            background: #f3f2f1;
+        }
+
+        .nav-item.active {
+            background: #edebe9;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: #edebe9;
+            margin: 8px 0;
+        }
+
+        .section-label {
+            padding: 16px 16px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #605e5c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== Main Content ========== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-y: auto;
+            padding: 64px 32px 48px;
+            position: relative;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        /* ========== Header ========== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .agent-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 12px;
+        }
+
+        .page-subtitle {
+            font-size: 15px;
+            color: #605e5c;
+            margin-bottom: 16px;
+        }
+
+        /* ========== Inline Carousels ========== */
+        .content-carousels {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .carousel-container {
+            background: #fff;
+            border: 1px solid #edebe9;
+            border-radius: 8px;
+            padding: 16px;
+            position: relative;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .carousel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #edebe9;
+        }
+
+        .carousel-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0078d4;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .carousel-indicator {
+            font-size: 11px;
+            color: #a19f9d;
+            font-weight: 600;
+        }
+
+        .carousel-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .carousel-card {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .carousel-card.active {
+            display: flex;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 12px;
+        }
+
+        .carousel-nav-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #d2d0ce;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #605e5c;
+            transition: all 0.1s;
+        }
+
+        .carousel-nav-btn:hover:not(:disabled) {
+            background: #f3f2f1;
+            border-color: #0078d4;
+            color: #0078d4;
+        }
+
+        .carousel-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .carousel-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #d2d0ce;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .carousel-dot.active {
+            background: #0078d4;
+            width: 16px;
+            border-radius: 3px;
+        }
+
+        /* Card Styles within Carousel */
+        .inline-card-tag {
+            padding: 3px 8px;
+            background: #f3f2f1;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #323130;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .inline-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #323130;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .inline-card-meta {
+            font-size: 11px;
+            color: #a19f9d;
+            margin-bottom: 8px;
+        }
+
+        .inline-card-summary {
+            background: #faf9f8;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 2px solid #0078d4;
+            margin-bottom: 8px;
+        }
+
+        .inline-ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #0078d4;
+            margin-bottom: 4px;
+        }
+
+        .inline-summary-text {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #605e5c;
+        }
+
+        .inline-card-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .inline-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: none;
+            flex: 1;
+        }
+
+        .inline-btn-primary {
+            background: #0078d4;
+            color: #fff;
+        }
+
+        .inline-btn-primary:hover {
+            background: #106ebe;
+        }
+
+        .inline-btn-secondary {
+            background: transparent;
+            color: #0078d4;
+            border: 1px solid #d2d0ce;
+        }
+
+        .inline-btn-secondary:hover {
+            background: #f3f2f1;
+        }
+
+        /* Event-specific inline styles */
+        .inline-event-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #fff4ce;
+            color: #323130;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .inline-rsvp-section {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #edebe9;
+        }
+
+        .inline-rsvp-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #605e5c;
+            margin-bottom: 6px;
+        }
+
+        .inline-rsvp-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .inline-rsvp-btn {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid #d2d0ce;
+            background: #fff;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s;
+            color: #323130;
+        }
+
+        .inline-rsvp-btn:hover {
+            background: #f3f2f1;
+            border-color: #c8c6c4;
+        }
+
+        .inline-rsvp-btn.selected {
+            background: #0078d4;
+            color: #fff;
+            border-color: #0078d4;
+        }
+
+        /* ========== Chat Input ========== */
+        .chat-input-section {
+            width: 100%;
+        }
+
+        .chat-input-wrapper {
+            position: relative;
+            background: #fff;
+            border: 2px solid #d2d0ce;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 4px 8px 4px 16px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .chat-input-wrapper:hover {
+            border-color: #c8c6c4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: #0078d4;
+            box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.1);
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 16px 12px;
+            font-size: 15px;
+            font-family: inherit;
+            background: transparent;
+            color: #323130;
+        }
+
+        .chat-input::placeholder {
+            color: #a19f9d;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #605e5c;
+            font-size: 18px;
+            transition: background 0.1s;
+        }
+
+        .icon-btn:hover {
+            background: #f3f2f1;
+        }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: background 0.15s;
+        }
+
+        .send-btn:hover {
+            background: #106ebe;
+        }
+
+        .send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ========== Quick Prompts ========== */
+        .quick-prompts {
+            width: 100%;
+        }
+
+        .prompts-label {
+            font-size: 13px;
+            color: #605e5c;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .prompt-card {
+            background: #fff;
+            border: 1px solid #edebe9;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+        }
+
+        .prompt-card:hover {
+            border-color: #c8c6c4;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
+        }
+
+        .prompt-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .prompt-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 4px;
+        }
+
+        .prompt-desc {
+            font-size: 12px;
+            color: #605e5c;
+            line-height: 1.4;
+        }
+
+        /* ========== Content Modal ========== */
+        .content-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(2px);
+        }
+
+        .content-modal.active {
+            display: flex;
+        }
+
+        .modal-panel {
+            width: 90%;
+            max-width: 1000px;
+            max-height: 85vh;
+            background: #fff;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25.6px 57.6px rgba(0,0,0,0.22);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #edebe9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #323130;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #605e5c;
+            transition: background 0.1s;
+        }
+
+        .modal-close:hover {
+            background: #f3f2f1;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .modal-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #edebe9;
+        }
+
+        .modal-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #605e5c;
+            transition: all 0.15s;
+            margin-bottom: -2px;
+        }
+
+        .modal-tab:hover {
+            color: #323130;
+        }
+
+        .modal-tab.active {
+            color: #0078d4;
+            border-bottom-color: #0078d4;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ========== Cards in Modal ========== */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .content-card {
+            background: #faf9f8;
+            border: 1px solid #edebe9;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .content-card:hover {
+            border-color: #c8c6c4;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .card-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card-tag {
+            padding: 4px 10px;
+            background: #f3f2f1;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #323130;
+            text-transform: uppercase;
+        }
+
+        .card-date {
+            font-size: 12px;
+            color: #605e5c;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 8px;
+        }
+
+        .card-author {
+            font-size: 13px;
+            color: #605e5c;
+            margin-bottom: 12px;
+        }
+
+        .card-summary {
+            background: #fff;
+            padding: 14px;
+            border-radius: 6px;
+            border-left: 3px solid #0078d4;
+            margin-bottom: 12px;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #0078d4;
+            margin-bottom: 6px;
+        }
+
+        .card-summary-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #323130;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #0078d4;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #106ebe;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #0078d4;
+            border: 1px solid #d2d0ce;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f2f1;
+        }
+
+        /* ========== Event Card Specific ========== */
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .event-date-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #fff4ce;
+            color: #323130;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .event-location {
+            font-size: 13px;
+            color: #605e5c;
+        }
+
+        .rsvp-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #edebe9;
+        }
+
+        .rsvp-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #605e5c;
+            margin-bottom: 8px;
+        }
+
+        .rsvp-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .rsvp-btn {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 12px;
+            border: 1px solid #d2d0ce;
+            background: #fff;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s;
+            color: #323130;
+        }
+
+        .rsvp-btn:hover {
+            background: #f3f2f1;
+            border-color: #c8c6c4;
+        }
+
+        .rsvp-btn.selected {
+            background: #0078d4;
+            color: #fff;
+            border-color: #0078d4;
+        }
+
+        /* ========== Chat Overlay ========== */
+        .chat-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(2px);
+        }
+
+        .chat-overlay.active {
+            display: flex;
+        }
+
+        .chat-panel {
+            width: 90%;
+            max-width: 800px;
+            height: 85vh;
+            max-height: 800px;
+            background: #fff;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25.6px 57.6px rgba(0,0,0,0.22);
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #edebe9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .chat-header-text h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #323130;
+        }
+
+        .chat-header-text p {
+            font-size: 12px;
+            color: #605e5c;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: messageIn 0.3s ease-out;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .message-avatar.agent {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+        }
+
+        .message-avatar.user {
+            background: #d2d0ce;
+        }
+
+        .message-content {
+            flex: 1;
+            max-width: 70%;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            white-space: pre-wrap;
+        }
+
+        .message-bubble.agent {
+            background: #f3f2f1;
+            color: #323130;
+        }
+
+        .message-bubble.user {
+            background: #0078d4;
+            color: #fff;
+        }
+
+        .message-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion-chip {
+            padding: 6px 14px;
+            background: #fff;
+            border: 1px solid #d2d0ce;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.1s;
+            color: #323130;
+        }
+
+        .suggestion-chip:hover {
+            background: #f3f2f1;
+            border-color: #c8c6c4;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: #f3f2f1;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #a19f9d;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .chat-input-area {
+            padding: 16px 24px;
+            border-top: 1px solid #edebe9;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #f3f2f1;
+            border-radius: 8px;
+            padding: 10px 16px;
+        }
+
+        .chat-input-field {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: inherit;
+            color: #323130;
+        }
+
+        .chat-input-field::placeholder {
+            color: #a19f9d;
+        }
+
+        .chat-send {
+            width: 32px;
+            height: 32px;
+            background: #0078d4;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.1s;
+        }
+
+        .chat-send:hover {
+            background: #106ebe;
+        }
+
+        /* ========== Toast ========== */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #323130;
+            color: #fff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 6.4px 14.4px rgba(0,0,0,0.18);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 3000;
+            animation: toastIn 0.3s ease-out;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast.active {
+            display: flex;
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast-message {
+            font-size: 14px;
+        }
+
+        /* ========== Responsive ========== */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                padding: 24px 16px;
+            }
+            .prompts-grid {
+                grid-template-columns: 1fr;
+            }
+            .page-title {
+                font-size: 24px;
+            }
+            .content-carousels {
+                grid-template-columns: 1fr;
+            }
+            .carousel-container {
+                min-height: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="app-title">
+                <div class="app-icon">💼</div>
+                <div class="app-name">M365 Copilot</div>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-item active">
+                <span class="nav-icon">🔍</span>
+                <span>Search</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span>Chat</span>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="section-label">Agents</div>
+        <div class="nav-section">
+            <div class="nav-item">
+                <span class="nav-icon">🏢</span>
+                <span>Company Portal</span>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="section-label">Recent</div>
+        <div class="nav-section">
+            <div class="nav-item">
+                <span class="nav-icon">📝</span>
+                <span>Previous chats</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-container">
+            <!-- Header -->
+            <div class="page-header">
+                <div class="agent-icon">🏢</div>
+                <h1 class="page-title">How can I help you today?</h1>
+                <p class="page-subtitle">Search company sites for answers and resources</p>
+            </div>
+
+            <!-- Inline Carousels -->
+            <div class="content-carousels">
+                <!-- News Carousel -->
+                <div class="carousel-container">
+                    <div class="carousel-header">
+                        <div class="carousel-title">📰 Company News</div>
+                        <div class="carousel-indicator" id="newsIndicator">1/5</div>
+                    </div>
+                    <div class="carousel-content" id="newsCarousel"></div>
+                    <div class="carousel-nav">
+                        <button class="carousel-nav-btn" onclick="navigateCarousel('news', -1)" id="newsPrev">‹</button>
+                        <div class="carousel-dots" id="newsDots"></div>
+                        <button class="carousel-nav-btn" onclick="navigateCarousel('news', 1)" id="newsNext">›</button>
+                    </div>
+                </div>
+
+                <!-- Events Carousel -->
+                <div class="carousel-container">
+                    <div class="carousel-header">
+                        <div class="carousel-title">📅 Upcoming Events</div>
+                        <div class="carousel-indicator" id="eventsIndicator">1/5</div>
+                    </div>
+                    <div class="carousel-content" id="eventsCarousel"></div>
+                    <div class="carousel-nav">
+                        <button class="carousel-nav-btn" onclick="navigateCarousel('events', -1)" id="eventsPrev">‹</button>
+                        <div class="carousel-dots" id="eventsDots"></div>
+                        <button class="carousel-nav-btn" onclick="navigateCarousel('events', 1)" id="eventsNext">›</button>
+                    </div>
+                </div>
+
+                <!-- Leadership Carousel -->
+                <div class="carousel-container">
+                    <div class="carousel-header">
+                        <div class="carousel-title">💭 From Leadership</div>
+                        <div class="carousel-indicator" id="leadershipIndicator">1/4</div>
+                    </div>
+                    <div class="carousel-content" id="leadershipCarousel"></div>
+                    <div class="carousel-nav">
+                        <button class="carousel-nav-btn" onclick="navigateCarousel('leadership', -1)" id="leadershipPrev">‹</button>
+                        <div class="carousel-dots" id="leadershipDots"></div>
+                        <button class="carousel-nav-btn" onclick="navigateCarousel('leadership', 1)" id="leadershipNext">›</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-section">
+                <div class="chat-input-wrapper">
+                    <input
+                        type="text"
+                        class="chat-input"
+                        placeholder="Ask me anything about company resources..."
+                        id="mainChatInput"
+                    >
+                    <div class="chat-actions">
+                        <button class="icon-btn" title="Attach">📎</button>
+                        <button class="icon-btn" title="Voice">🎤</button>
+                        <button class="send-btn" id="mainSendBtn">➤</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Prompts -->
+            <div class="quick-prompts">
+                <div class="prompts-label">Or try these quick actions:</div>
+                <div class="prompts-grid">
+                    <div class="prompt-card" data-task="pto">
+                        <div class="prompt-icon">🏖️</div>
+                        <div class="prompt-title">Request PTO</div>
+                        <div class="prompt-desc">Submit time off request with AI assistance</div>
+                    </div>
+                    <div class="prompt-card" data-task="expense">
+                        <div class="prompt-icon">💰</div>
+                        <div class="prompt-title">Submit Expense</div>
+                        <div class="prompt-desc">Quick expense submission</div>
+                    </div>
+                    <div class="prompt-card" data-task="directory">
+                        <div class="prompt-icon">👥</div>
+                        <div class="prompt-title">Find Colleague</div>
+                        <div class="prompt-desc">Search company directory</div>
+                    </div>
+                    <div class="prompt-card" data-task="support">
+                        <div class="prompt-icon">💻</div>
+                        <div class="prompt-title">IT Support</div>
+                        <div class="prompt-desc">Get help with technical issues</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Modal -->
+    <div class="content-modal" id="contentModal">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <div class="modal-title">Company Updates</div>
+                <button class="modal-close" onclick="closeContentModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tabs">
+                    <button class="modal-tab active" data-tab="news">Company News</button>
+                    <button class="modal-tab" data-tab="events">Upcoming Events</button>
+                    <button class="modal-tab" data-tab="leadership">From Leadership</button>
+                </div>
+
+                <!-- News Tab -->
+                <div class="tab-content active" id="newsTab">
+                    <div class="cards-list" id="newsList"></div>
+                </div>
+
+                <!-- Events Tab -->
+                <div class="tab-content" id="eventsTab">
+                    <div class="cards-list" id="eventsList"></div>
+                </div>
+
+                <!-- Leadership Tab -->
+                <div class="tab-content" id="leadershipTab">
+                    <div class="cards-list" id="leadershipList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Overlay -->
+    <div class="chat-overlay" id="chatOverlay">
+        <div class="chat-panel">
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <div class="chat-avatar">🤖</div>
+                    <div class="chat-header-text">
+                        <h3>Copilot</h3>
+                        <p id="chatContext">Ready to help</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeChat()">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-area">
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input-field" placeholder="Type your message..." id="chatInput">
+                    <button class="chat-send" id="chatSend">➤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon">✓</span>
+        <div class="toast-message" id="toastMessage"></div>
+    </div>
+
+    <script>
+        // Sample Data
+        const newsData = [
+            { id: 'n1', title: 'Q1 All-Hands Meeting - Register Now', tag: 'ANNOUNCEMENT', date: 'Feb 1, 2026', author: 'Sarah Chen, CEO', summary: 'CEO Sarah Chen invites all employees to the Q1 All-Hands meeting on Feb 15th at 2 PM PST. The agenda includes Q4 results (18% growth), new product launches, 2026 strategic initiatives, and Q&A session.' },
+            { id: 'n2', title: 'New Hybrid Work Policy - Increased Flexibility', tag: 'POLICY UPDATE', date: 'Jan 28, 2026', author: 'Marcus Johnson, VP HR', summary: 'Starting Q2 2026, employees can choose fully remote, hybrid (2-3 days/week in-office), or full in-office work arrangements. Core collaboration days are Tuesday-Thursday.' },
+            { id: 'n3', title: 'Product Launch: CloudSync 3.0 Now Available', tag: 'PRODUCT LAUNCH', date: 'Jan 25, 2026', author: 'Product Team', summary: 'CloudSync 3.0 launches with AI-powered sync intelligence, 50% faster performance, and enhanced security. Available to all enterprise customers starting Feb 1st.' },
+            { id: 'n4', title: 'Wellness Program Expansion', tag: 'BENEFITS', date: 'Jan 22, 2026', author: 'Wellness Team', summary: 'New mental health benefits effective Feb 1st include: unlimited therapy sessions, 24/7 crisis support hotline, meditation app subscriptions, and quarterly mental health days.' },
+            { id: 'n5', title: 'Carbon Neutral Certification Achieved', tag: 'SUSTAINABILITY', date: 'Jan 20, 2026', author: 'Sustainability Team', summary: 'Company achieves carbon neutral certification through 40% emissions reduction and verified carbon offset projects. Next goal: carbon negative by 2028.' }
+        ];
+
+        const eventsData = [
+            { id: 'e1', title: 'Leadership Summit 2026', date: 'Feb 15-17, 2026', time: '2:00 PM PST', location: 'Seattle Convention Center (Hybrid)', summary: 'Connect with 500+ leaders. CEO keynote, 30+ breakout sessions, team building and networking dinner. Early bird pricing ends Feb 10th.' },
+            { id: 'e2', title: 'Tech Talk: AI in Product Development', date: 'Feb 10, 2026', time: '12:00 PM PST', location: 'Virtual', summary: 'Engineering VP demos new AI-powered development tools: automated code review, intelligent testing, and predictive bug detection.' },
+            { id: 'e3', title: 'Q1 Sales Kickoff', date: 'Feb 8, 2026', time: '9:00 AM EST', location: 'New York Office', summary: 'Full-day sales kickoff with Q1 goals, product training on CloudSync 3.0, and team celebration. Mandatory for sales org.' },
+            { id: 'e4', title: 'Women in Tech Networking Event', date: 'Feb 20, 2026', time: '5:00 PM PST', location: 'Seattle HQ - Rooftop', summary: 'Networking with light refreshments, speed mentoring, and panel discussion. Featured speakers: 3 senior women leaders.' },
+            { id: 'e5', title: 'Financial Wellness Workshop', date: 'Feb 25, 2026', time: '3:00 PM PST', location: 'Virtual', summary: 'Expert-led workshop: 401(k) optimization, student loan strategies, home buying tips, and investment basics.' }
+        ];
+
+        const leadershipData = [
+            { id: 'l1', name: 'Sarah Chen', title: 'CEO', postTitle: 'Q4 Results & Looking Ahead to 2026', date: '2 days ago', summary: 'Record Q4 2025: 18% revenue growth ($2.3B), 3 major product launches, expansion into 5 new markets, and 500 new hires. Q1 2026 priorities: customer experience and innovation.' },
+            { id: 'l2', name: 'Marcus Johnson', title: 'VP HR', postTitle: 'Investing in You: New Benefits', date: '5 days ago', summary: 'Announcing unlimited therapy sessions, $2,000 learning budget per employee, new mentorship program matching 500+ pairs, and enhanced hybrid work policy.' },
+            { id: 'l3', name: 'Dr. Emily Rodriguez', title: 'CTO', postTitle: 'Our AI-First Future', date: '1 week ago', summary: 'AI copilots in every product by Q3, next-gen cloud infrastructure (40% cost reduction), zero-trust security architecture, and 20% engineering headcount growth.' },
+            { id: 'l4', name: 'James Patterson', title: 'CCO', postTitle: 'Customer-First: Our North Star', date: '1 week ago', summary: 'Record NPS of 72 (up from 65). 2026 initiatives: 24/7 support expansion, customer advisory board (20 enterprises), and voice-of-customer program.' }
+        ];
+
+        // Carousel State Manager
+        class CarouselManager {
+            constructor() {
+                this.state = {
+                    news: 0,
+                    events: 0,
+                    leadership: 0
+                };
+            }
+
+            get(type) {
+                return this.state[type] || 0;
+            }
+
+            set(type, index) {
+                this.state[type] = index;
+            }
+
+            getTotal(type) {
+                if (type === 'news') return newsData.length;
+                if (type === 'events') return eventsData.length;
+                if (type === 'leadership') return leadershipData.length;
+                return 0;
+            }
+        }
+
+        const carouselManager = new CarouselManager();
+
+        // Render Inline Carousels
+        function renderInlineCarousels() {
+            renderNewsCarousel();
+            renderEventsCarousel();
+            renderLeadershipCarousel();
+        }
+
+        function renderNewsCarousel() {
+            const container = document.getElementById('newsCarousel');
+            const currentIndex = carouselManager.get('news');
+
+            container.innerHTML = newsData.map((item, idx) => `
+                <div class="carousel-card ${idx === currentIndex ? 'active' : ''}">
+                    <span class="inline-card-tag">${item.tag}</span>
+                    <div class="inline-card-title">${item.title}</div>
+                    <div class="inline-card-meta">${item.author} • ${item.date}</div>
+                    <div class="inline-card-summary">
+                        <div class="inline-ai-badge">✨ AI Summary</div>
+                        <div class="inline-summary-text">${item.summary}</div>
+                    </div>
+                    <div class="inline-card-actions">
+                        <button class="inline-btn inline-btn-primary" onclick="askAboutNews('${item.id}')">💬 Ask</button>
+                        <button class="inline-btn inline-btn-secondary">Read →</button>
+                    </div>
+                </div>
+            `).join('');
+
+            updateCarouselControls('news');
+        }
+
+        function renderEventsCarousel() {
+            const container = document.getElementById('eventsCarousel');
+            const currentIndex = carouselManager.get('events');
+
+            container.innerHTML = eventsData.map((item, idx) => {
+                const rsvp = rsvpManager.get(item.id);
+                return `
+                    <div class="carousel-card ${idx === currentIndex ? 'active' : ''}">
+                        <span class="inline-event-badge">${item.date}</span>
+                        <div class="inline-card-title">${item.title}</div>
+                        <div class="inline-card-meta">📍 ${item.location}</div>
+                        <div class="inline-card-summary">
+                            <div class="inline-ai-badge">✨ AI Summary</div>
+                            <div class="inline-summary-text">${item.summary}</div>
+                        </div>
+                        <div class="inline-rsvp-section">
+                            <div class="inline-rsvp-label">Will you attend?</div>
+                            <div class="inline-rsvp-buttons">
+                                <button class="inline-rsvp-btn ${rsvp === 'yes' ? 'selected' : ''}" onclick="setInlineRSVP('${item.id}', 'yes')">✓ Yes</button>
+                                <button class="inline-rsvp-btn ${rsvp === 'maybe' ? 'selected' : ''}" onclick="setInlineRSVP('${item.id}', 'maybe')">? Maybe</button>
+                                <button class="inline-rsvp-btn ${rsvp === 'no' ? 'selected' : ''}" onclick="setInlineRSVP('${item.id}', 'no')">✗ No</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateCarouselControls('events');
+        }
+
+        function renderLeadershipCarousel() {
+            const container = document.getElementById('leadershipCarousel');
+            const currentIndex = carouselManager.get('leadership');
+
+            container.innerHTML = leadershipData.map((item, idx) => `
+                <div class="carousel-card ${idx === currentIndex ? 'active' : ''}">
+                    <span class="inline-card-tag">${item.title}</span>
+                    <div class="inline-card-title">${item.postTitle}</div>
+                    <div class="inline-card-meta">${item.name} • ${item.date}</div>
+                    <div class="inline-card-summary">
+                        <div class="inline-ai-badge">✨ AI Summary</div>
+                        <div class="inline-summary-text">${item.summary}</div>
+                    </div>
+                    <div class="inline-card-actions">
+                        <button class="inline-btn inline-btn-primary" onclick="askAboutLeadership('${item.id}')">🤖 Deep Dive</button>
+                        <button class="inline-btn inline-btn-secondary">Read →</button>
+                    </div>
+                </div>
+            `).join('');
+
+            updateCarouselControls('leadership');
+        }
+
+        function navigateCarousel(type, direction) {
+            const current = carouselManager.get(type);
+            const total = carouselManager.getTotal(type);
+            let newIndex = current + direction;
+
+            if (newIndex < 0) newIndex = 0;
+            if (newIndex >= total) newIndex = total - 1;
+
+            carouselManager.set(type, newIndex);
+
+            if (type === 'news') renderNewsCarousel();
+            else if (type === 'events') renderEventsCarousel();
+            else if (type === 'leadership') renderLeadershipCarousel();
+        }
+
+        function updateCarouselControls(type) {
+            const current = carouselManager.get(type);
+            const total = carouselManager.getTotal(type);
+
+            // Update indicator
+            document.getElementById(`${type}Indicator`).textContent = `${current + 1}/${total}`;
+
+            // Update buttons
+            document.getElementById(`${type}Prev`).disabled = current === 0;
+            document.getElementById(`${type}Next`).disabled = current === total - 1;
+
+            // Update dots
+            const dotsContainer = document.getElementById(`${type}Dots`);
+            dotsContainer.innerHTML = Array.from({ length: total }, (_, i) =>
+                `<div class="carousel-dot ${i === current ? 'active' : ''}" onclick="goToCarouselSlide('${type}', ${i})"></div>`
+            ).join('');
+        }
+
+        function goToCarouselSlide(type, index) {
+            carouselManager.set(type, index);
+            if (type === 'news') renderNewsCarousel();
+            else if (type === 'events') renderEventsCarousel();
+            else if (type === 'leadership') renderLeadershipCarousel();
+        }
+
+        function setInlineRSVP(eventId, response) {
+            rsvpManager.set(eventId, response);
+            renderEventsCarousel();
+            const msgs = { yes: "Great! I've marked you as attending.", maybe: "Noted! I'll remind you closer to the date.", no: "Thanks for letting us know." };
+            showToast(msgs[response]);
+        }
+
+        // RSVP Manager
+        class RSVPManager {
+            constructor() {
+                this.state = JSON.parse(localStorage.getItem('rsvp_state') || '{}');
+            }
+            get(id) { return this.state[id] || null; }
+            set(id, val) { this.state[id] = val; localStorage.setItem('rsvp_state', JSON.stringify(this.state)); }
+        }
+        const rsvpManager = new RSVPManager();
+
+        // Toast
+        function showToast(msg, icon = '✓') {
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMessage').textContent = msg;
+            document.getElementById('toast').classList.add('active');
+            setTimeout(() => document.getElementById('toast').classList.remove('active'), 4000);
+        }
+
+        // Content Modal
+        function openContentModal(tab = 'news') {
+            document.getElementById('contentModal').classList.add('active');
+            switchTab(tab);
+            renderContent();
+        }
+
+        function closeContentModal() {
+            document.getElementById('contentModal').classList.remove('active');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.modal-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.tab === tabName);
+            });
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.classList.toggle('active', c.id === tabName + 'Tab');
+            });
+        }
+
+        document.querySelectorAll('.modal-tab').forEach(tab => {
+            tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+        });
+
+        function renderContent() {
+            // Render News
+            document.getElementById('newsList').innerHTML = newsData.map(item => `
+                <div class="content-card">
+                    <div class="card-header-info">
+                        <span class="card-tag">${item.tag}</span>
+                        <span class="card-date">${item.date}</span>
+                    </div>
+                    <div class="card-title">${item.title}</div>
+                    <div class="card-author">${item.author}</div>
+                    <div class="card-summary">
+                        <div class="ai-badge">✨ AI Summary</div>
+                        <div class="card-summary-text">${item.summary}</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-primary" onclick="askAboutNews('${item.id}')">💬 Ask Copilot</button>
+                        <button class="btn-secondary">Read Article →</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Events
+            document.getElementById('eventsList').innerHTML = eventsData.map(item => {
+                const rsvp = rsvpManager.get(item.id);
+                return `
+                    <div class="content-card">
+                        <div class="event-meta">
+                            <span class="event-date-badge">${item.date}</span>
+                            <span class="event-location">📍 ${item.location}</span>
+                        </div>
+                        <div class="card-title">${item.title}</div>
+                        <div class="card-summary">
+                            <div class="ai-badge">✨ AI Summary</div>
+                            <div class="card-summary-text">${item.summary}</div>
+                        </div>
+                        <div class="rsvp-section">
+                            <div class="rsvp-label">Will you attend?</div>
+                            <div class="rsvp-buttons">
+                                <button class="rsvp-btn ${rsvp === 'yes' ? 'selected' : ''}" onclick="setRSVP('${item.id}', 'yes')">✓ Yes</button>
+                                <button class="rsvp-btn ${rsvp === 'maybe' ? 'selected' : ''}" onclick="setRSVP('${item.id}', 'maybe')">? Maybe</button>
+                                <button class="rsvp-btn ${rsvp === 'no' ? 'selected' : ''}" onclick="setRSVP('${item.id}', 'no')">✗ No</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Render Leadership
+            document.getElementById('leadershipList').innerHTML = leadershipData.map(item => `
+                <div class="content-card">
+                    <div class="card-header-info">
+                        <span class="card-date">${item.date}</span>
+                    </div>
+                    <div class="card-title">${item.postTitle}</div>
+                    <div class="card-author">${item.name}, ${item.title}</div>
+                    <div class="card-summary">
+                        <div class="ai-badge">✨ AI Summary</div>
+                        <div class="card-summary-text">${item.summary}</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-primary" onclick="askAboutLeadership('${item.id}')">🤖 Deep Dive</button>
+                        <button class="btn-secondary">Read Full Post →</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setRSVP(eventId, response) {
+            rsvpManager.set(eventId, response);
+            renderContent();
+            const msgs = { yes: "Great! I've marked you as attending.", maybe: "Noted! I'll remind you closer to the date.", no: "Thanks for letting us know." };
+            showToast(msgs[response]);
+        }
+
+        // Chat
+        class ChatManager {
+            constructor() {
+                this.overlay = document.getElementById('chatOverlay');
+                this.messages = document.getElementById('chatMessages');
+                this.input = document.getElementById('chatInput');
+                this.send = document.getElementById('chatSend');
+                this.context = document.getElementById('chatContext');
+                this.currentFlow = null;
+                this.setupListeners();
+            }
+
+            setupListeners() {
+                this.send.addEventListener('click', () => this.sendMessage());
+                this.input.addEventListener('keypress', e => { if (e.key === 'Enter') this.sendMessage(); });
+            }
+
+            open(type, data = null) {
+                this.overlay.classList.add('active');
+                this.messages.innerHTML = '';
+                this.context.textContent = type === 'news' ? 'Discussing Company News' :
+                                          type === 'leadership' ? 'Discussing Leadership Post' :
+                                          type === 'pto' ? 'PTO Request' :
+                                          type === 'expense' ? 'Expense Submission' : 'Ready to help';
+
+                if (type === 'news') {
+                    const news = newsData.find(n => n.id === data);
+                    this.addAgentMessage(`I can help you understand "${news.title}".\n\n${news.summary}`, ['What are the key takeaways?', 'How does this affect my team?']);
+                } else if (type === 'leadership') {
+                    const lead = leadershipData.find(l => l.id === data);
+                    this.addAgentMessage(`Let's discuss ${lead.name}'s post: "${lead.postTitle}".\n\n${lead.summary}`, ['What are the priorities?', 'How can I contribute?']);
+                } else if (type === 'pto') {
+                    this.currentFlow = new PTOFlow(this);
+                } else if (type === 'expense') {
+                    this.currentFlow = new ExpenseFlow(this);
+                }
+                this.input.focus();
+            }
+
+            async sendMessage() {
+                const text = this.input.value.trim();
+                if (!text) return;
+                this.addUserMessage(text);
+                this.input.value = '';
+                this.showTyping();
+                await new Promise(r => setTimeout(r, 1500));
+                this.hideTyping();
+                if (this.currentFlow) {
+                    this.currentFlow.handleInput(text);
+                } else {
+                    this.addAgentMessage('I understand. Let me help you with that.', ['Tell me more', 'Contact info']);
+                }
+            }
+
+            addUserMessage(text) {
+                this.messages.innerHTML += `<div class="message"><div class="message-avatar user">👤</div><div class="message-content"><div class="message-bubble user">${text}</div></div></div>`;
+                this.scrollToBottom();
+            }
+
+            addAgentMessage(text, suggestions = []) {
+                const sugs = suggestions.length ? `<div class="message-suggestions">${suggestions.map(s => `<button class="suggestion-chip">${s}</button>`).join('')}</div>` : '';
+                this.messages.innerHTML += `<div class="message"><div class="message-avatar agent">🤖</div><div class="message-content"><div class="message-bubble agent">${text}</div>${sugs}</div></div>`;
+                this.messages.querySelectorAll('.suggestion-chip').forEach(btn => {
+                    btn.addEventListener('click', () => { this.input.value = btn.textContent; this.sendMessage(); });
+                });
+                this.scrollToBottom();
+            }
+
+            showTyping() {
+                this.messages.innerHTML += `<div class="message typing-msg"><div class="message-avatar agent">🤖</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+                this.scrollToBottom();
+            }
+
+            hideTyping() {
+                const typing = this.messages.querySelector('.typing-msg');
+                if (typing) typing.remove();
+            }
+
+            scrollToBottom() {
+                this.messages.scrollTop = this.messages.scrollHeight;
+            }
+        }
+
+        const chat = new ChatManager();
+
+        function closeChat() {
+            document.getElementById('chatOverlay').classList.remove('active');
+            chat.currentFlow = null;
+        }
+
+        function askAboutNews(id) {
+            closeContentModal();
+            chat.open('news', id);
+        }
+
+        function askAboutLeadership(id) {
+            closeContentModal();
+            chat.open('leadership', id);
+        }
+
+        // Task Flows
+        class PTOFlow {
+            constructor(chat) {
+                this.chat = chat;
+                this.step = 0;
+                this.data = {};
+                this.chat.addAgentMessage("I'll help you request time off. When would you like to take PTO?", ['Next week', 'Specific dates']);
+            }
+            handleInput(text) {
+                if (this.step === 0) {
+                    this.data.dates = text;
+                    this.chat.addAgentMessage('What type of time off?', ['🏖️ Vacation', '🤒 Sick Leave']);
+                    this.step++;
+                } else if (this.step === 1) {
+                    this.data.type = text;
+                    this.chat.addAgentMessage('Who will cover your responsibilities?', ['Alex Rivera', 'Sarah Mitchell']);
+                    this.step++;
+                } else if (this.step === 2) {
+                    this.data.coverage = text;
+                    this.chat.addAgentMessage(`Review:\n\nDates: ${this.data.dates}\nType: ${this.data.type}\nCoverage: ${this.data.coverage}\n\nReady to submit?`, ['✓ Submit Request']);
+                    this.step++;
+                } else {
+                    this.chat.addAgentMessage(`✓ PTO request submitted!\n\nRequest ID: PTO-${Date.now()}\nYou'll receive confirmation shortly.`);
+                    this.chat.currentFlow = null;
+                }
+            }
+        }
+
+        class ExpenseFlow {
+            constructor(chat) {
+                this.chat = chat;
+                this.step = 0;
+                this.data = {};
+                this.chat.addAgentMessage('What type of expense?', ['✈️ Travel', '🍽️ Meals', '💻 Technology']);
+            }
+            handleInput(text) {
+                if (this.step === 0) {
+                    this.data.category = text;
+                    this.chat.addAgentMessage("What's the amount?", ['$50', '$100']);
+                    this.step++;
+                } else if (this.step === 1) {
+                    this.data.amount = text;
+                    this.chat.addAgentMessage('Describe the expense', []);
+                    this.step++;
+                } else if (this.step === 2) {
+                    this.data.description = text;
+                    this.chat.addAgentMessage(`Review:\n\nCategory: ${this.data.category}\nAmount: ${this.data.amount}\nDescription: ${this.data.description}\n\nReady to submit?`, ['✓ Submit']);
+                    this.step++;
+                } else {
+                    this.chat.addAgentMessage(`✓ Expense submitted!\n\nExpense ID: EXP-${Date.now()}\nReimbursement in 5-7 days.`);
+                    this.chat.currentFlow = null;
+                }
+            }
+        }
+
+        // Main input handlers
+        document.getElementById('mainSendBtn').addEventListener('click', () => {
+            const val = document.getElementById('mainChatInput').value.trim();
+            if (val) {
+                chat.open('general');
+                setTimeout(() => { chat.input.value = val; chat.sendMessage(); }, 100);
+                document.getElementById('mainChatInput').value = '';
+            }
+        });
+
+        document.getElementById('mainChatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') document.getElementById('mainSendBtn').click();
+        });
+
+        // Prompt cards
+        document.querySelectorAll('.prompt-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const task = card.dataset.task;
+                if (task === 'pto') chat.open('pto');
+                else if (task === 'expense') chat.open('expense');
+                else chat.open('general');
+            });
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('contentModal').addEventListener('click', (e) => {
+            if (e.target.id === 'contentModal') closeContentModal();
+        });
+
+        document.getElementById('chatOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'chatOverlay') closeChat();
+        });
+
+        // Initialize carousels on page load
+        renderInlineCarousels();
+    </script>
+</body>
+</html>
