@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ODSP Onboarding Agent — User Research</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a2e;
+      color: #242424;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Slide container */
+    .deck {
+      width: 960px;
+      height: 560px;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+      position: absolute;
+      top: 0; left: 0;
+    }
+
+    .slide.active { display: flex; flex-direction: column; }
+
+    /* Slide header accent bar */
+    .slide-header {
+      padding: 32px 48px 20px;
+      border-bottom: 3px solid #0078d4;
+      flex-shrink: 0;
+    }
+
+    .slide-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #0078d4;
+      margin-bottom: 6px;
+    }
+
+    .slide-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.2;
+    }
+
+    .slide-subtitle {
+      font-size: 14px;
+      color: #616161;
+      margin-top: 4px;
+    }
+
+    .slide-body {
+      flex: 1;
+      padding: 24px 48px 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ── Title slide ── */
+    .title-slide {
+      background: linear-gradient(135deg, #0078d4 0%, #004e8c 100%);
+      color: white;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px;
+    }
+
+    .title-slide .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 16px;
+    }
+
+    .title-slide h1 {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .title-slide .meta {
+      font-size: 14px;
+      opacity: 0.7;
+      margin-top: 8px;
+    }
+
+    .title-slide .pill {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 13px;
+      margin: 4px;
+    }
+
+    /* ── Participant cards ── */
+    .participant-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .p-card {
+      background: #f8f9fa;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 18px;
+      border-top: 4px solid #0078d4;
+    }
+
+    .p-card.accent2 { border-top-color: #107c10; }
+    .p-card.accent3 { border-top-color: #6264a7; }
+
+    .p-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .p-role {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0078d4;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+
+    .p-card.accent2 .p-role { color: #107c10; }
+    .p-card.accent3 .p-role { color: #6264a7; }
+
+    .p-detail {
+      font-size: 12.5px;
+      color: #494949;
+      line-height: 1.6;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e8f0fe;
+      color: #0078d4;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+      margin-right: 4px;
+    }
+
+    .tag.green { background: #e6f4ea; color: #107c10; }
+    .tag.purple { background: #f0effe; color: #6264a7; }
+
+    /* ── Pain points list ── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .pain-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 4px solid #d13438;
+    }
+
+    .pain-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: #d13438;
+      line-height: 1;
+      flex-shrink: 0;
+      min-width: 24px;
+    }
+
+    .pain-text {
+      font-size: 13px;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+
+    .pain-text strong {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .pain-who {
+      font-size: 11px;
+      color: #888;
+      margin-top: 3px;
+    }
+
+    /* ── Scenario cards ── */
+    .scenario-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .scenario-item {
+      display: grid;
+      grid-template-columns: 28px 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .s-num {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0078d4;
+      background: #e8f0fe;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .s-trigger {
+      font-size: 13px;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+
+    .s-trigger strong { font-weight: 700; display: block; margin-bottom: 2px; }
+
+    .s-action {
+      font-size: 12.5px;
+      color: #494949;
+      line-height: 1.5;
+      border-left: 2px solid #0078d4;
+      padding-left: 10px;
+    }
+
+    /* ── Do / Don't ── */
+    .dodo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .do-col h3, .dont-col h3 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .do-col h3 { color: #107c10; }
+    .dont-col h3 { color: #d13438; }
+
+    .do-item, .dont-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .do-item { background: #e6f4ea; color: #1e3a1e; }
+    .dont-item { background: #fde7e9; color: #3a1e1e; }
+
+    .do-icon, .dont-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Capability cards ── */
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .cap-card {
+      background: #f8f9fa;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 14px 12px;
+      text-align: center;
+      border-top: 3px solid #0078d4;
+    }
+
+    .cap-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0078d4;
+      margin-bottom: 6px;
+    }
+
+    .cap-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .cap-desc {
+      font-size: 11.5px;
+      color: #616161;
+      line-height: 1.5;
+    }
+
+    /* ── Arch slide ── */
+    .arch-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .arch-visual {
+      flex-shrink: 0;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .arch-master {
+      background: #0078d4;
+      color: white;
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      width: 100%;
+    }
+
+    .arch-arrow {
+      font-size: 18px;
+      color: #0078d4;
+    }
+
+    .arch-subs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .arch-sub {
+      background: #e8f0fe;
+      color: #0078d4;
+      border-radius: 8px;
+      padding: 10px 8px;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .arch-notes {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .arch-note {
+      background: #f8f9fa;
+      border-left: 4px solid #0078d4;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+
+    .arch-note strong { display: block; font-weight: 700; margin-bottom: 3px; }
+
+    /* ── Nav ── */
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .nav-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-family: 'Segoe UI', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .nav-btn:hover { background: rgba(255,255,255,0.25); }
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+    .nav-counter {
+      color: rgba(255,255,255,0.6);
+      font-size: 13px;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .dot-nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .dot.active { background: white; }
+  </style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- Slide 1: Title -->
+  <div class="slide active">
+    <div class="title-slide" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;background:linear-gradient(135deg,#0078d4 0%,#004e8c 100%);color:white;padding:48px;border-radius:12px;">
+      <div class="eyebrow">ODSP · User Research · April 2026</div>
+      <h1>Onboarding Agent<br>Research Findings</h1>
+      <div style="font-size:15px;opacity:0.8;margin-top:12px;margin-bottom:28px;">3 interviews · PM + 2 Software Engineers · 1–3 months tenure</div>
+      <div>
+        <span class="pill">Pain Points</span>
+        <span class="pill">Scenarios</span>
+        <span class="pill">Agent Design</span>
+        <span class="pill">Architecture</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Who we spoke to -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Participants</div>
+      <div class="slide-title">Who we spoke to</div>
+      <div class="slide-subtitle">3 new hires across PM and engineering — all within their first 3 months</div>
+    </div>
+    <div class="slide-body">
+      <div class="participant-grid">
+        <div class="p-card">
+          <div class="p-name">PM</div>
+          <div class="p-role">Product Manager</div>
+          <div class="p-detail">
+            External hire · ~1.5 months<br>
+            News Posts / Publishing team<br>
+            Filling in for a colleague
+          </div>
+          <div>
+            <span class="tag">External hire</span>
+            <span class="tag">Cross-surface Copilot user</span>
+          </div>
+        </div>
+        <div class="p-card accent2">
+          <div class="p-name">Antonio</div>
+          <div class="p-role">Software Engineer</div>
+          <div class="p-detail">
+            External hire · ~2 months<br>
+            Multi-tiering / Blob storage<br>
+            Heavy Copilot user for docs
+          </div>
+          <div>
+            <span class="tag green">External hire</span>
+            <span class="tag green">Copilot-first workflow</span>
+          </div>
+        </div>
+        <div class="p-card accent3">
+          <div class="p-name">Mary</div>
+          <div class="p-role">Software Engineer</div>
+          <div class="p-detail">
+            Internal transfer (ex-Copilot Hub) · ~3 months<br>
+            Nucleus / OD4 (Vibe Photos)<br>
+            Prefers Claude over Copilot
+          </div>
+          <div>
+            <span class="tag purple">Internal transfer</span>
+            <span class="tag purple">Claude-first workflow</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Pain Points -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Research Findings</div>
+      <div class="slide-title">Key pain points</div>
+      <div class="slide-subtitle">Recurring friction across all 3 participants, regardless of role or background</div>
+    </div>
+    <div class="slide-body" style="justify-content:flex-start;padding-top:16px;">
+      <div class="pain-grid">
+        <div class="pain-item">
+          <div class="pain-num">1</div>
+          <div class="pain-text">
+            <strong>Wrong access, wrong path</strong>
+            "Request ODSP All" — but that's almost never the right group. The real sub-group, approver, and wait time are buried or wrong.
+            <div class="pain-who">All 3 participants</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-num">2</div>
+          <div class="pain-text">
+            <strong>Stale or contradictory docs</strong>
+            Onboarding wikis with 404s, videos from years ago with outdated info, ramp docs that mention deprecation with no "use this instead."
+            <div class="pain-who">Antonio, Mary</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-num">3</div>
+          <div class="pain-text">
+            <strong>Flights & rings assumed as known</strong>
+            New hires end up in meetings seeing a different UI from everyone else. Instructions assume you're already on the flight.
+            <div class="pain-who">PM, Mary</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-num">4</div>
+          <div class="pain-text">
+            <strong>Acronyms + colloquialisms not in glossary</strong>
+            "Quit nucleus" = quit OneDrive.Sync in Task Manager. "One-up view." "Rehydrate the blob." Formal glossary doesn't cover these.
+            <div class="pain-who">All 3 participants</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-num">5</div>
+          <div class="pain-text">
+            <strong>No map of the org or what teams own</strong>
+            No structured way to understand what other ODSP teams are building or how they connect to your work.
+            <div class="pain-who">All 3 participants</div>
+          </div>
+        </div>
+        <div class="pain-item">
+          <div class="pain-num">6</div>
+          <div class="pain-text">
+            <strong>Dashboards are tribal knowledge</strong>
+            Links shared ad hoc in meeting invites or chat. No curated list. Even when found, meaningless without team context first.
+            <div class="pain-who">PM, Mary</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: ODSP Homepage -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Research Findings</div>
+      <div class="slide-title">The ODSP homepage pattern</div>
+      <div class="slide-subtitle">Useful in Week 1 — then forgotten. Not a recurring resource.</div>
+    </div>
+    <div class="slide-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;">
+        <div style="background:#f8f9fa;border-radius:10px;padding:18px;text-align:center;border-top:3px solid #0078d4;">
+          <div style="font-size:32px;font-weight:800;color:#0078d4;">Week 1</div>
+          <div style="font-size:13px;color:#494949;margin-top:6px;line-height:1.5;">Visited every 1–2 days for checklist, bio post, doc links</div>
+        </div>
+        <div style="background:#f8f9fa;border-radius:10px;padding:18px;text-align:center;border-top:3px solid #6264a7;">
+          <div style="font-size:32px;font-weight:800;color:#6264a7;">Week 2–3</div>
+          <div style="font-size:13px;color:#494949;margin-top:6px;line-height:1.5;">Maybe once a week. Visiting specific links shared by others.</div>
+        </div>
+        <div style="background:#f8f9fa;border-radius:10px;padding:18px;text-align:center;border-top:3px solid #d13438;">
+          <div style="font-size:32px;font-weight:800;color:#d13438;">Month 2+</div>
+          <div style="font-size:13px;color:#494949;margin-top:6px;line-height:1.5;">Not visited. News posts seen via direct links, not homepage.</div>
+        </div>
+      </div>
+      <div style="background:#fff4ce;border-left:4px solid #f7c948;border-radius:0 8px 8px 0;padding:14px 16px;font-size:13.5px;color:#3a2e00;line-height:1.6;">
+        <strong>Key insight:</strong> The homepage is a Week 1 tool. After initial tasks are done, there is no trigger to return — even when new questions come up. The org vision doc was discovered 6 weeks in, by accident. Had it been surfaced in Week 1, it would have been "even better."
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Scenarios -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Agent Design</div>
+      <div class="slide-title">Scenarios this agent would solve</div>
+      <div class="slide-subtitle">Real situations from interviews — trigger → what the agent does</div>
+    </div>
+    <div class="slide-body" style="justify-content:flex-start;padding-top:12px;">
+      <div class="scenario-list">
+        <div class="scenario-item">
+          <div class="s-num">1</div>
+          <div class="s-trigger"><strong>"What access do I request?"</strong>Day 1–3. Onboarding doc says "ODSP All" — that's wrong for most teams.</div>
+          <div class="s-action">Asks your team → returns the exact security group, right approver, expected wait time. Shareable checklist.</div>
+        </div>
+        <div class="scenario-item">
+          <div class="s-num">2</div>
+          <div class="s-trigger"><strong>"Everyone's on dogfood, I'm not."</strong>In a meeting, seeing a different UI. No idea why.</div>
+          <div class="s-action">Explains flights/rings in plain language. Step-by-step to get on the right flight. Offered proactively in Week 1.</div>
+        </div>
+        <div class="scenario-item">
+          <div class="s-num">3</div>
+          <div class="s-trigger"><strong>"What does [term] mean?"</strong>"Quit nucleus." "One-up view." "Rehydrate the blob." Not in the glossary.</div>
+          <div class="s-action">Plain-language definition. If unknown, routes to the right alias. Lets anyone submit new terms back.</div>
+        </div>
+        <div class="scenario-item">
+          <div class="s-num">4</div>
+          <div class="s-trigger"><strong>"Is this doc still current?"</strong>Wiki last updated 2 years ago. Are ramps still the right way? Is V1 or V2?</div>
+          <div class="s-action">Cross-references against newer sources. Flags if stale. Points to fresher doc or a human alias — never guesses.</div>
+        </div>
+        <div class="scenario-item">
+          <div class="s-num">5</div>
+          <div class="s-trigger"><strong>"I don't know what I don't know."</strong>Day 1. No idea what to even ask.</div>
+          <div class="s-action">Detects role + team from profile. Walks through top 3–5 things most people on your team needed in Week 1.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: Do / Don't -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Agent Design</div>
+      <div class="slide-title">What makes them use it — or abandon it</div>
+      <div class="slide-subtitle">Direct from participant feedback on what they'd need to give it a real shot</div>
+    </div>
+    <div class="slide-body">
+      <div class="dodo-grid">
+        <div class="do-col">
+          <h3><span>✓</span> Will use it if...</h3>
+          <div class="do-item"><span class="do-icon">✓</span>Knows my role, team, title — responses feel personalized, not generic</div>
+          <div class="do-item"><span class="do-icon">✓</span>Has a clear onboarding flow explaining what it knows and can do</div>
+          <div class="do-item"><span class="do-icon">✓</span>Gives the doc link AND the access path — not just "here's a doc"</div>
+          <div class="do-item"><span class="do-icon">✓</span>Points to a human alias when it doesn't know — rather than making something up</div>
+          <div class="do-item"><span class="do-icon">✓</span>Shows social proof — "X new hires found this useful"</div>
+        </div>
+        <div class="dont-col">
+          <h3><span>✗</span> Will abandon it if...</h3>
+          <div class="dont-item"><span class="dont-icon">✗</span>Gives the same answer to a PM, SWE, or designer — feels like AI slop</div>
+          <div class="dont-item"><span class="dont-icon">✗</span>Returns stale information presented confidently as current</div>
+          <div class="dont-item"><span class="dont-icon">✗</span>Hallucinated answers when it doesn't actually know</div>
+          <div class="dont-item"><span class="dont-icon">✗</span>Over-contextualizes from previous chats when asking something unrelated</div>
+          <div class="dont-item"><span class="dont-icon">✗</span>Becomes a replacement for team connection — "just ask Claude"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Top 5 Capabilities -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Recommendations</div>
+      <div class="slide-title">Top 5 capabilities to build first</div>
+      <div class="slide-subtitle">Prioritized by frequency of mention and severity of pain across all 3 interviews</div>
+    </div>
+    <div class="slide-body">
+      <div class="cap-grid">
+        <div class="cap-card">
+          <div class="cap-num">1</div>
+          <div class="cap-title">Personalized onboarding flow</div>
+          <div class="cap-desc">Role + team aware. Walks new hire through what they actually need — not a generic checklist.</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">2</div>
+          <div class="cap-title">Access & permissions guide</div>
+          <div class="cap-desc">Right sub-group, right approver, real wait time. Shareable completion checklist for manager.</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">3</div>
+          <div class="cap-title">Living glossary</div>
+          <div class="cap-desc">Formal terms + colloquialisms. Crowdsourced. Anyone can submit a new term.</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">4</div>
+          <div class="cap-title">Team & org context hub</div>
+          <div class="cap-desc">What each ODSP team owns, interactive org chart tied to active work and PR areas.</div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">5</div>
+          <div class="cap-title">Flights & dogfood guide</div>
+          <div class="cap-desc">Step-by-step setup. Surfaced proactively in Week 1 — not after they notice they're off-flight.</div>
+        </div>
+      </div>
+      <div style="background:#e8f0fe;border-radius:8px;padding:12px 16px;margin-top:16px;font-size:13px;color:#003a75;line-height:1.5;">
+        <strong>Note on dashboards:</strong> Surface curated dashboards — but only after the new hire has team context. A dashboard is meaningless without understanding what the numbers represent.
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: Architecture -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Architecture Signal</div>
+      <div class="slide-title">Don't build one big agent</div>
+      <div class="slide-subtitle">Insight from Antonio — echoed by Mary's preference for accuracy over completeness</div>
+    </div>
+    <div class="slide-body">
+      <div class="arch-container">
+        <div class="arch-visual">
+          <div class="arch-master">ODSP Master Agent<br><span style="font-size:11px;opacity:0.8;font-weight:400;">Routes queries, doesn't answer everything</span></div>
+          <div class="arch-arrow">↓</div>
+          <div class="arch-subs">
+            <div class="arch-sub">Access &<br>Permissions</div>
+            <div class="arch-sub">Flights &<br>Rings</div>
+            <div class="arch-sub">Team &<br>Org Context</div>
+            <div class="arch-sub">Glossary &<br>Terms</div>
+            <div class="arch-sub">Docs &<br>Wikis</div>
+            <div class="arch-sub">Customer<br>Data</div>
+          </div>
+        </div>
+        <div class="arch-notes">
+          <div class="arch-note">
+            <strong>Avoid context poisoning</strong>
+            One monolithic agent carrying all ODSP context will bleed across unrelated queries — giving answers that fit prior conversations, not the current question.
+          </div>
+          <div class="arch-note">
+            <strong>Expert sub-agents per domain</strong>
+            Each sub-agent knows its area deeply and stays in its lane. The master agent routes "I'm on multi-tiering, how do I start a Nitro pipeline?" to the right expert.
+          </div>
+          <div class="arch-note">
+            <strong>Prefer routing to humans over hallucinating</strong>
+            When no sub-agent has a confident answer, surface the right alias — not a plausible-sounding guess. Mary was explicit: stale or hallucinated answers are an instant turn-off.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: Next Steps -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-label">Next Steps</div>
+      <div class="slide-title">Where to go from here</div>
+      <div class="slide-subtitle">Suggested path based on research priority and build complexity</div>
+    </div>
+    <div class="slide-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div style="background:#f8f9fa;border-radius:10px;padding:18px;border-top:4px solid #0078d4;">
+          <div style="font-size:11px;font-weight:700;color:#0078d4;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Now — POC</div>
+          <div style="font-size:13px;color:#1a1a1a;line-height:1.7;">
+            ✓ Access & permissions guide<br>
+            ✓ Flight/dogfood setup flow<br>
+            ✓ Personalized Week 1 checklist<br>
+            ✓ Basic glossary (formal + colloquial)
+          </div>
+        </div>
+        <div style="background:#f8f9fa;border-radius:10px;padding:18px;border-top:4px solid #107c10;">
+          <div style="font-size:11px;font-weight:700;color:#107c10;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Next — V1</div>
+          <div style="font-size:13px;color:#1a1a1a;line-height:1.7;">
+            ✓ Team & org context hub<br>
+            ✓ Crowdsourced glossary submissions<br>
+            ✓ Staleness detection on docs<br>
+            ✓ Human alias routing when unknown
+          </div>
+        </div>
+        <div style="background:#f8f9fa;border-radius:10px;padding:18px;border-top:4px solid #6264a7;">
+          <div style="font-size:11px;font-weight:700;color:#6264a7;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Later — V2</div>
+          <div style="font-size:13px;color:#1a1a1a;line-height:1.7;">
+            ✓ Customer personas & usage data<br>
+            ✓ Curated dashboards with context<br>
+            ✓ Sub-agent architecture by domain<br>
+            ✓ Social proof / usage metrics
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff4ce;border-left:4px solid #f7c948;border-radius:0 8px 8px 0;padding:12px 16px;margin-top:16px;font-size:13px;color:#3a2e00;line-height:1.6;">
+        <strong>Validation signal:</strong> All 3 participants said they would try the agent. Retention depends on accuracy and personalization in the first 1–2 uses. Get those right before adding breadth.
+      </div>
+    </div>
+  </div>
+
+</div><!-- end deck -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
+  <div class="dot-nav" id="dotNav"></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<div style="color:rgba(255,255,255,0.35);font-size:11px;margin-top:10px;">Use ← → arrow keys to navigate</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotNav = document.getElementById('dotNav');
+  let current = 0;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotNav.appendChild(dot);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dotNav.children[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, slides.length - 1));
+    slides[current].classList.add('active');
+    dotNav.children[current].classList.add('active');
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === slides.length - 1;
+  }
+
+  function changeSlide(dir) { goTo(current + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+</script>
+</body>
+</html>

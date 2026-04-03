@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ODSP Onboarding Agent — User Research</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; max-width: 820px; margin: 48px auto; padding: 0 24px 80px; color: #1a1a1a; background: #fff; line-height: 1.6; }
+
+    .page-title { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+    .page-subtitle { font-size: 14px; color: #555; margin-bottom: 4px; }
+    .page-meta { font-size: 12px; color: #aaa; margin-bottom: 52px; }
+
+    .section { margin-bottom: 52px; }
+    .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0078d4; margin-bottom: 4px; }
+    .section-title { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
+    .section-desc { font-size: 13.5px; color: #666; margin-bottom: 20px; }
+    hr { border: none; border-top: 1px solid #ebebeb; margin-bottom: 24px; }
+
+    /* Personas */
+    .personas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .persona { border: 1px solid #e8e8e8; border-radius: 8px; padding: 18px; }
+    .persona-role { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #0078d4; margin-bottom: 6px; }
+    .persona:nth-child(2) .persona-role { color: #107c10; }
+    .persona:nth-child(3) .persona-role { color: #6264a7; }
+    .persona-name { font-size: 17px; font-weight: 700; margin-bottom: 3px; }
+    .persona-detail { font-size: 12px; color: #999; margin-bottom: 12px; }
+    .persona-body { font-size: 13px; color: #333; line-height: 1.65; }
+    .persona-quote { font-size: 12.5px; color: #666; font-style: italic; border-left: 3px solid #e0e0e0; padding-left: 10px; margin-top: 12px; }
+
+    /* Pain points */
+    .pain-item { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid #f0f0f0; }
+    .pain-item:last-child { border-bottom: none; }
+    .pain-num { font-size: 13px; font-weight: 800; color: #bbb; min-width: 18px; padding-top: 2px; }
+    .pain-title { font-size: 14.5px; font-weight: 700; margin-bottom: 5px; color: #1a1a1a; }
+    .pain-desc { font-size: 13.5px; color: #444; line-height: 1.65; }
+    .pain-quote { font-size: 12.5px; color: #888; font-style: italic; margin-top: 8px; }
+
+    /* User stories */
+    .story-item { padding: 16px 0; border-bottom: 1px solid #f0f0f0; }
+    .story-item:last-child { border-bottom: none; }
+    .story-who { display: inline-block; font-size: 11px; font-weight: 700; background: #f0f4f8; color: #444; border-radius: 4px; padding: 2px 8px; margin-bottom: 8px; }
+    .story-text { font-size: 13.5px; color: #1a1a1a; line-height: 1.7; }
+    .story-text em { color: #555; font-style: normal; }
+  </style>
+</head>
+<body>
+
+<div class="page-title">ODSP Onboarding Agent</div>
+<div class="page-subtitle">User research — personas, pain points, and what the agent needs to solve</div>
+<div class="page-meta">3 interviews · 1 PM, 2 Software Engineers · April 2026</div>
+
+<!-- PERSONAS -->
+<div class="section">
+  <div class="section-eyebrow">Who we spoke to</div>
+  <div class="section-title">User Personas</div>
+  <div class="section-desc">Three new hires across different roles and backgrounds — all within their first three months on ODSP.</div>
+  <hr>
+  <div class="personas">
+    <div class="persona">
+      <div class="persona-role">Product Manager</div>
+      <div class="persona-name">Reethik</div>
+      <div class="persona-detail">External hire · ~6 weeks in · News Posts team</div>
+      <div class="persona-body">Reethik joined from outside Microsoft and was quickly asked to fill in for a colleague. He had no context on what the team was building, who the customers were, or how decisions were made. He uses Copilot through Bing and Teams for searching internal links.</div>
+      <div class="persona-quote">"A bunch of random things were thrown at me. They're still being thrown at me."</div>
+    </div>
+    <div class="persona">
+      <div class="persona-role">Software Engineer</div>
+      <div class="persona-name">Antonio</div>
+      <div class="persona-detail">External hire · ~2 months in · Multi-tiering team</div>
+      <div class="persona-body">Antonio has strong engineering experience but no Microsoft background. He uses Copilot to search for docs and wikis, but frequently hits dead ends — wrong access groups, outdated pages, or guidance that points to the right topic but the wrong version of it.</div>
+      <div class="persona-quote">"Copilot pointed me to the right page — but not to the page that tells you how to actually get access to it."</div>
+    </div>
+    <div class="persona">
+      <div class="persona-role">Software Engineer</div>
+      <div class="persona-name">Mary</div>
+      <div class="persona-detail">Internal transfer · ~3 months in · OD4 / Nucleus team</div>
+      <div class="persona-body">Mary came from the Copilot Hub team inside Microsoft. She knew the company but not ODSP, and assumed more would carry over than it did. She prefers accuracy over breadth and will stop using a tool the moment it gives her stale or made-up information.</div>
+      <div class="persona-quote">"I'd rather be pointed to the right person than get a confident answer that turns out to be wrong."</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAIN POINTS -->
+<div class="section">
+  <div class="section-eyebrow">What we heard</div>
+  <div class="section-title">Pain Points</div>
+  <div class="section-desc">Seven clear friction areas that came up across all three interviews. These are the moments where new hires slow down, get stuck, or have to rely on someone else to unblock them.</div>
+  <hr>
+
+  <div class="pain-item">
+    <div class="pain-num">1</div>
+    <div>
+      <div class="pain-title">The onboarding checklist is hard to follow</div>
+      <div class="pain-desc">The new hire checklist lives in a document, but the steps reference separate email instructions, wiki links, and access requests spread across different places. New hires have to jump between multiple sources to complete what should be a single, guided flow — and it's easy to miss steps or do them in the wrong order.</div>
+      <div class="pain-quote">"My manager also just missed a couple of things — he had me for 10 different things at once."</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-num">2</div>
+    <div>
+      <div class="pain-title">No visibility into what the team — or adjacent teams — are working on</div>
+      <div class="pain-desc">New hires don't have a clear view of their team's current priorities or how those connect to what neighboring teams are doing. This makes it hard to understand the full picture, know who to collaborate with, or see how their own work fits into broader org goals.</div>
+      <div class="pain-quote">"I didn't know what my team was doing — let alone what other teams were building."</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-num">3</div>
+    <div>
+      <div class="pain-title">Finding the right documents and dashboards means asking someone</div>
+      <div class="pain-desc">There's no reliable way to find the relevant specs, wikis, or dashboards for a given project without reaching out to a teammate. Links are shared informally in meetings or chat threads, and searching for them often surfaces outdated or unrelated results.</div>
+      <div class="pain-quote">"I piggybacked on someone else asking in the chat for the link — there was no other way to get it."</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-num">4</div>
+    <div>
+      <div class="pain-title">No clear picture of our customers, metrics, or how decisions get made</div>
+      <div class="pain-desc">New hires — especially PMs — need to understand who uses ODSP, what they care about, and what data drives product decisions. This context isn't surfaced during onboarding, so people either make decisions without it or spend weeks piecing it together from meetings and documents they stumble across.</div>
+      <div class="pain-quote">"I found the FY2026 vision document six weeks in — by accident. I would have loved to have it on day one."</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-num">5</div>
+    <div>
+      <div class="pain-title">Team language and acronyms aren't explained anywhere useful</div>
+      <div class="pain-desc">The formal glossary covers official terms but misses the shorthand that teammates actually use in meetings and docs. Terms like "quit nucleus," "one-up view," or "rehydrating a blob" are used as if everyone knows them — but for a new hire, they're invisible barriers to following what's going on. Searching the glossary every time breaks focus and still often doesn't help.</div>
+      <div class="pain-quote">"I feel shy to even ask — is this something everyone already knows and I just missed it?"</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-num">6</div>
+    <div>
+      <div class="pain-title">Operating procedures like ERs and PRs are unclear — and so is how to participate in them</div>
+      <div class="pain-desc">New hires don't have a clear understanding of recurring team rituals like exception reviews, pull request processes, and bug bashes — or what they need to set up to participate properly. Things like being on the right product flight, knowing how to enable debug mode, or understanding what's expected of them in a review aren't explained anywhere ahead of time.</div>
+      <div class="pain-quote">"Everyone was on the dogfood flight and I wasn't. I was seeing a completely different UI and had no idea why."</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-num">7</div>
+    <div>
+      <div class="pain-title">No map of the org — who the teams are and what they own</div>
+      <div class="pain-desc">ODSP is large, and new hires have no structured way to understand which teams exist, what each one is responsible for, and how they relate to each other. Building this mental model currently takes months of passive observation in meetings.</div>
+      <div class="pain-quote">"I want to know what the other teams are doing — siloing into just my team is a problem."</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- USER STORIES -->
+<div class="section">
+  <div class="section-eyebrow">What the agent needs to solve</div>
+  <div class="section-title">User Stories</div>
+  <div class="section-desc">Each story maps directly to a pain point above. These are the things new hires need to be able to do — on their own, without asking a colleague.</div>
+  <hr>
+
+  <div class="story-item">
+    <div class="story-who">Any new hire</div>
+    <div class="story-text">
+      When I start at ODSP, I want a single guided checklist — with all the steps, links, and access requests in one place — <em>so I can complete onboarding on my own without cross-referencing emails, docs, and wikis.</em>
+    </div>
+  </div>
+
+  <div class="story-item">
+    <div class="story-who">Any new hire</div>
+    <div class="story-text">
+      I want to see what my team is currently prioritizing and how that connects to what adjacent teams are working on — <em>so I understand where my work fits and who I need to be aware of.</em>
+    </div>
+  </div>
+
+  <div class="story-item">
+    <div class="story-who">Any new hire</div>
+    <div class="story-text">
+      When I'm working on a project, I want to find the relevant specs, wikis, and dashboards without having to ask a teammate — <em>so I can get up to speed quickly and independently.</em>
+    </div>
+  </div>
+
+  <div class="story-item">
+    <div class="story-who">New hire PM</div>
+    <div class="story-text">
+      I want to understand who our customers are, what metrics matter for my feature area, and how product decisions are typically made — <em>so I can contribute meaningfully from the start instead of waiting months to build that context.</em>
+    </div>
+  </div>
+
+  <div class="story-item">
+    <div class="story-who">Any new hire</div>
+    <div class="story-text">
+      When I hear a term or acronym I don't recognize — whether it's in a doc, a meeting, or a code review — I want an instant explanation without having to open the glossary and search — <em>so I can stay in flow and keep up with what's happening around me.</em>
+    </div>
+  </div>
+
+  <div class="story-item">
+    <div class="story-who">Any new hire</div>
+    <div class="story-text">
+      Before my first ER, PR review, or bug bash, I want to know what's expected of me and how to set up everything I need — the right flight, debug mode, and any other prerequisites — <em>so I can participate fully instead of realizing mid-meeting that I'm not set up correctly.</em>
+    </div>
+  </div>
+
+  <div class="story-item">
+    <div class="story-who">Any new hire</div>
+    <div class="story-text">
+      I want a clear overview of all the teams in ODSP, what each one owns, and how they interact — <em>so I can build a mental model of the org without having to wait for it to emerge slowly through months of meetings.</em>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
